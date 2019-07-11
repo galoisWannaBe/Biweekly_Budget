@@ -1,6 +1,9 @@
 package com.example.biweeklybudget;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     public static int q;
     public static boolean upDated = false;
     public static boolean firstRun = true;
+    //Database vars
+    public static final int ADD_TO_BILLS = 1;
+    public static final int ADD_TO_WEEKLIES = 2;
+    private  viewModel mBillViewModel;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +70,29 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
+             mBillViewModel = ViewModelProviders.of(this).get(viewModel.class);
 
 
         }
 
-        public void gotoMain(View view) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        TextView textView = findViewById(R.id.projBalance_box);
+        textView.setText("[onActivityResult] TRIGGERED!!!");
+        if(requestCode == ADD_TO_BILLS || resultCode == RESULT_OK){
+            //add to bill_table
+        }else if(requestCode == ADD_TO_BILLS){
+            //show that add/edit/delete was cancelled
+        }else if (requestCode == ADD_TO_WEEKLIES || resultCode == RESULT_OK){
+            //add to weekly_table
+        }else if (requestCode == ADD_TO_WEEKLIES){
+            //show that add to weekly was cancelled
+        }
+
+    }
+
+    public void gotoMain(View view) {
             Intent mIntent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(mIntent);
         }
@@ -79,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
         public void gotoViewAll(View view){
             Intent vIntent = new Intent(MainActivity.this, viewAll.class);
-            startActivity(vIntent);
+
+            startActivityForResult(vIntent, ADD_TO_BILLS);
         }
         public void gotoWeeklyExpenses(View view){
             Intent pintent = new Intent(this, WeeklyExpenses.class);
