@@ -17,7 +17,7 @@ class repository {
         mAllBills = mBillDao.getAlphabetizedBills();
     }
 
-    LiveData<List<Bills>> getmAllBills(){
+    LiveData<List<Bills>> getAllBills(){
         return mAllBills;
     }
     void insert(Bills bill){
