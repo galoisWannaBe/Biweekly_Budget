@@ -1,5 +1,6 @@
 package com.example.biweeklybudget;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -72,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
             }
              mBillViewModel = ViewModelProviders.of(this).get(viewModel.class);
 
+            //mBillViewModel.getAllBillsFromRepo().observe((this, new Observer<List<Bills>>() {}
 
-        }
-
-    @Override
+        /*
+        @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         TextView textView = findViewById(R.id.projBalance_box);
@@ -90,7 +91,10 @@ public class MainActivity extends AppCompatActivity {
             //show that add to weekly was cancelled
         }
 
+         */
+
     }
+
 
     public void gotoMain(View view) {
             Intent mIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -104,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
         public void gotoViewAll(View view){
             Intent vIntent = new Intent(MainActivity.this, viewAll.class);
-
-            startActivityForResult(vIntent, ADD_TO_BILLS);
+            startActivity(vIntent);
+            //startActivityForResult(vIntent, ADD_TO_BILLS);
         }
         public void gotoWeeklyExpenses(View view){
             Intent pintent = new Intent(this, WeeklyExpenses.class);

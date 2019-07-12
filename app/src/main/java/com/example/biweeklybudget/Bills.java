@@ -8,6 +8,12 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "bills_table")
 public class Bills {
 
+    Bills(@NonNull String label, @NonNull int due, @NonNull double cost){
+        this.mLabel = label;
+        this.mDue = due;
+        this.mCost = cost;
+    }
+
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "id")
@@ -40,10 +46,4 @@ public class Bills {
         return this.mCost;
     }
 
-
-    public Bills(@NonNull String lable, @NonNull int due, @NonNull double cost){
-        this.mLabel = lable;
-        this.mDue = due;
-        this.mCost = cost;
-    }
 }

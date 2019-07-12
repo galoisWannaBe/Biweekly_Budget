@@ -27,7 +27,14 @@ public class viewAll extends AppCompatActivity {
         mAdapter = new com.example.biweeklybudget.viewAllAdapter();
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setOnClickListener(new View.OnClickListener(){
 
+            @Override
+            public void onClick(View v){
+                int pos = mRecyclerView.indexOfChild(v);
+                System.out.println("Position is " +pos);
+            }
+        });
 
     }
     public void goToAdd(View view) {
