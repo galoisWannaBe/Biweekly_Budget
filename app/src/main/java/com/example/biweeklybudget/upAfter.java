@@ -33,7 +33,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             label = "\0";
             due = "\0";
             cost = "\0";
-        }
+        }mAdapter = new upAfterAdapter();
         if(requestCode == ADD_REQUEST){
             if(resultCode == RESULT_OK){
                 data.addItem(label, due, cost);

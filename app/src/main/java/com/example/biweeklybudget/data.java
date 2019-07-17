@@ -31,6 +31,8 @@ public class data {
         temp2 = tempStr2;
         temp3 = tempStr3;
         toSort.add(new BillItem(temp, temp2, temp3, nextID));
+        System.out.println("Next ID as originally added: " +nextID);
+        System.out.println("ID immediately after being added: " +toSort.get(nextID).getId());
         nextID++;
         //now sort
         tempInt = 1000;
@@ -39,18 +41,22 @@ public class data {
         size = toSort.size();
         while (size > 0) {
             while (i < size) {
-                tempInt2 = Integer.parseInt(toSort.get(i).getText2());
+                tempInt2 = Integer.parseInt(toSort.get(i).getDue());
                 if (tempInt2 < tempInt) {
                     tempInt = tempInt2;
+                    System.out.println("ID at current Index" +toSort.get(i).getId());
                     index = i;
                 }
                 i++;
             }
-            temp = toSort.get(index).getText1();
-            temp2 = toSort.get(index).getText2();
-            temp3 = toSort.get(index).getText3();
+            temp = toSort.get(index).getLabel();
+            temp2 = toSort.get(index).getDue();
+            temp3 = toSort.get(index).getCost();
             tempID = toSort.get(index).getId();
+            System.out.println("index: " +index);
+            System.out.println("ID being added to isSort: " +tempID);
             isSort.add(new BillItem(temp, temp2, temp3, tempID));
+            System.out.println("ID after initial sort: " +tempID);
             toSort.remove(index);
             tempInt = 1000;
             index = 0;
@@ -61,9 +67,9 @@ public class data {
         //switch the list to the original list
         size = isSort.size();
         for (int j = 0; j < size; j++) {
-            temp = isSort.get(j).getText1();
-            temp2 = isSort.get(j).getText2();
-            temp3 = isSort.get(j).getText3();
+            temp = isSort.get(j).getLabel();
+            temp2 = isSort.get(j).getDue();
+            temp3 = isSort.get(j).getCost();
             tempID = isSort.get(i).getId();
             toSort.add(new BillItem(temp, temp2, temp3, tempID));
         }
@@ -88,16 +94,16 @@ public class data {
         size = toSort.size();
         while (size > 0) {
             while (i < size) {
-                tempInt2 = Integer.parseInt(toSort.get(i).getText2());
+                tempInt2 = Integer.parseInt(toSort.get(i).getDue());
                 if (tempInt2 < tempInt) {
                     tempInt = tempInt2;
                     index = i;
                 }
                 i++;
             }
-            temp = toSort.get(index).getText1();
-            temp2 = toSort.get(index).getText2();
-            temp3 = toSort.get(index).getText3();
+            temp = toSort.get(index).getLabel();
+            temp2 = toSort.get(index).getDue();
+            temp3 = toSort.get(index).getCost();
             tempID = toSort.get(index).getId();
             isSort.add(new BillItem(temp, temp2, temp3, tempID));
             toSort.remove(index);
@@ -111,9 +117,9 @@ public class data {
         size = isSort.size();
 
         for (int j = 0; j < size; j++) {
-            temp = isSort.get(j).getText1();
-            temp2 = isSort.get(j).getText2();
-            temp3 = isSort.get(j).getText3();
+            temp = isSort.get(j).getLabel();
+            temp2 = isSort.get(j).getDue();
+            temp3 = isSort.get(j).getCost();
             tempID = isSort.get(j).getId();
             toSort.add(new BillItem(temp, temp2, temp3, tempID));
         }
@@ -130,7 +136,7 @@ public class data {
         tempInt = toSort.size();
         int lnm = 0;
         while (lnm < tempInt) {
-            System.out.println(toSort.get(lnm).getText1() + " " + toSort.get(lnm) + " " + toSort.get(lnm));
+            System.out.println(toSort.get(lnm).getLabel() + " " + toSort.get(lnm) + " " + toSort.get(lnm));
             lnm++;
         }
         return tempInt;
@@ -143,11 +149,11 @@ public class data {
         indexTwo = b;
         switch (indexTwo) {
             case 0:
-                return toSort.get(index).getText1();
+                return toSort.get(index).getLabel();
             case 1:
-                return toSort.get(index).getText2();
+                return toSort.get(index).getDue();
             case 2:
-                return toSort.get(index).getText3();
+                return toSort.get(index).getCost();
             default:
                 return "default";
         }
@@ -166,18 +172,21 @@ public class data {
         indexTwo = b;
         switch (indexTwo) {
             case 0:
-                return toSort.get(isDue.get(index)).getText1();
+                return toSort.get(isDue.get(index)).getLabel();
             case 1:
-                return toSort.get(isDue.get(index)).getText2();
+                return toSort.get(isDue.get(index)).getDue();
             case 2:
-                return toSort.get(isDue.get(index)).getText3();
+                return toSort.get(isDue.get(index)).getCost();
             default:
                 return "default";
         }
     }
 
     public static int findDue(int pos) {
-        return isDue.get(pos);
+        tempInt = isDue.get(pos);
+        System.out.println("item came from index at " +tempInt);
+        tempID = toSort.get(tempInt).getId();
+        return tempID;
     }
 
     public static int dueSize() {
@@ -189,7 +198,10 @@ public class data {
     }
 
     public static int findAfter(int pos) {
-        return isAfter.get(pos);
+        tempInt = isAfter.get(pos);
+        System.out.println("item came from index at " +tempInt);
+        tempID = toSort.get(tempInt).getId();
+        return tempID;
     }
 
     public static String getAfter(int a, int b) {
@@ -197,11 +209,11 @@ public class data {
         indexTwo = b;
         switch (indexTwo) {
             case 0:
-                return toSort.get(isAfter.get(index)).getText1();
+                return toSort.get(isAfter.get(index)).getLabel();
             case 1:
-                return toSort.get(isAfter.get(index)).getText2();
+                return toSort.get(isAfter.get(index)).getDue();
             case 2:
-                return toSort.get(isAfter.get(index)).getText3();
+                return toSort.get(isAfter.get(index)).getCost();
             default:
                 return "default";
         }

@@ -1,29 +1,30 @@
 package com.example.biweeklybudget;
 
 public class BillItem {
-    private String mText1;
-    private String mText2;
-    private String mText3;
+    private String mLabel;
+    private String mDue;
+    private String mCost;
     private int id;
 
-    public BillItem(String text1, String text2, String text3, int identifier) {
-        mText1 = text1;
-        mText2 = text2;
-        mText3 = text3;
+    public BillItem(String label, String due, String cost, int identifier) {
+        mLabel = label;
+        mDue = due;
+        mCost = cost;
         id = identifier;
+        System.out.println("Saved ID = " +id);
     }
 
 
-    public String getText1() {
-        return mText1;
+    public String getLabel() {
+        return mLabel;
     }
 
-    public String getText2() {
-        return mText2;
+    public String getDue() {
+        return mDue;
     }
 
-    public String getText3() {
-        return mText3;
+    public String getCost() {
+        return mCost;
     }
 
     public int getId(){

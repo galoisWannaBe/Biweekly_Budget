@@ -57,8 +57,8 @@ public class budgetData {
         begOfPay = day - dayOfPay;
         endOfPay = begOfPay + 14;
         daysRemain = 14 - dayOfPay;
-        begNextPay = begOfPay + 14;
-        endNextPay = endOfPay + 14;
+        begNextPay = (day - dayOfPay)+ 14;
+        endNextPay = (day - dayOfPay) + 28;
 
     }
 
@@ -131,6 +131,8 @@ public class budgetData {
     public static void upNextGen() {
         data.clearIsDue();
         due = 0;
+        begOfPay = day - dayOfPay;
+        endOfPay = begOfPay + 14;
         //begOfPay = day - dayOfPay;
         //endOfPay = begOfPay + 14;
         quant  = data.getSize();
@@ -170,6 +172,8 @@ public class budgetData {
         data.clearIsAfter();
         due = 0;
         quant = data.getSize();
+        begNextPay = (day - dayOfPay)+ 14;
+        endNextPay = (day - dayOfPay) + 28;
         //Checking if the next pay starts in the next month
         if (begNextPay > months[(month - 1)]) {
             monthNew = month;
