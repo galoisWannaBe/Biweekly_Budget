@@ -20,6 +20,38 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
+        Bundle bundle = Data.getExtras();
+        String label;
+        String due;
+        String cost;
+        int ID = 0;
+        if(resultCode == RESULT_OK){
+            label = bundle.getString("Label");
+            due = bundle.getString("Due");
+            cost = bundle.getString("Cost");
+        } else{
+            label = "\0";
+            due = "\0";
+            cost = "\0";
+        }
+        if(requestCode == ADD_REQUEST){
+            if(resultCode == RESULT_OK){
+                data.addItem(label, due, cost);
+            }else if(resultCode == RESULT_CANCELED){
+                //make toast; add failed
+            }
+        }else if (requestCode == EDIT_REQUEST){
+            ID = bundle.getInt("ID");
+            if (resultCode == RESULT_OK){
+                data.addItem(label, due, cost, ID);
+            }else if (resultCode == RESULT_DELETED){
+                data.removeItem(ID);
+            }else if (resultCode == RESULT_CANCELED){
+                //make toast; edit failed
+            }
+        }
+        budgetData.upAfterGen();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -38,7 +70,12 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
 
     }
     public void goToAdd(View view) {
-        //addy stuff
+        Intent intent = new Intent(this, AddToList.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("fromList", false);
+        bundle.putString("origin_class", "upAfter");
+        intent.putExtras(bundle);
+        startActivityForResult(intent, ADD_REQUEST);
     }
 
 

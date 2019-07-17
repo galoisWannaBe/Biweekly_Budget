@@ -47,9 +47,9 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
             due = bundle.getString("Due");
             cost = bundle.getString("Cost");
         } else {
-            label = "/0";
-            due = "/0";
-            cost = "/0";
+            label = "\0";
+            due = "\0";
+            cost = "\0";
         }
         if (requestCode == ADD_REQUEST){
             if (resultCode == RESULT_OK){
