@@ -13,33 +13,33 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterViewHolder> {
 
+    private OnBillListener mOnBillListener;
 
-    public static class upAfterViewHolder extends RecyclerView.ViewHolder {
+    upAfterAdapter(OnBillListener onBillListener){
+        this.mOnBillListener = onBillListener;
+    }
+
+    public static class upAfterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView mTextView1;
         public TextView mTextView2;
         public TextView mTextView3;
 
         private final Context context;
+        OnBillListener onBillListener;
 
-        public upAfterViewHolder(View itemView) {
+        public upAfterViewHolder(View itemView, OnBillListener onBillListener) {
             super(itemView);
             context  = itemView.getContext();
             mTextView1 = itemView.findViewById(R.id.textView);
             mTextView2 = itemView.findViewById(R.id.textView2);
             mTextView3 = itemView.findViewById(R.id.textView3);
+            this.onBillListener = onBillListener;
+            itemView.setOnClickListener(this);
+        }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    int id = data.findAfter(position);
-
-                    Bundle bundle = new Bundle();
-                    Intent nIntent = new Intent(context, AddToList.class);
-                    startActivity(context, nIntent, bundle);
-
-
-                }
-            });
+        @Override
+        public void onClick(View view) {
+            onBillListener.OnBillclick(getAdapterPosition());
         }
     }
 
@@ -49,7 +49,7 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
     @Override
     public upAfterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_item, parent, false);
-        upAfterViewHolder avh = new upAfterViewHolder(v);
+        upAfterViewHolder avh = new upAfterViewHolder(v, mOnBillListener);
         return avh;
     }
 
@@ -62,7 +62,6 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
         temp1 = data.getAfter(pos, 0);
         temp2 = data.getAfter(pos, 1);
         temp3 = data.getAfter(pos, 2);
-        //BillItem currentItem = new BillItem(temp1, temp2, temp3);
 
         holder.mTextView1.setText(temp1);
         holder.mTextView2.setText(temp2);
@@ -70,6 +69,9 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
 
 
 
+    }
+    public interface OnBillListener{
+        void OnBillclick(int position);
     }
 
     @Override

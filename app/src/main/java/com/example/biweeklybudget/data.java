@@ -153,6 +153,9 @@ public class data {
         }
 
     }
+    public static int getIDByPosition(int pos){
+        return toSort.get(pos).getId();
+    }
 
     public static void addDue(int identifier) {
         isDue.add(identifier);

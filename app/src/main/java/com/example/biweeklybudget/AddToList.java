@@ -32,14 +32,17 @@ public class AddToList extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         originClass = bundle.getString("origin_class");
-        System.out.println("Origin Class" +originClass);
         fromList = bundle.getBoolean("fromList");
-        System.out.println("fromList " +fromList);
         if (fromList) {
             position = bundle.getInt("index");
-            billStr = data.getData(position, 0);
-            dueStr = data.getData(position, 1);
-            costStr = data.getData(position, 2);
+            if(originClass == "viewAll") {
+                ID = data.getIDByPosition(position);
+            }else if(originClass == "upNext") {
+                ID = data.findAfter(position);
+            }
+            billStr = data.getData(ID, 0);
+            dueStr = data.getData(ID, 1);
+            costStr = data.getData(ID, 2);
             System.out.println(billStr);
             System.out.println(dueStr);
             System.out.println(costStr);
@@ -55,6 +58,9 @@ public class AddToList extends AppCompatActivity {
         switch (originClass){
             case "viewAll":
                 backIntent = new Intent(this, viewAll.class);
+                break;
+            case "upNext":
+                backIntent = new Intent(this, upNext.class);
                 break;
                 default:
                     backIntent = new Intent();
@@ -79,6 +85,8 @@ public class AddToList extends AppCompatActivity {
             case "viewAll":
                 backIntent = new Intent(this, viewAll.class);
                 break;
+            case "upNext":
+                backIntent = new Intent(this, upNext.class);
                 default:
                     backIntent = new Intent();
                     break;
@@ -96,6 +104,9 @@ public class AddToList extends AppCompatActivity {
         switch (originClass){
             case "viewAll":
                 backIntent = new Intent(this, viewAll.class);
+                break;
+            case "upNext":
+                backIntent = new Intent(this, upNext.class);
                 break;
                 default:
                     backIntent = new Intent();
