@@ -5,27 +5,13 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
 
-interface ClickListener{
-
-    void setClickListener(OnClickListener callback);
-
-}
-
-public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllViewHolder> implements ClickListener {
-
-    static OnClickListener mClickListener;
-
-    @Override
-    public void setClickListener(OnClickListener callback) {
-        mClickListener = callback;
-    }
+public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllViewHolder> {
 
 
     public static class ViewAllViewHolder extends RecyclerView.ViewHolder {
@@ -36,14 +22,12 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
         private final Context context;
 
         public ViewAllViewHolder(View itemView) {
-
             super(itemView);
             context  = itemView.getContext();
             mTextView1 = itemView.findViewById(R.id.textView);
             mTextView2 = itemView.findViewById(R.id.textView2);
             mTextView3 = itemView.findViewById(R.id.textView3);
 
-            /*
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -57,34 +41,16 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
 
                 }
             });
-
-             */
         }
     }
 
     public viewAllAdapter() {
-
     }
     private static Context context;
-
     @Override
     public ViewAllViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_item, parent, false);
         ViewAllViewHolder evh = new ViewAllViewHolder(v);
-
-        //mOnClickListener = new OnClickListener() {
-          //  @Override
-           // public void onClick(View v) {
-
-            //}
-        //};
-        evh.itemView.setClickListener(new OnClickListener() {
-           @Override public void onClick(View v) {
-             mClickListener.onClick(v);
-            }
-
-        });
-
         return evh;
     }
 
@@ -112,6 +78,5 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
     public int getItemCount() {
         return data.getSize();
     }
-
 
 }

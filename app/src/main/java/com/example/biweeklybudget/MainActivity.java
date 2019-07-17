@@ -56,45 +56,22 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 q = ListData.weeklyInit();
-                for(int i = 0; i < q; i++){
+                for (int i = 0; i < q; i++) {
                     data.addWeekly(ListData.getWeeklyLabel(i), ListData.getWeeklyCost(i), ListData.getWeeklyDays(i));
                 }
-                for (int i = 0; i < q; i++){
-                    System.out.println("the " +i +" item in the list is");
-                    System.out.println(data.getWeekly(i, 0) +" " +data.getWeekly(i, 1) +" " +data.getWeekly(i, 2));
+                for (int i = 0; i < q; i++) {
+                    System.out.println("the " + i + " item in the list is");
+                    System.out.println(data.getWeekly(i, 0) + " " + data.getWeekly(i, 1) + " " + data.getWeekly(i, 2));
                 }
                 budgetData.upNextGen();
                 budgetData.upAfterGen();
                 firstRun = false;
-            }
-            else{
+            } else {
 
 
             }
-             mBillViewModel = ViewModelProviders.of(this).get(viewModel.class);
-
-            //mBillViewModel.getAllBillsFromRepo().observe((this, new Observer<List<Bills>>() {}
-
-        /*
-        @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        TextView textView = findViewById(R.id.projBalance_box);
-        textView.setText("[onActivityResult] TRIGGERED!!!");
-        if(requestCode == ADD_TO_BILLS || resultCode == RESULT_OK){
-            //add to bill_table
-        }else if(requestCode == ADD_TO_BILLS){
-            //show that add/edit/delete was cancelled
-        }else if (requestCode == ADD_TO_WEEKLIES || resultCode == RESULT_OK){
-            //add to weekly_table
-        }else if (requestCode == ADD_TO_WEEKLIES){
-            //show that add to weekly was cancelled
+            mBillViewModel = ViewModelProviders.of(this).get(viewModel.class);
         }
-
-         */
-
-    }
-
 
     public void gotoMain(View view) {
             Intent mIntent = new Intent(MainActivity.this, MainActivity.class);
