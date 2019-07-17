@@ -67,13 +67,9 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
         String temp2;
         String temp3;
         int wPos = wPosition;
-        System.out.println("The WeeklyAdapter position is " +wPos);
         temp1 = data.getWeekly(wPos, 0);
         temp2 = data.getWeekly(wPos, 1);
         temp3 = data.getWeekly(wPos, 2);
-        System.out.println("Item just added");
-        System.out.println(temp1 +" " +temp2 +" " +temp3);
-        //ExampleItem currentItem = new ExampleItem(temp1, temp2, temp3);
 
         holder.wTextView1.setText(temp1);
         holder.wTextView2.setText(temp2);

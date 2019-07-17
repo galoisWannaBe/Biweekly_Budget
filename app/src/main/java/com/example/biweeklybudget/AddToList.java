@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 
 public class AddToList extends AppCompatActivity {
 
@@ -17,98 +18,92 @@ public class AddToList extends AppCompatActivity {
     String dueStr;
     String costStr;
     static int position;
-    static int list;
     static boolean fromList;
-    static public Intent mIntent;
+    String originClass;
+    static int ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_list);
-        switch (list) {
-            case 0:
-                mIntent = new Intent(this, upNext.class);
-                break;
-            case 1:
-                mIntent = new Intent(this, upAfter.class);
-                break;
-            case 2:
-                mIntent = new Intent(this, viewAll.class);
-                break;
-        }
-
         tvBill = findViewById(R.id.name);
         tvDue = findViewById(R.id.due);
         tvCost = findViewById(R.id.cost);
-
-        if(fromList == true) {
-
-                billStr = data.getData(position, 0);
-                dueStr = data.getData(position, 1);
-                costStr = data.getData(position, 2);
-
-
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        originClass = bundle.getString("origin_class");
+        System.out.println("Origin Class" +originClass);
+        fromList = bundle.getBoolean("fromList");
+        System.out.println("fromList " +fromList);
+        if (fromList) {
+            position = bundle.getInt("index");
+            billStr = data.getData(position, 0);
+            dueStr = data.getData(position, 1);
+            costStr = data.getData(position, 2);
+            System.out.println(billStr);
+            System.out.println(dueStr);
+            System.out.println(costStr);
+            tvBill.setText(billStr);
+            tvDue.setText(dueStr);
+            tvCost.setText(costStr);
+        }
         }
 
 
-        else {
-            tvBill.setText("");
-            tvDue.setText("");
-            tvCost.setText("");
-        }
-
-        tvBill.setText(billStr);
-        tvDue.setText(dueStr);
-        tvCost.setText(costStr);
-    }
     public void addSave(View view){
+        Intent backIntent;
+        switch (originClass){
+            case "viewAll":
+                backIntent = new Intent(this, viewAll.class);
+                break;
+                default:
+                    backIntent = new Intent();
+        }
+        Bundle backBundle = new Bundle();
         billStr = tvBill.getText().toString();
         dueStr = tvDue.getText().toString();
         costStr = tvCost.getText().toString();
-
-        System.out.println(billStr +" " +dueStr +" " +costStr);
-
-
-        if (fromList == true){
-                data.addItem(billStr, dueStr, costStr, position);
-
+        backBundle.putString("Label", billStr);
+        backBundle.putString("Due", dueStr);
+        backBundle.putString("Cost", costStr);
+        if (fromList){
+            backBundle.putInt("ID" , ID);
         }
-        else {
-            data.addItem(billStr, dueStr, costStr);
-        }
-        budgetData.upNextGen();
-        budgetData.upAfterGen();
-        MainActivity.update();
-        //Intent mIntent = new Intent(this, MainActivity.class);
-        startActivity(mIntent);
+        backIntent.putExtras(backBundle);
+        setResult(RESULT_OK, backIntent);
+        finish();
     }
     public void delete(View view){
-        if (fromList == true){
-            data.removeItem(position);
+        Intent backIntent;
+        switch (originClass){
+            case "viewAll":
+                backIntent = new Intent(this, viewAll.class);
+                break;
+                default:
+                    backIntent = new Intent();
+                    break;
         }
-        budgetData.upNextGen();
-        budgetData.upAfterGen();
-        MainActivity.update();
-        fromList = false;
-        //Intent mIntent = new Intent(this, MainActivity.class);
-        startActivity(mIntent);
+        Bundle backBundle = new Bundle();
+        backBundle.putInt("ID", position);
+        backIntent.putExtras(backBundle);
+        setResult(2, backIntent);
+        finish();
     }
     public void cancel(View view){
-        MainActivity.update();
-        //Intent mIntent = new Intent(this, MainActivity.class);
-        startActivity(mIntent);
-    }
-    public static void setPosition(boolean frommList, int positron, int listing){
-        fromList = frommList;
-        position = positron;
-        list = listing;
-
-    }
-    public static void resetFromList(){
-        fromList = false;
-    }
-    public static void setList(int listing){
-        list = listing;
+        Intent backIntent;
+        Bundle bundle = new Bundle();
+        bundle.putInt("ID", 0);
+        switch (originClass){
+            case "viewAll":
+                backIntent = new Intent(this, viewAll.class);
+                break;
+                default:
+                    backIntent = new Intent();
+                    break;
+        }
+        backIntent.putExtras(bundle);
+        setResult(RESULT_CANCELED, backIntent);
+        finish();
     }
 
 }

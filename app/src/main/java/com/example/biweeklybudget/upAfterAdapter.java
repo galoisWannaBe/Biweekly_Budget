@@ -33,7 +33,6 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
                     int position = getAdapterPosition();
                     int id = data.findAfter(position);
 
-                    AddToList.setPosition(true, id, 1);
                     Bundle bundle = new Bundle();
                     Intent nIntent = new Intent(context, AddToList.class);
                     startActivity(context, nIntent, bundle);

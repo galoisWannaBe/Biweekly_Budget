@@ -7,15 +7,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class upNext extends AppCompatActivity {
+public class upNext extends AppCompatActivity implements upNextAdapter.OnBillListener{
 
     private RecyclerView nRecyclerView;
     private RecyclerView.Adapter nAdapter;
     private RecyclerView.LayoutManager nLayoutManager;
     public static int q;
-    public String temp1;
-    public String temp2;
-    public String temp3;
+    public String label;
+    public String due;
+    public String cost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +34,7 @@ public class upNext extends AppCompatActivity {
 
     }
     public void goToAdd(View view) {
-        AddToList.resetFromList();
-        AddToList.setList(0);
-        Intent nIntent = new Intent(this, AddToList.class);
-        startActivity(nIntent);
     }
-
 
     public void gotoMain(View view){
         Intent mIntent = new Intent(this, MainActivity.class);
@@ -51,5 +46,12 @@ public class upNext extends AppCompatActivity {
     }    public void gotoviewAll(View view){
         Intent vIntent = new Intent(this, viewAll.class);
         startActivity(vIntent);
+    }
+
+    @Override
+    public void OnBillClick(int position) {
+        Intent intent = new Intent(this, AddToList.class);
+        Bundle bundle = new Bundle();
+        //finish onBillClick and set intents/REQUESTS/etc
     }
 }

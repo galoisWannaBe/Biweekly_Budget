@@ -13,34 +13,34 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllViewHolder> {
 
+    private OnBillListener mOnBillListener;
 
-    public static class ViewAllViewHolder extends RecyclerView.ViewHolder {
+    viewAllAdapter(OnBillListener onBillListener){
+        this.mOnBillListener = onBillListener;
+    }
+
+    public static class ViewAllViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView mTextView1;
         public TextView mTextView2;
         public TextView mTextView3;
 
         private final Context context;
+        OnBillListener onBillListener;
 
-        public ViewAllViewHolder(View itemView) {
+        public ViewAllViewHolder(View itemView, OnBillListener onBillListener) {
             super(itemView);
             context  = itemView.getContext();
             mTextView1 = itemView.findViewById(R.id.textView);
             mTextView2 = itemView.findViewById(R.id.textView2);
             mTextView3 = itemView.findViewById(R.id.textView3);
+            this.onBillListener = onBillListener;
+            itemView.setOnClickListener(this);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    int position = getAdapterPosition();
+        }
 
-                    System.out.println(position);
-                    AddToList.setPosition(true, position, 2);
-                    Bundle bundle = new Bundle();
-                    Intent nIntent = new Intent(context, AddToList.class);
-                    startActivity(context, nIntent, bundle);
-
-
-                }
-            });
+        @Override
+        public void onClick(View v) {
+            onBillListener.OnBillClick(getAdapterPosition());
         }
     }
 
@@ -50,28 +50,30 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
     @Override
     public ViewAllViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_item, parent, false);
-        ViewAllViewHolder evh = new ViewAllViewHolder(v);
+        ViewAllViewHolder evh = new ViewAllViewHolder(v, mOnBillListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(ViewAllViewHolder holder, int position) {
-        String temp1;
-        String temp2;
-        String temp3;
+        String Label;
+        String Due;
+        String Cost;
         int pos = position;
-        System.out.println("viewAllAdapter position is " +pos);
-        temp1 = data.getData(pos, 0);
-                temp2 = data.getData(pos, 1);
-                temp3 = data.getData(pos, 2);
-            //BillItem currentItem = new BillItem(temp1, temp2, temp3);
+        Label = data.getData(pos, 0);
+        Due = data.getData(pos, 1);
+        Cost = data.getData(pos, 2);
 
-        holder.mTextView1.setText(temp1);
-        holder.mTextView2.setText(temp2);
-        holder.mTextView3.setText(temp3);
+        holder.mTextView1.setText(Label);
+        holder.mTextView2.setText(Due);
+        holder.mTextView3.setText(Cost);
 
 
 
+    }
+
+    public interface OnBillListener{
+        void OnBillClick(int position);
     }
 
     @Override

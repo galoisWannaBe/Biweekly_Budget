@@ -70,7 +70,6 @@ public class clockStuff {
                 week = 6;
                 break;
         }
-        //week = Integer.valueOf(weekS);
         System.out.println("Day of week" +week);
         return week;
     }

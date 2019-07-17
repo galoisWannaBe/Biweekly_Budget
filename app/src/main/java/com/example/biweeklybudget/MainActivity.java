@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     //Database vars
     public static final int ADD_TO_BILLS = 1;
     public static final int ADD_TO_WEEKLIES = 2;
-    private  viewModel mBillViewModel;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
             ee = clockStuff.getWeek();
             budgetData.init(seed, julDate, dd, MM, yy, ee);
             //helps distinguish between an add and an edit
-            AddToList.resetFromList();
             System.out.println(firstRun);
             if (firstRun == true) {
                 q = ListData.listDataInit();
@@ -59,18 +57,10 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < q; i++) {
                     data.addWeekly(ListData.getWeeklyLabel(i), ListData.getWeeklyCost(i), ListData.getWeeklyDays(i));
                 }
-                for (int i = 0; i < q; i++) {
-                    System.out.println("the " + i + " item in the list is");
-                    System.out.println(data.getWeekly(i, 0) + " " + data.getWeekly(i, 1) + " " + data.getWeekly(i, 2));
-                }
                 budgetData.upNextGen();
                 budgetData.upAfterGen();
                 firstRun = false;
-            } else {
-
-
             }
-            mBillViewModel = ViewModelProviders.of(this).get(viewModel.class);
         }
 
     public void gotoMain(View view) {

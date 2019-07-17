@@ -30,8 +30,7 @@ public class upAfter extends AppCompatActivity {
 
     }
     public void goToAdd(View view) {
-        AddToList.resetFromList();
-        AddToList.setList(2);
+
         Intent nIntent = new Intent(upAfter.this, AddToList.class);
         startActivity(nIntent);
     }

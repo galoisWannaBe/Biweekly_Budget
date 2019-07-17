@@ -134,9 +134,6 @@ public class budgetData {
         //begOfPay = day - dayOfPay;
         //endOfPay = begOfPay + 14;
         quant  = data.getSize();
-        System.out.println(" ");
-        System.out.println("started upNextGen");
-        System.out.println(" ");
         //do this if the pay straddles months
         if ((begOfPay + 14) > months[(month - 1)]) {
             for (int i = day; i <= months[(month - 1)]; i++) {
@@ -173,11 +170,6 @@ public class budgetData {
         data.clearIsAfter();
         due = 0;
         quant = data.getSize();
-        System.out.println(" ");
-        System.out.println("Started upAfterGen");
-        System.out.println(" ");
-        System.out.println("Begnextpay = " +begNextPay);
-        System.out.println("EndnextPay = " +endNextPay);
         //Checking if the next pay starts in the next month
         if (begNextPay > months[(month - 1)]) {
             monthNew = month;
@@ -185,45 +177,35 @@ public class budgetData {
             begNextPay++;
             endNextPay = endNextPay - months[month];
             endNextPay++;
-            System.out.println("MonthNew: " +monthNew);
         } else {
             //monthNew is an index; month is the counting number month
             monthNew = month - 1;
-            System.out.println("MonthNew: " +monthNew);
         }
         if (endNextPay > months[monthNew]) {
+            System.out.println("Pay begins next month");
             for (int i = begNextPay; i <= months[monthNew]; i++) {
-                System.out.println("Comparing day" +i +" from calendar");
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
-                    System.out.println("Comparing date " +due +" from bills");
                     if (due == i) {
-                        data.addAfter(j);
-                        System.out.println("Added to After Straddles Month");
                     }
                 }
             }
             endNextPay = endNextPay - months[monthNew];
+            System.out.println("Started counting into next month");
             for (int i = 1; i < endNextPay; i++) {
-                System.out.println("Comparing date " +i +"from calendar");
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
-                    System.out.println("Comparing date " +due +" from bills");
                     if (due == i) {
                         data.addAfter(j);
-                        System.out.println("Added to After Straddled Month");
                     }
                 }
             }
-        } else {
+        } else {System.out.println("Didn't find that pay ended next month");
             for (int i = begNextPay; i < endNextPay; i++) {
-                System.out.println("Comparing day " +i +"from calendar");
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
-                    System.out.println("Comparing day " +due +" from due dates");
                     if (due == i) {
                         data.addAfter(j);
-                        System.out.println("Added to After Didn't straddle month");
                     }
                 }
             }
@@ -241,11 +223,6 @@ public class budgetData {
 
         tempTtl = ttlbills + weeklyTotal;
         projBalance = balance - tempTtl;
-        System.out.println("Total bills: " +ttlbills);
-        System.out.println("Total weekly: " +weeklyTotal);
-        System.out.println("TempTtl is " +tempTtl);
-        System.out.println("Bank Balance " +balance);
-        System.out.println("Projected Balance " +projBalance);
         returned = String.valueOf(projBalance);
         return returned;
 

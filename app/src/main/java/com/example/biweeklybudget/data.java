@@ -127,8 +127,6 @@ public class data {
     }
 
     public static int getSize() {
-        System.out.println(toSort.size() + "items in toSort");
-        System.out.println("They are: ");
         tempInt = toSort.size();
         int lnm = 0;
         while (lnm < tempInt) {
@@ -231,12 +229,9 @@ public class data {
         temp = label;
         temp2 = cost;
         temp3 = day;
-        System.out.println("MainActivity passed " +temp +" " +temp2 +" " +temp3);
         weeklies.add(new weeklyItems(temp, temp2, temp3));
-        System.out.println("Just added");
         int q = weeklies.size();
         q--;
-        System.out.println(weeklies.get(q).getLabel() +" " +weeklies.get(q).getCost() +" " +weeklies.get(q).getDays());
     }
     public static void addWeekly(String label, String cost, String day, int rIndex){
         temp = label;
