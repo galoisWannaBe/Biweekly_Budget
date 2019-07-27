@@ -37,7 +37,7 @@ public class AddToList extends AppCompatActivity {
             position = bundle.getInt("index");
             System.out.println("Position was " +position);
             if(originClass == "viewAll") {
-                ID = data.getIDByPosition(position);
+                ID = position;
             }else if(originClass == "upNext") {
                 ID = data.findAfter(position);
             }

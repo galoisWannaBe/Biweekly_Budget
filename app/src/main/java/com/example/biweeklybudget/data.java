@@ -30,8 +30,7 @@ public class data {
         temp = tempStr1;
         temp2 = tempStr2;
         temp3 = tempStr3;
-        toSort.add(new BillItem(temp, temp2, temp3, nextID));
-        nextID++;
+        toSort.add(new BillItem(temp, temp2, temp3));
         //now sort
         tempInt = 1000;
         i = 0;
@@ -49,8 +48,7 @@ public class data {
             temp = toSort.get(index).getLabel();
             temp2 = toSort.get(index).getDue();
             temp3 = toSort.get(index).getCost();
-            tempID = toSort.get(index).getId();
-            isSort.add(new BillItem(temp, temp2, temp3, tempID));
+            isSort.add(new BillItem(temp, temp2, temp3));
             toSort.remove(index);
             tempInt = 1000;
             index = 0;
@@ -64,8 +62,7 @@ public class data {
             temp = isSort.get(j).getLabel();
             temp2 = isSort.get(j).getDue();
             temp3 = isSort.get(j).getCost();
-            tempID = isSort.get(i).getId();
-            toSort.add(new BillItem(temp, temp2, temp3, tempID));
+            toSort.add(new BillItem(temp, temp2, temp3));
         }
         //get isSort ready for next time
         isSort.clear();
@@ -80,7 +77,7 @@ public class data {
         temp3 = tempStr3;
         //add ability to get IDs from due and after lists
         tempID = rIndex;
-        toSort.add(new BillItem(temp, temp2, temp3, tempID));
+        toSort.add(new BillItem(temp, temp2, temp3));
         //now sort
         tempInt = 1000;
         i = 0;
@@ -98,8 +95,7 @@ public class data {
             temp = toSort.get(index).getLabel();
             temp2 = toSort.get(index).getDue();
             temp3 = toSort.get(index).getCost();
-            tempID = toSort.get(index).getId();
-            isSort.add(new BillItem(temp, temp2, temp3, tempID));
+            isSort.add(new BillItem(temp, temp2, temp3));
             toSort.remove(index);
             tempInt = 1000;
             index = 0;
@@ -114,8 +110,7 @@ public class data {
             temp = isSort.get(j).getLabel();
             temp2 = isSort.get(j).getDue();
             temp3 = isSort.get(j).getCost();
-            tempID = isSort.get(j).getId();
-            toSort.add(new BillItem(temp, temp2, temp3, tempID));
+            toSort.add(new BillItem(temp, temp2, temp3));
         }
         //get isSort ready for next use
         isSort.clear();
@@ -152,9 +147,6 @@ public class data {
         }
 
     }
-    public static int getIDByPosition(int pos){
-        return toSort.get(pos).getId();
-    }
 
     public static void addDue(int identifier) {
         isDue.add(identifier);
@@ -176,8 +168,7 @@ public class data {
     }
 
     public static int findDue(int pos) {
-        tempInt = isDue.get(pos);
-        tempID = toSort.get(tempInt).getId();
+        tempID = isDue.get(pos);
         return tempID;
     }
 
@@ -190,8 +181,7 @@ public class data {
     }
 
     public static int findAfter(int pos) {
-        tempInt = isAfter.get(pos);
-        tempID = toSort.get(tempInt).getId();
+        tempID = isAfter.get(pos);
         return tempID;
     }
 
