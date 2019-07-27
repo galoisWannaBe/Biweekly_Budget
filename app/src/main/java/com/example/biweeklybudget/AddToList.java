@@ -20,7 +20,7 @@ public class AddToList extends AppCompatActivity {
     static int position;
     static boolean fromList;
     String originClass;
-    static int ID;
+    int ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class AddToList extends AppCompatActivity {
         fromList = bundle.getBoolean("fromList");
         if (fromList) {
             position = bundle.getInt("index");
+            System.out.println("Position was " +position);
             if(originClass == "viewAll") {
                 ID = data.getIDByPosition(position);
             }else if(originClass == "upNext") {

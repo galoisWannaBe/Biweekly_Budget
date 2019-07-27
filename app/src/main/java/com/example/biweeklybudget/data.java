@@ -31,8 +31,6 @@ public class data {
         temp2 = tempStr2;
         temp3 = tempStr3;
         toSort.add(new BillItem(temp, temp2, temp3, nextID));
-        System.out.println("Next ID as originally added: " +nextID);
-        System.out.println("ID immediately after being added: " +toSort.get(nextID).getId());
         nextID++;
         //now sort
         tempInt = 1000;
@@ -44,7 +42,6 @@ public class data {
                 tempInt2 = Integer.parseInt(toSort.get(i).getDue());
                 if (tempInt2 < tempInt) {
                     tempInt = tempInt2;
-                    System.out.println("ID at current Index" +toSort.get(i).getId());
                     index = i;
                 }
                 i++;
@@ -53,10 +50,7 @@ public class data {
             temp2 = toSort.get(index).getDue();
             temp3 = toSort.get(index).getCost();
             tempID = toSort.get(index).getId();
-            System.out.println("index: " +index);
-            System.out.println("ID being added to isSort: " +tempID);
             isSort.add(new BillItem(temp, temp2, temp3, tempID));
-            System.out.println("ID after initial sort: " +tempID);
             toSort.remove(index);
             tempInt = 1000;
             index = 0;
@@ -136,7 +130,6 @@ public class data {
         tempInt = toSort.size();
         int lnm = 0;
         while (lnm < tempInt) {
-            System.out.println(toSort.get(lnm).getLabel() + " " + toSort.get(lnm) + " " + toSort.get(lnm));
             lnm++;
         }
         return tempInt;
@@ -184,7 +177,6 @@ public class data {
 
     public static int findDue(int pos) {
         tempInt = isDue.get(pos);
-        System.out.println("item came from index at " +tempInt);
         tempID = toSort.get(tempInt).getId();
         return tempID;
     }
@@ -199,7 +191,6 @@ public class data {
 
     public static int findAfter(int pos) {
         tempInt = isAfter.get(pos);
-        System.out.println("item came from index at " +tempInt);
         tempID = toSort.get(tempInt).getId();
         return tempID;
     }

@@ -186,7 +186,6 @@ public class budgetData {
             monthNew = month - 1;
         }
         if (endNextPay > months[monthNew]) {
-            System.out.println("Pay begins next month");
             for (int i = begNextPay; i <= months[monthNew]; i++) {
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
@@ -195,7 +194,6 @@ public class budgetData {
                 }
             }
             endNextPay = endNextPay - months[monthNew];
-            System.out.println("Started counting into next month");
             for (int i = 1; i < endNextPay; i++) {
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
@@ -204,7 +202,7 @@ public class budgetData {
                     }
                 }
             }
-        } else {System.out.println("Didn't find that pay ended next month");
+        } else {
             for (int i = begNextPay; i < endNextPay; i++) {
                 for (int j = 0; j < quant; j++) {
                     due = Integer.parseInt(data.getData(j, 1));
