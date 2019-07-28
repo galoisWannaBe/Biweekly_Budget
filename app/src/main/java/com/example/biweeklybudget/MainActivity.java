@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+        public void goToSettings(View view){
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+        }
     public static void update(){
         upDated = true;
     }

@@ -18,44 +18,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public final int RESULT_DELETED = 2;
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
-        super.onActivityResult(requestCode, resultCode, Data);
-        Bundle bundle = Data.getExtras();
-        String label;
-        String due;
-        String cost;
-        int ID = 0;
-        if(resultCode == RESULT_OK){
-            label = bundle.getString("Label");
-            due = bundle.getString("Due");
-            cost = bundle.getString("Cost");
-        } else{
-            label = "\0";
-            due = "\0";
-            cost = "\0";
-        }mAdapter = new upAfterAdapter();
-        if(requestCode == ADD_REQUEST){
-            if(resultCode == RESULT_OK){
-                data.addItem(label, due, cost);
-            }else if(resultCode == RESULT_CANCELED){
-                //make toast; add failed
-            }
-        }else if (requestCode == EDIT_REQUEST){
-            ID = bundle.getInt("ID");
-            if (resultCode == RESULT_OK){
-                data.addItem(label, due, cost, ID);
-            }else if (resultCode == RESULT_DELETED){
-                data.removeItem(ID);
-            }else if (resultCode == RESULT_CANCELED){
-                //make toast; edit failed
-            }
-        }
-        budgetData.upNextGen();
-        budgetData.upAfterGen();
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_after);
@@ -66,10 +28,47 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-
-
     }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data){
+            super.onActivityResult(requestCode, resultCode, Data);
+            Bundle bundle = Data.getExtras();
+            String label;
+            String due;
+            String cost;
+            int ID = 0;
+            if(resultCode == RESULT_OK){
+                label = bundle.getString("Label");
+                due = bundle.getString("Due");
+                cost = bundle.getString("Cost");
+            }
+            else{
+                label = "\0";
+                due = "\0";
+                cost = "\0";
+            }
+            if(requestCode == ADD_REQUEST){
+                if(resultCode == RESULT_OK){
+                    data.addItem(label, due, cost);
+                } else if (resultCode == RESULT_CANCELED) {
+
+                    //make toast; add failed
+                }
+                } else if(requestCode == EDIT_REQUEST){
+                    ID = bundle.getInt("ID");
+                if(resultCode == RESULT_OK){
+                    data.addItem(label, due, cost, ID);
+                }else if(resultCode == RESULT_DELETED){
+                    data.removeItem(ID);
+                }else if(resultCode == RESULT_CANCELED){
+                    //make toast; edit failed
+                }
+            }budgetData.upNextGen();
+            budgetData.upAfterGen();
+            mAdapter.notifyDataSetChanged();
+        }
+
     public void goToAdd(View view) {
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();

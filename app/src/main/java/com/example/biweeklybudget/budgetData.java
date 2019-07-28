@@ -229,4 +229,25 @@ public class budgetData {
         return returned;
 
     }
+    public static void setSeedPay(int month, int day){
+        int currentSeed =  0;
+        int dayIndex = day;
+        for (int i = 0; i < (month - 1); i++){
+            currentSeed += months[i];
+        }
+        currentSeed += dayIndex;
+        seedPay = currentSeed;
+        /*
+        temp = julDate - seedPay;
+        dayOfPay = temp % 14;
+        julBegOfPay = julDate - dayOfPay;
+        begOfPay = day - dayOfPay;
+        endOfPay = begOfPay + 14;
+        daysRemain = 14 - dayOfPay;
+        begNextPay = (day - dayOfPay)+ 14;
+        endNextPay = (day - dayOfPay) + 28;
+        upNextGen();
+        upAfterGen();
+        */
+    }
 }

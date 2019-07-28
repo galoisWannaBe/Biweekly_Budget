@@ -44,8 +44,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
+                    android:hint="Label"
+                    android:inputType="textPersonName" />
 
             </LinearLayout>
 
@@ -70,8 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="number"
-                    android:text="Due Date" />
+                    android:hint="Due Date"
+                    android:inputType="number" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,8 +94,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="numberDecimal"
-                    android:text="... Well... Cost" />
+                    android:hint="Cost"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
         </LinearLayout>
 
