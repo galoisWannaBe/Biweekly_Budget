@@ -33,16 +33,12 @@ public class AddToList extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         originClass = bundle.getString("origin_class");
         fromList = bundle.getBoolean("fromList");
-        System.out.println("AddtoList ln 36. fromList = " +fromList);
         if (fromList) {
             position = bundle.getInt("index");
-            System.out.println("Position was " +position);
-            System.out.println("addtolist ln 40: Origin class was " +originClass);
             if(originClass.contains("viewAll")) {
                 ID = position;
-                System.out.println("addtolist ln 43: " +ID);
             }else if(originClass.contains("upNext")) {
-                ID = data.findAfter(position);
+                ID = data.findDue(position);
             }
             billStr = data.getData(ID, 0);
             dueStr = data.getData(ID, 1);
@@ -96,7 +92,7 @@ public class AddToList extends AppCompatActivity {
                     break;
         }
         Bundle backBundle = new Bundle();
-        backBundle.putInt("ID", position);
+        backBundle.putInt("ID", ID);
         backIntent.putExtras(backBundle);
         setResult(2, backIntent);
         finish();
