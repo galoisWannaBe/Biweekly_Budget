@@ -20,7 +20,7 @@ public class AddToList extends AppCompatActivity {
     static int position;
     static boolean fromList;
     String originClass;
-    int ID = 0;
+    int ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +33,15 @@ public class AddToList extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         originClass = bundle.getString("origin_class");
         fromList = bundle.getBoolean("fromList");
+        System.out.println("AddtoList ln 36. fromList = " +fromList);
         if (fromList) {
             position = bundle.getInt("index");
             System.out.println("Position was " +position);
-            if(originClass == "viewAll") {
+            System.out.println("addtolist ln 40: Origin class was " +originClass);
+            if(originClass.contains("viewAll")) {
                 ID = position;
-            }else if(originClass == "upNext") {
+                System.out.println("addtolist ln 43: " +ID);
+            }else if(originClass.contains("upNext")) {
                 ID = data.findAfter(position);
             }
             billStr = data.getData(ID, 0);

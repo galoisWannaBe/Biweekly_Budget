@@ -96,6 +96,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("fromList", true);
+        System.out.println("viewAll ln 99 " +position);
         bundle.putInt("index", position);
         bundle.putString("origin_class", "viewAll");
         intent.putExtras(bundle);

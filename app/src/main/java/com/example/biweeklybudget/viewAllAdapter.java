@@ -41,6 +41,7 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
         @Override
         public void onClick(View v) {
             onBillListener.OnBillClick(getAdapterPosition());
+            System.out.println("ViewAllAdapter Ln 44 Adapter position" +getAdapterPosition());
         }
     }
 
