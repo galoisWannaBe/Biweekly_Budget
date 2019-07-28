@@ -129,6 +129,7 @@ public class budgetData {
     }
 
     public static void upNextGen() {
+        System.out.println("budgetData ln 132 upNextGen Ran");
         data.clearIsDue();
         due = 0;
         begOfPay = day - dayOfPay;
@@ -170,6 +171,7 @@ public class budgetData {
 
     public static void upAfterGen() {
         data.clearIsAfter();
+        System.out.println("budgetData ln 174 upAfterGen ran");
         due = 0;
         quant = data.getSize();
         begNextPay = (day - dayOfPay)+ 14;
@@ -237,7 +239,6 @@ public class budgetData {
         }
         currentSeed += dayIndex;
         seedPay = currentSeed;
-        /*
         temp = julDate - seedPay;
         dayOfPay = temp % 14;
         julBegOfPay = julDate - dayOfPay;
@@ -248,6 +249,5 @@ public class budgetData {
         endNextPay = (day - dayOfPay) + 28;
         upNextGen();
         upAfterGen();
-        */
     }
 }
