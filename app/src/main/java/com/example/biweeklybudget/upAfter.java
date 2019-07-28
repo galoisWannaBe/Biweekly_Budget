@@ -50,6 +50,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
                 //make toast; edit failed
             }
         }
+        budgetData.upNextGen();
         budgetData.upAfterGen();
         mAdapter.notifyDataSetChanged();
     }

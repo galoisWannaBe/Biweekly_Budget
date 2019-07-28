@@ -69,6 +69,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             }
         }
         budgetData.upNextGen();
+        budgetData.upAfterGen();
         nAdapter.notifyDataSetChanged();
     }
 

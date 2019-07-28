@@ -33,12 +33,16 @@ public class AddToList extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         originClass = bundle.getString("origin_class");
         fromList = bundle.getBoolean("fromList");
+
         if (fromList) {
             position = bundle.getInt("index");
             if(originClass.contains("viewAll")) {
                 ID = position;
             }else if(originClass.contains("upNext")) {
                 ID = data.findDue(position);
+            }
+            else if (originClass.contains("upAfter")){
+                ID = data.findAfter(position);
             }
             billStr = data.getData(ID, 0);
             dueStr = data.getData(ID, 1);
@@ -61,6 +65,9 @@ public class AddToList extends AppCompatActivity {
                 break;
             case "upNext":
                 backIntent = new Intent(this, upNext.class);
+                break;
+            case "upAfter":
+                backIntent = new Intent(this, upAfter.class);
                 break;
                 default:
                     backIntent = new Intent();
@@ -87,6 +94,9 @@ public class AddToList extends AppCompatActivity {
                 break;
             case "upNext":
                 backIntent = new Intent(this, upNext.class);
+                break;
+            case "upAfter":
+                backIntent = new Intent(this, upAfter.class);
                 default:
                     backIntent = new Intent();
                     break;
@@ -107,6 +117,9 @@ public class AddToList extends AppCompatActivity {
                 break;
             case "upNext":
                 backIntent = new Intent(this, upNext.class);
+                break;
+            case "upAfter":
+                backIntent = new Intent(this, upAfter.class);
                 break;
                 default:
                     backIntent = new Intent();

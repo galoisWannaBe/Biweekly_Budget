@@ -67,6 +67,8 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
                 //make toast; edit failed
             }
         }
+        budgetData.upNextGen();
+        budgetData.upAfterGen();
         mAdapter.notifyDataSetChanged();
     }
 
