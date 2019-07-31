@@ -38,6 +38,14 @@
             android:onClick="gotoViewAll"
             android:text="View all" />
 
+        <Button
+            android:id="@+id/toExpenses"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="gotoWeeklyExpenses"
+            android:text="Weekly" />
+
     </LinearLayout>
 
 
@@ -52,17 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <Button
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="91dp"
-        android:onClick="testGetting"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calculate" />
-
 
     <EditText
         android:id="@+id/balance"
@@ -70,6 +67,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:hint="Current Bank Balance"
         android:inputType="number"
         android:textColorLink="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,30 +80,20 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:hint="Projected bank balance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/balance" />
-
-    <Button
-        android:id="@+id/toExpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="234dp"
-        android:layout_marginTop="16dp"
-        android:onClick="gotoWeeklyExpenses"
-        android:text="ToExpenses"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test" />
 
     <Button
         android:id="@+id/to_settings_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="236dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="140dp"
         android:onClick="goToSettings"
         android:text="Settings"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toExpenses" />
+        app:layout_constraintTop_toBottomOf="@+id/projBalance_box" />
 
 
 </android.support.constraint.ConstraintLayout>
