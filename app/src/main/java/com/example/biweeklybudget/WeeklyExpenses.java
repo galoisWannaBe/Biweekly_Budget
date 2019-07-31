@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.OnWeeklyListener {
     private RecyclerView wRecyclerView;
@@ -35,12 +36,18 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
-        Bundle bundle = Data.getExtras();
-        String label;
-        String cost;
-        String days;
+        String label = " ";
+        String cost = " ";
+        String days = " ";
         int position = 0;
-        if (resultCode == RESULT_OK){
+
+        if(resultCode == RESULT_CANCELED){
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Cancelled",
+                    Toast.LENGTH_LONG).show();
+        }else if (resultCode == RESULT_OK){
+            Bundle bundle = Data.getExtras();
             label = bundle.getString("Label");
             cost = bundle.getString("Cost");
             days = bundle.getString("Days");
@@ -52,17 +59,17 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         if (requestCode == ADD_REQUEST) {
             if (resultCode == RESULT_OK) {
                 data.addWeekly(label, cost, days);
-            } else if (resultCode == RESULT_CANCELED) {
-                //make toast; add failed
             }
         }else if(requestCode == EDIT_REQUEST){
-            position = bundle.getInt("position");
+
             if (resultCode == RESULT_OK){
+                Bundle bundle = Data.getExtras();
+                position = bundle.getInt("position");
                 data.addWeekly(label, cost, days, position);
             }else if(resultCode == RESULT_DELETED){
+                Bundle bundle = Data.getExtras();
+                position = bundle.getInt("position");
                 data.removeWeekly(position);
-            }else if(resultCode == RESULT_CANCELED){
-                //make toast; edit failed
             }
         }
         wAdapter.notifyDataSetChanged();

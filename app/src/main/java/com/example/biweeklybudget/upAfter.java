@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillListener{
     private RecyclerView mRecyclerView;
@@ -33,12 +34,12 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         @Override
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data){
             super.onActivityResult(requestCode, resultCode, Data);
-            Bundle bundle = Data.getExtras();
             String label;
             String due;
             String cost;
             int ID = 0;
             if(resultCode == RESULT_OK){
+                Bundle bundle = Data.getExtras();
                 label = bundle.getString("Label");
                 due = bundle.getString("Due");
                 cost = bundle.getString("Cost");
@@ -48,21 +49,25 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
                 due = "\0";
                 cost = "\0";
             }
-            if(requestCode == ADD_REQUEST){
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Cancelled",
+                        Toast.LENGTH_LONG).show();
+            }
+            else if(requestCode == ADD_REQUEST){
                 if(resultCode == RESULT_OK){
                     data.addItem(label, due, cost);
-                } else if (resultCode == RESULT_CANCELED) {
-
-                    //make toast; add failed
                 }
                 } else if(requestCode == EDIT_REQUEST){
-                    ID = bundle.getInt("ID");
                 if(resultCode == RESULT_OK){
+                    Bundle bundle = Data.getExtras();
+                    ID = bundle.getInt("ID");
                     data.addItem(label, due, cost, ID);
-                }else if(resultCode == RESULT_DELETED){
+                }else if(resultCode == RESULT_DELETED) {
+                    Bundle bundle = Data.getExtras();
+                    ID = bundle.getInt("ID");
                     data.removeItem(ID);
-                }else if(resultCode == RESULT_CANCELED){
-                    //make toast; edit failed
                 }
             }budgetData.upNextGen();
             budgetData.upAfterGen();
