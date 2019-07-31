@@ -239,6 +239,7 @@ public class budgetData {
         }
         currentSeed += dayIndex;
         seedPay = currentSeed;
+        seedPay %= 14;
         temp = julDate - seedPay;
         dayOfPay = temp % 14;
         julBegOfPay = julDate - dayOfPay;
