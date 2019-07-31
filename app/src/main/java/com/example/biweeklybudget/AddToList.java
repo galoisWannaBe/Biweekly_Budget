@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 public class AddToList extends AppCompatActivity {
 
@@ -72,19 +73,71 @@ public class AddToList extends AppCompatActivity {
                 default:
                     backIntent = new Intent();
         }
-        Bundle backBundle = new Bundle();
+
         billStr = tvBill.getText().toString();
         dueStr = tvDue.getText().toString();
         costStr = tvCost.getText().toString();
-        backBundle.putString("Label", billStr);
-        backBundle.putString("Due", dueStr);
-        backBundle.putString("Cost", costStr);
-        if (fromList){
-            backBundle.putInt("ID" , ID);
+        if (billStr.isEmpty()){
+            if (dueStr.isEmpty()){
+                if (costStr.isEmpty()){
+                    Toast.makeText(
+                            getApplicationContext(),
+                            R.string.all_empty,
+                            Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(
+                            getApplicationContext(),
+                            R.string.label_date_empty,
+                            Toast.LENGTH_LONG).show();
+                }
+            } else if (costStr.isEmpty()){
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.label_cost_empty,
+                        Toast.LENGTH_LONG).show();
+            } else{
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.label_empty,
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }else if (dueStr.isEmpty()){
+            if (costStr.isEmpty()){
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.due_cost_empty,
+                        Toast.LENGTH_LONG).show();
+            } else{
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.due_empty,
+                        Toast.LENGTH_LONG).show();
+            }
         }
-        backIntent.putExtras(backBundle);
-        setResult(RESULT_OK, backIntent);
-        finish();
+        else if (costStr.isEmpty()){
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.cost_empty,
+                    Toast.LENGTH_LONG).show();
+        }else if(Integer.parseInt(dueStr) < 1 || Integer.parseInt(dueStr) > 28){
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.bad_day,
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            Bundle backBundle = new Bundle();
+            backBundle.putString("Label", billStr);
+            backBundle.putString("Due", dueStr);
+            backBundle.putString("Cost", costStr);
+            if (fromList) {
+                backBundle.putInt("ID", ID);
+            }
+            backIntent.putExtras(backBundle);
+            setResult(RESULT_OK, backIntent);
+            finish();
+        }
     }
     public void delete(View view){
         Intent backIntent;

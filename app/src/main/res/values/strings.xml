@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Biweekly Budget</string>
+    <string name="null_entry">invalid entry; please enter a number</string>
+    <string name="all_empty">Label, due date, and cost invalid; please enter a valid label, due date, and cost</string>
+    <string name="label_date_empty">Label and date invalid; please enter a valid label and due date</string>
+    <string name="label_cost_empty">Label and cost valid; please enter a valid label and cost</string>
+    <string name="due_cost_empty">Due date and cost valid; please enter a valid due date and cost</string>
+    <string name="label_empty">Label empty; please enter a label</string>
+    <string name="due_empty">Due date invalid; please enter the day of the month your bill is due</string>
+    <string name="cost_empty">Cost empty; please enter a cost</string>
+    <string name="days_empty">Please select the days you incur this expense</string>
+    <string name="weekly_empty">Please enter a label and cost and select at least one day</string>
+    <string name="label_days_empty">Please enter label and select at least one day</string>
+    <string name="cost_days_empty">Please enter the cost and select at least one day</string>
+    <string name="bad_day">Please enter a day between 1 and 28</string>
 </resources>

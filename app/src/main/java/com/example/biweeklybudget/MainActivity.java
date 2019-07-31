@@ -10,14 +10,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
         String balanceStr;
         String projBalanceStr;
-        String listedBills;
-        String date;
         int seed;
         int julDate;
         int dd;
@@ -25,11 +24,8 @@ public class MainActivity extends AppCompatActivity {
         int yy;
         int ee;
     public static int q;
-    public static boolean upDated = false;
     public static boolean firstRun = true;
     //Database vars
-    public static final int ADD_TO_BILLS = 1;
-    public static final int ADD_TO_WEEKLIES = 2;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         public void gotoViewAll(View view){
             Intent vIntent = new Intent(MainActivity.this, viewAll.class);
             startActivity(vIntent);
-            //startActivityForResult(vIntent, ADD_TO_BILLS);
         }
         public void gotoWeeklyExpenses(View view){
             Intent pintent = new Intent(this, WeeklyExpenses.class);
@@ -86,34 +81,21 @@ public class MainActivity extends AppCompatActivity {
         public void calculate(View view) {
             EditText editText = findViewById(R.id.balance);
             balanceStr = editText.getText().toString();
-            projBalanceStr = budgetData.calculate(balanceStr);
-            TextView textView = findViewById(R.id.projBalance_box);
-            textView.setText(projBalanceStr);
-        }
-
-        public void testGetting(View view) {
-            date = String.valueOf(clockStuff.getDay());
-            System.out.println("Day : " + date);
-            date = String.valueOf(clockStuff.getMonth());
-            System.out.println("Month " + date);
-            date = String.valueOf(clockStuff.getYear());
-            System.out.println("Year " + date);
-            System.out.println("Julian date: " + julDate);
-            System.out.println("Number of bills: " +data.getSize());
-            System.out.println("Number of upcoming bills: " +data.dueSize());
-            System.out.println("Number of weekly expenses: " +data.getWeeklySize());
-            TextView textView = findViewById(R.id.projBalance_box);
-            textView.setText("Check Terminal");
-
-
+            if(balanceStr.isEmpty()){
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.null_entry,
+                        Toast.LENGTH_LONG).show();
+            }else {
+                projBalanceStr = budgetData.calculate(balanceStr);
+                TextView textView = findViewById(R.id.projBalance_box);
+                textView.setText(projBalanceStr);
+            }
         }
         public void goToSettings(View view){
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
         }
-    public static void update(){
-        upDated = true;
-    }
 
     }
 

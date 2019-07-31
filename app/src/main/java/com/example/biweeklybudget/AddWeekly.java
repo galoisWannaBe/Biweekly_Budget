@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 public class AddWeekly extends AppCompatActivity {
     public static String label;
@@ -70,8 +71,6 @@ public class AddWeekly extends AppCompatActivity {
 
         }
         else {
-            label = " ";
-            cost = " ";
             sunday.setChecked(false);
             monday.setChecked(false);
             tuesday.setChecked(false);
@@ -86,32 +85,81 @@ public class AddWeekly extends AppCompatActivity {
     }
     public void save(View view){
         StringBuilder sb = new StringBuilder("\0");
+        Boolean daysSelected = false;
         if (sunday.isChecked()) {
             sb = sb.append("U");
+            daysSelected = true;
         }if (monday.isChecked()){
             sb = sb.append("M");
+            daysSelected = true;
         }if (tuesday.isChecked()){
             sb = sb.append("T");
+            daysSelected = true;
         }if (wednesday.isChecked()){
             sb = sb.append("W");
+            daysSelected = true;
         }if (thursday.isChecked()){
             sb = sb.append("R");
+            daysSelected = true;
         }if (friday.isChecked()){
             sb = sb.append("F");
+            daysSelected = true;
         }if (saturday.isChecked()){
             sb = sb.append("S");
+            daysSelected = true;
         }
         label = labelEdit.getText().toString();
         cost = costEdit.getText().toString();
         days = sb.toString();
-        if (fromList){
-            data.addWeekly(label, cost, days, pos);
-            fromList = false;
+        if(label.isEmpty()){
+            if(cost.isEmpty()){
+                if(daysSelected == false){
+                    Toast.makeText(
+                            getApplicationContext(),
+                            R.string.weekly_empty,
+                            Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(
+                            getApplicationContext(),
+                            R.string.label_cost_empty,
+                            Toast.LENGTH_LONG).show();
+                }
+            }else if (daysSelected == false){
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.label_days_empty,
+                        Toast.LENGTH_LONG).show();
+            }else Toast.makeText(
+                    getApplicationContext(),
+                    R.string.label_empty,
+                    Toast.LENGTH_LONG).show();
+        }else if(cost.isEmpty()){
+            if (daysSelected == false){
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.cost_days_empty,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.cost_empty,
+                        Toast.LENGTH_LONG).show();
+            }
+        }else if (daysSelected == false){
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.days_empty,
+                    Toast.LENGTH_LONG).show();
         }else {
-            data.addWeekly(label, cost, days);
+            if (fromList) {
+                data.addWeekly(label, cost, days, pos);
+                fromList = false;
+            } else {
+                data.addWeekly(label, cost, days);
+            }
+            Intent mIntent = new Intent(this, WeeklyExpenses.class);
+            startActivity(mIntent);
         }
-        Intent mIntent = new Intent(this, WeeklyExpenses.class);
-        startActivity(mIntent);
     }
     public void delete(View view){
         data.removeWeekly(pos);
