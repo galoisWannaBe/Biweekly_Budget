@@ -226,8 +226,6 @@ public class data {
         temp2 = cost;
         temp3 = day;
         weeklies.add(new weeklyItems(temp, temp2, temp3));
-        int q = weeklies.size();
-        q--;
     }
     public static void addWeekly(String label, String cost, String day, int rIndex){
         temp = label;

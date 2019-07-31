@@ -22,42 +22,40 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyViewHolder> {
 
-    public static class WeeklyViewHolder extends RecyclerView.ViewHolder {
+    private OnWeeklyListener mOnWeeklyListener;
+
+    public static class WeeklyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView wTextView1;
         public TextView wTextView2;
         public TextView wTextView3;
 
         private final Context context;
+        OnWeeklyListener onWeeklyListener;
 
-        public WeeklyViewHolder(View itemView) {
+        public WeeklyViewHolder(View itemView, OnWeeklyListener onWeeklyListener) {
             super(itemView);
             context  = itemView.getContext();
             wTextView1 = itemView.findViewById(R.id.weeklyLabels);
             wTextView2 = itemView.findViewById(R.id.weeklyCosts);
             wTextView3 = itemView.findViewById(R.id.weeklyDays);
+            this.onWeeklyListener = onWeeklyListener;
+            itemView.setOnClickListener(this);
+        }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    int position = getAdapterPosition();
-
-                    //onClick Shit
-                    AddWeekly.setPosition(position, true);
-                    Bundle bundle = new Bundle();
-                    Intent nIntent = new Intent(context, AddWeekly.class);
-                    startActivity(context, nIntent, bundle);
-
-                }
-            });
+        @Override
+        public void onClick(View v) {
+            onWeeklyListener.OnWeeklyClick(getAdapterPosition());
         }
     }
 
-    public weeklyAdapter() {
+    public weeklyAdapter(OnWeeklyListener onWeeklyListener) {
+        this.mOnWeeklyListener = onWeeklyListener;
     }
     private static Context context;
     @Override
     public WeeklyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.weekly_item, parent, false);
-        WeeklyViewHolder wvh = new WeeklyViewHolder(v);
+        WeeklyViewHolder wvh = new WeeklyViewHolder(v, mOnWeeklyListener);
         return wvh;
     }
 
@@ -82,6 +80,10 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
     @Override
     public int getItemCount() {
         return data.getWeeklySize();
+    }
+
+    public interface OnWeeklyListener{
+        void OnWeeklyClick(int position);
     }
 
 }

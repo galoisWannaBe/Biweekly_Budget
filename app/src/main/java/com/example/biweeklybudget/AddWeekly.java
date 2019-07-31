@@ -10,6 +10,15 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 public class AddWeekly extends AppCompatActivity {
+
+    public final byte SUNDAY = 1;
+    public final byte MONDAY = 2;
+    public final byte TUESDAY = 4;
+    public final byte WEDNESDAY = 8;
+    public final byte THURSDAY = 16;
+    public final byte FRIDAY = 32;
+    public final byte SATURDAY = 64;
+
     public static String label;
     public static String cost;
     public static String days;
@@ -25,7 +34,8 @@ public class AddWeekly extends AppCompatActivity {
     public static EditText labelEdit;
     public static EditText costEdit;
     public static int pos;
-    public static boolean fromList= false;
+    public static boolean fromList;
+    public static byte daysBin = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,78 +52,54 @@ public class AddWeekly extends AppCompatActivity {
         friday = findViewById(R.id.friday);
         saturday = findViewById(R.id.saturday);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        fromList = bundle.getBoolean("fromList");
+
         if (fromList){
+            pos = bundle.getInt("position");
             label = data.getWeekly(pos, 0);
             cost = data.getWeekly(pos, 1);
-            days = data.getWeekly(pos, 2);
-            if (days.contains("U")){
-                sunday.setChecked(true);
-            }
-            if (days.contains("M")){
-                monday.setChecked(true);
-            }
-            if (days.contains("T")){
-                tuesday.setChecked(true);
-            }
-            if (days.contains("W")){
-                wednesday.setChecked(true);
-            }
-            if (days.contains("R")){
-                thursday.setChecked(true);
-            }
-            if (days.contains("F")){
-                friday.setChecked(true);
-            }
-            if (days.contains("S")) {
-                saturday.setChecked(true);
-            }
+            daysBin = Byte.parseByte(data.getWeekly(pos, 2));
 
+            labelEdit.setText(label);
+            costEdit.setText(cost);
+        }
+        else{
+            daysBin = 0;
+        }
+        sunday.setChecked((daysBin & SUNDAY) == SUNDAY);
+        monday.setChecked((daysBin & MONDAY) == MONDAY);
+        tuesday.setChecked((daysBin & TUESDAY) == TUESDAY);
+        wednesday.setChecked((daysBin & WEDNESDAY) == WEDNESDAY);
+        thursday.setChecked((daysBin & THURSDAY) == THURSDAY);
+        friday.setChecked((daysBin & FRIDAY) == FRIDAY);
+        saturday.setChecked((daysBin & SATURDAY) == SATURDAY);
 
-        }
-        else {
-            sunday.setChecked(false);
-            monday.setChecked(false);
-            tuesday.setChecked(false);
-            wednesday.setChecked(false);
-            thursday.setChecked(false);
-            friday.setChecked(false);
-            saturday.setChecked(false);
-        }
-        labelEdit.setText(label);
-        costEdit.setText(cost);
 
     }
     public void save(View view){
-        StringBuilder sb = new StringBuilder("\0");
-        Boolean daysSelected = false;
-        if (sunday.isChecked()) {
-            sb = sb.append("U");
-            daysSelected = true;
-        }if (monday.isChecked()){
-            sb = sb.append("M");
-            daysSelected = true;
-        }if (tuesday.isChecked()){
-            sb = sb.append("T");
-            daysSelected = true;
-        }if (wednesday.isChecked()){
-            sb = sb.append("W");
-            daysSelected = true;
-        }if (thursday.isChecked()){
-            sb = sb.append("R");
-            daysSelected = true;
-        }if (friday.isChecked()){
-            sb = sb.append("F");
-            daysSelected = true;
-        }if (saturday.isChecked()){
-            sb = sb.append("S");
-            daysSelected = true;
-        }
+
+        if (sunday.isChecked())
+            daysBin |= SUNDAY;
+        if (monday.isChecked())
+            daysBin |= MONDAY;
+        if (tuesday.isChecked())
+            daysBin |= TUESDAY;
+        if (wednesday.isChecked())
+            daysBin |= WEDNESDAY;
+        if (thursday.isChecked())
+            daysBin |= THURSDAY;
+        if (friday.isChecked())
+            daysBin |= FRIDAY;
+        if (saturday.isChecked())
+            daysBin |= SATURDAY;
+
         label = labelEdit.getText().toString();
         cost = costEdit.getText().toString();
-        days = sb.toString();
         if(label.isEmpty()){
             if(cost.isEmpty()){
-                if(daysSelected == false){
+                if(daysBin == 0){
                     Toast.makeText(
                             getApplicationContext(),
                             R.string.weekly_empty,
@@ -124,7 +110,7 @@ public class AddWeekly extends AppCompatActivity {
                             R.string.label_cost_empty,
                             Toast.LENGTH_LONG).show();
                 }
-            }else if (daysSelected == false){
+            }else if (daysBin == 0){
                 Toast.makeText(
                         getApplicationContext(),
                         R.string.label_days_empty,
@@ -134,7 +120,7 @@ public class AddWeekly extends AppCompatActivity {
                     R.string.label_empty,
                     Toast.LENGTH_LONG).show();
         }else if(cost.isEmpty()){
-            if (daysSelected == false){
+            if (daysBin == 0){
                 Toast.makeText(
                         getApplicationContext(),
                         R.string.cost_days_empty,
@@ -145,36 +131,41 @@ public class AddWeekly extends AppCompatActivity {
                         R.string.cost_empty,
                         Toast.LENGTH_LONG).show();
             }
-        }else if (daysSelected == false){
+        }else if (daysBin == 0){
             Toast.makeText(
                     getApplicationContext(),
                     R.string.days_empty,
                     Toast.LENGTH_LONG).show();
         }else {
-            if (fromList) {
-                data.addWeekly(label, cost, days, pos);
-                fromList = false;
-            } else {
-                data.addWeekly(label, cost, days);
-            }
+
             Intent mIntent = new Intent(this, WeeklyExpenses.class);
-            startActivity(mIntent);
+            Bundle backBundle = new Bundle();
+            backBundle.putString("Label", label);
+            backBundle.putString("Cost", cost);
+            backBundle.putString("Days", String.valueOf(daysBin));
+            if (fromList){
+                backBundle.putInt("position", pos);
+            }
+            mIntent.putExtras(backBundle);
+            setResult(RESULT_OK, mIntent);
+            finish();
         }
     }
     public void delete(View view){
-        data.removeWeekly(pos);
-        fromList = false;
         Intent nIntent = new Intent(this, WeeklyExpenses.class);
-        startActivity(nIntent);
+        Bundle backBundle = new Bundle();
+        backBundle.putInt("position", pos);
+        nIntent.putExtras(backBundle);
+        setResult(2, nIntent);
+        finish();
     }
     public void cancel(View view){
-        fromList = false;
         Intent pIntent = new Intent(this, WeeklyExpenses.class);
-        startActivity(pIntent);
-    }
-    public static void setPosition(int i, boolean isFromList){
-        pos = i;
-        fromList = isFromList;
+        Bundle backBundle = new Bundle();
+        backBundle.putInt("position", pos);
+        pIntent.putExtras(backBundle);
+        setResult(RESULT_CANCELED, pIntent);
+        finish();
     }
 
 }
