@@ -38,11 +38,16 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
-        String label;
-        String due;
-        String cost;
+        String label = "\0";
+        String due = "\0";
+        String cost = "\0";
         int ID = 0;
-        if (resultCode == RESULT_OK){
+        if(resultCode == RESULT_CANCELED){
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Cancelled",
+                    Toast.LENGTH_LONG).show();
+        }else if (resultCode == RESULT_OK){
             Bundle bundle = Data.getExtras();
             label = bundle.getString("Label");
             due = bundle.getString("Due");
@@ -51,13 +56,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
             label = "\0";
             due = "\0";
             cost = "\0";
-        }
-        if(resultCode == RESULT_CANCELED){
-            Toast.makeText(
-                    getApplicationContext(),
-                    "Cancelled",
-                    Toast.LENGTH_LONG).show();
-        }else if (requestCode == ADD_REQUEST){
+        }if (requestCode == ADD_REQUEST){
             if (resultCode == RESULT_OK){
                 data.addItem(label, due, cost);
             }

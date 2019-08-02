@@ -45,7 +45,7 @@ public class budgetData {
     public static void init(int seed, int jul, int dd, int MM, int yy, int ee) {
         balance = 0;
         ttlbills = 0;
-        seedPay = seed;
+        seedPay = seed % 14;
         julDate = jul;
         day = dd;
         month = MM;
