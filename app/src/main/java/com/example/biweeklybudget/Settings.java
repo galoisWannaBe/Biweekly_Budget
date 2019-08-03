@@ -35,6 +35,8 @@ public class Settings extends AppCompatActivity {
             date = date / 100;
             mon = date;
             budgetData.setSeedPay(mon, day);
+            budgetData.upNextGen();
+            budgetData.upAfterGen();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }else {

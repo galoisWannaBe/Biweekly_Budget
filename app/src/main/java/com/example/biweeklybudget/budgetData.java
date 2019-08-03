@@ -38,9 +38,18 @@ public class budgetData {
     public static double weeklyTotal;
     public static String weekDayCounter;
     public static double tempDouble;
-    public static ArrayList<String> weekDay = new ArrayList<>(Arrays.asList("U" , "M" , "T" , "W" , "R" , "F" , "S"));
     public static String tempStr3;
     public static double tempTtl;
+
+    public static final byte SUNDAY = 1;
+    public static final byte MONDAY = 2;
+    public static final byte TUESDAY = 4;
+    public static final byte WEDNESDAY = 8;
+    public static final byte THURSDAY = 16;
+    public static final byte FRIDAY = 32;
+    public static final byte SATURDAY = 64;
+    public static final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
+    public static final String[] weekStr = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
     public static void init(int seed, int jul, int dd, int MM, int yy, int ee) {
         balance = 0;
@@ -64,45 +73,15 @@ public class budgetData {
 
     public static void addBills() {
         ttlbills = 0;
-        quant = data.getSize();
+        upNextGen();
+        quant = data.dueSize();
         cost = 0;
-
             //do this if the pay straddles months
-        if ((begOfPay + 14) > months[(month - 1)]) {
-            for (int i = day; i <= months[(month - 1)]; i++) {
-                for (int j = 0; j < quant; j++) {
-                    due = Integer.parseInt(data.getData(j, 1));
-                    if (i == due) {
-                        cost = Double.valueOf(data.getData(j, 2));
-                        ttlbills += cost;
-                    }
-                }
-            }
-            endOfPay = endOfPay - months[(month - 1)];
-            for (int i = 1; i < endOfPay; i++) {
-                for (int j = 0; j < quant; j++) {
-                    due = Integer.parseInt(data.getData(j, 1));
-                    if (i == due) {
-                        cost = Double.valueOf(data.getData(j, 2));
-                        ttlbills += cost;
-                    }
-                }
-            }
-            //pick up here
-            //replacing arrays with data
-        } else {
-            for (int i = day; i < endOfPay; i++) {
 
-                System.out.println(i);
-                for (int j = 0; j < quant; j++) {
-                    due = Integer.parseInt(data.getData(j, 1));
-                    if (i == due) {
-                        cost = Double.valueOf(data.getData(j, 2));
-                        ttlbills += cost;
-                    }
-                }
-            }
+        for (int i = 0; i < quant; i++){
+            cost += Double.parseDouble(data.getDue(i, 2));
         }
+        System.out.println("budgetData ln 84 cost: " +cost);
 
     }
     public static void addWeekly(){
@@ -110,22 +89,19 @@ public class budgetData {
             weeklyTotal = 0;
             weekCounter = week;
             tempDouble = 0;
+            byte tempByte = 0;
             for (int i = 0; i < daysRemain; i++){
-                tempStr = weekDay.get(weekCounter);
                 for (int j = 0; j < quant; j++){
-                    tempStr2 = data.getWeekly(j , 2);
-                    if (tempStr2.contains(tempStr)){
+                    tempByte = Byte.parseByte(data.getWeekly(j , 2));
+                    if ((tempByte & weekArr[weekCounter]) == weekArr[weekCounter]){
                         tempDouble = Double.valueOf(data.getWeekly(j, 1));
                         weeklyTotal = weeklyTotal + tempDouble;
                     }
-
                 }
                 weekCounter++;
                 weekCounter = weekCounter % 7;
             }
-
-
-
+            System.out.println("budgetData ln 104 Weekly: " +weeklyTotal);
     }
 
     public static void upNextGen() {
@@ -225,7 +201,7 @@ public class budgetData {
         addBills();
         addWeekly();
 
-        tempTtl = ttlbills + weeklyTotal;
+        tempTtl = cost + weeklyTotal;
         projBalance = balance - tempTtl;
         returned = String.valueOf(projBalance);
         return returned;
@@ -239,7 +215,7 @@ public class budgetData {
         }
         currentSeed += dayIndex;
         seedPay = currentSeed;
-        seedPay %= 14;
+        seedPay = seedPay % 14;
         temp = julDate - seedPay;
         dayOfPay = temp % 14;
         julBegOfPay = julDate - dayOfPay;
@@ -248,6 +224,7 @@ public class budgetData {
         daysRemain = 14 - dayOfPay;
         begNextPay = (day - dayOfPay)+ 14;
         endNextPay = (day - dayOfPay) + 28;
+        daysRemain = 14 - dayOfPay;
         upNextGen();
         upAfterGen();
     }

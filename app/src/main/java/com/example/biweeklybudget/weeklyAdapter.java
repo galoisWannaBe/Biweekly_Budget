@@ -22,6 +22,16 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyViewHolder> {
 
+    public final byte SUNDAY = 1;
+    public final byte MONDAY = 2;
+    public final byte TUESDAY = 4;
+    public final byte WEDNESDAY = 8;
+    public final byte THURSDAY = 16;
+    public final byte FRIDAY = 32;
+    public final byte SATURDAY = 64;
+    public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
+    public final String[] weekStr = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
     private OnWeeklyListener mOnWeeklyListener;
 
     public static class WeeklyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -65,9 +75,32 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
         String temp2;
         String temp3;
         int wPos = wPosition;
+        StringBuilder sb = new StringBuilder("\0");
+        int bitcount = 0;
+        byte weekBin = 0;
         temp1 = data.getWeekly(wPos, 0);
         temp2 = data.getWeekly(wPos, 1);
         temp3 = data.getWeekly(wPos, 2);
+
+        weekBin = Byte.parseByte(temp3);
+        for(int i = 0; i < 7; i++){
+            if ((weekBin & weekArr[i]) == weekArr[i]){
+                bitcount++;
+            }
+        }
+        for(int i = 0; i < 7; i++){
+            if ((weekBin & weekArr[i]) == weekArr[i]){
+                sb = sb.append(weekStr[i]);
+                if (bitcount > 2){
+                    sb = sb.append(", ");
+                }
+                if (bitcount == 2 ){
+                    sb = sb.append(" & ");
+                }
+                bitcount--;
+            }
+        }
+        temp3 = sb.toString();
 
         holder.wTextView1.setText(temp1);
         holder.wTextView2.setText(temp2);
