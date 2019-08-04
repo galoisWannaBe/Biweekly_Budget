@@ -211,13 +211,9 @@ public class budgetData {
         return returned;
 
     }
-    public static void setSeedPay(int mon, int day){
+    public static void setSeedPay(int seed){
         int currentSeed =  0;
-        int dayIndex = day;
-        for (int i = 0; i < (mon - 1); i++){
-            currentSeed += months[i];
-        }
-        currentSeed += dayIndex;
+        currentSeed = seed;
         seedPay = currentSeed;
         System.out.println("budgetData ln 218 seedPay: " +seedPay);
         seedPay = seedPay % 14;
@@ -235,7 +231,6 @@ public class budgetData {
         System.out.println("budgetData ln 227 begOfPay: " +begOfPay);
         endOfPay = begOfPay + 14;
         System.out.println("budgetData ln 231 endOfPay: " +endOfPay);
-        System.out.println("budgetData ln 232 endOfPay, corrected to fit calendar: " +(endOfPay-months[mon - 2]));
         daysRemain = 14 - dayOfPay;
         begNextPay = (day - dayOfPay)+ 14;
         endNextPay = (day - dayOfPay) + 28;

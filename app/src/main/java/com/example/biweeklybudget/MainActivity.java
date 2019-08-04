@@ -1,5 +1,6 @@
 package com.example.biweeklybudget;
 
+import android.app.DownloadManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -32,18 +33,19 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            seed = 112;
 
-            clockStuff.init();
-            julDate = clockStuff.getJulDate();
-            dd = clockStuff.getDay();
-            MM = clockStuff.getMonth();
-            yy = clockStuff.getYear();
-            ee = clockStuff.getWeek();
-            budgetData.init(seed, julDate, dd, MM, yy, ee);
             //helps distinguish between an add and an edit
             System.out.println(firstRun);
             if (firstRun == true) {
+                seed = 112;
+
+                clockStuff.init();
+                julDate = clockStuff.getJulDate();
+                dd = clockStuff.getDay();
+                MM = clockStuff.getMonth();
+                yy = clockStuff.getYear();
+                ee = clockStuff.getWeek();
+                budgetData.init(seed, julDate, dd, MM, yy, ee);
                 q = ListData.listDataInit();
                 for (int i = 0; i < q; i++) {
                     data.addItem(ListData.getBillElement(i), ListData.getDueElement(i), ListData.getCostElement(i));
@@ -58,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
                 firstRun = false;
             }
         }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
+        super.onActivityResult(requestCode, resultCode, Data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            Bundle bundle = Data.getExtras();
+            int seed = bundle.getInt("seed");
+            budgetData.setSeedPay(seed);
+        }
+    }
 
     public void gotoMain(View view) {
             Intent mIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -94,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         }
         public void goToSettings(View view){
             Intent intent = new Intent(this, Settings.class);
-            startActivity(intent);
+            startActivityForResult(intent, 0);
         }
 
     }
