@@ -13,4 +13,5 @@
     <string name="label_days_empty">Please enter label and select at least one day</string>
     <string name="cost_days_empty">Please enter the cost and select at least one day</string>
     <string name="bad_day">Please enter a day between 1 and 28</string>
+    <string name="invalid_date">Please enter a valid date</string>
 </resources>

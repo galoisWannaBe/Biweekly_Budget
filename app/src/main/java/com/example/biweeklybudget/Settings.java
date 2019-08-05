@@ -33,7 +33,7 @@ public class Settings extends AppCompatActivity {
             if (dateStr.isEmpty()){
                 Toast.makeText(
                         getApplicationContext(),
-                        "Please enter a valid date",
+                        R.string.invalid_date,
                         Toast.LENGTH_LONG).show();
             }else {
                 date = Integer.parseInt(dateStr);
@@ -47,7 +47,7 @@ public class Settings extends AppCompatActivity {
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
-                            "Please enter a valid date",
+                            R.string.invalid_date,
                             Toast.LENGTH_LONG).show();
                 }
             }
