@@ -242,7 +242,6 @@ public class data {
     public static String getWeekly(int a, int b) {
         index = a;
         indexTwo = b;
-        //System.out.println("Getting weekly item at :" +index +", " +indexTwo);
         switch (indexTwo) {
             case 0:
                 return weeklies.get(index).getLabel();

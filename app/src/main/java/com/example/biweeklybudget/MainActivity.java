@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             //helps distinguish between an add and an edit
-            System.out.println(firstRun);
             if (firstRun == true) {
                 seed = 112;
 

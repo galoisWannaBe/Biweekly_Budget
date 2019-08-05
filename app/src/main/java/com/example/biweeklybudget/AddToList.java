@@ -48,9 +48,6 @@ public class AddToList extends AppCompatActivity {
             billStr = data.getData(ID, 0);
             dueStr = data.getData(ID, 1);
             costStr = data.getData(ID, 2);
-            System.out.println(billStr);
-            System.out.println(dueStr);
-            System.out.println(costStr);
             tvBill.setText(billStr);
             tvDue.setText(dueStr);
             tvCost.setText(costStr);

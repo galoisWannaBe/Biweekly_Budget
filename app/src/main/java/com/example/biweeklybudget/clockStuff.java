@@ -46,7 +46,6 @@ public class clockStuff {
         return year;
     }
     static public int getWeek(){
-        System.out.println("Day of week" +weekS);
         switch (weekS){
             case "Sun":
                 week = 0;
@@ -70,7 +69,6 @@ public class clockStuff {
                 week = 6;
                 break;
         }
-        System.out.println("Day of week" +week);
         return week;
     }
     static public int getJulDate(){

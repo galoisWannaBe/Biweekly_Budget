@@ -34,6 +34,7 @@ public class budgetData {
     public static double tempDouble;
     public static double tempTtl;
     public static int x;
+    public static int dueDate;
 
     public static final byte SUNDAY = 1;
     public static final byte MONDAY = 2;
@@ -43,7 +44,6 @@ public class budgetData {
     public static final byte FRIDAY = 32;
     public static final byte SATURDAY = 64;
     public static final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
-    public static final String[] weekStr = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     public static int tempBeginning;
     public static int tempEnding;
 
@@ -67,6 +67,7 @@ public class budgetData {
         daysRemain = 14 - dayOfPay;
         begNextPay = (day - dayOfPay)+ 14;
         endNextPay = (day - dayOfPay) + 28;
+        dueDate = 0;
 
     }
 
@@ -75,12 +76,10 @@ public class budgetData {
         upNextGen();
         quant = data.dueSize();
         cost = 0;
-            //do this if the pay straddles months
 
         for (int i = 0; i < quant; i++){
             cost += Double.parseDouble(data.getDue(i, 2));
         }
-        System.out.println("budgetData ln 84 cost: " +cost);
 
     }
     public static void addWeekly(){
@@ -100,12 +99,11 @@ public class budgetData {
                 weekCounter++;
                 weekCounter = weekCounter % 7;
             }
-            System.out.println("budgetData ln 104 Weekly: " +weeklyTotal);
     }
 
     public static void upNextGen() {
-        System.out.println("budgetData ln 132 upNextGen Ran");
         data.clearIsDue();
+        int j;
         due = 0;
         quant  = data.getSize();
         tempBeginning = begOfPay;
@@ -114,30 +112,39 @@ public class budgetData {
         //do this if the pay straddles months
         if (endOfPay - daysRemain <= 0) {
             for (int i = day; i <= months[(month - 2)]; i++) {
-                for (int j = 0; j < quant; j++) {
+                j = 0;
+                due = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (i == due) {
                         data.addDue(j);
                     }
+                    j++;
                 }
             }
             tempEnding = tempEnding - months[(month - 2)];
             for (int i = 1; i < tempEnding; i++) {
-                for (int j = 0; j < quant; j++) {
+                j = 0;
+                due = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (i == due) {
                         data.addDue(j);
                     }
+                    j++;
                 }
             }
         } else {
             tempEnding = tempEnding - months[(month - 2)];
             for (int i = day; i < tempEnding; i++) {
-                for (int j = 0; j < quant; j++) {
+                j = 0;
+                due = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (i == due) {
                         data.addDue(j);
                     }
+                j++;
                 }
             }
         }
@@ -146,7 +153,7 @@ public class budgetData {
 
     public static void upAfterGen() {
         data.clearIsAfter();
-        System.out.println("budgetData ln 174 upAfterGen ran");
+        int j;
         due = 0;
         quant = data.getSize();
         tempBeginning = begNextPay;
@@ -164,28 +171,37 @@ public class budgetData {
         }
         if (tempEnding > months[monthNew]) {
             for (int i = tempBeginning; i <= months[monthNew]; i++) {
-                for (int j = 0; j < quant; j++) {
+                j = 0;
+                due = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (due == i) {
                     }
+                    j++;
                 }
             }
             tempEnding = tempEnding - months[monthNew];
             for (int i = 1; i < tempEnding; i++) {
-                for (int j = 0; j < quant; j++) {
+                j = 0;
+                due = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (due == i) {
                         data.addAfter(j);
                     }
+                    j++;
                 }
             }
         } else {
             for (int i = tempBeginning; i < tempEnding; i++) {
-                for (int j = 0; j < quant; j++) {
+                due = 0;
+                j = 0;
+                while (due <= i && j < data.getSize()) {
                     due = Integer.parseInt(data.getData(j, 1));
                     if (due == i) {
                         data.addAfter(j);
                     }
+                    j++;
                 }
             }
         }
@@ -199,12 +215,6 @@ public class budgetData {
         tempTtl = 0;
         addBills();
         addWeekly();
-        System.out.println("Budget Data Calculate:");
-        System.out.println("Beginning of pay: " +begOfPay);
-        System.out.println("End of pay: " +endOfPay);
-        System.out.println("Seed Pay: " +seedPay);
-        System.out.println("Days remaining: " +daysRemain);
-        System.out.println("Day of pay: " +dayOfPay);
         tempTtl = cost + weeklyTotal;
         projBalance = balance - tempTtl;
         returned = String.valueOf(projBalance);
@@ -215,12 +225,9 @@ public class budgetData {
         int currentSeed =  0;
         currentSeed = seed;
         seedPay = currentSeed;
-        System.out.println("budgetData ln 218 seedPay: " +seedPay);
         seedPay = seedPay % 14;
-        System.out.println("budgetData ln 220 seedPay after modulus: " +seedPay);
         temp = julDate - seedPay;
         dayOfPay = temp % 14;
-        System.out.println("budgetData ln 223 dayOfPay: " +dayOfPay);
         julBegOfPay = julDate - dayOfPay;
         begOfPay = julBegOfPay;
         x = 0;
@@ -228,14 +235,11 @@ public class budgetData {
             begOfPay -= months[x];
             x++;
         }
-        System.out.println("budgetData ln 227 begOfPay: " +begOfPay);
         endOfPay = begOfPay + 14;
-        System.out.println("budgetData ln 231 endOfPay: " +endOfPay);
         daysRemain = 14 - dayOfPay;
         begNextPay = (day - dayOfPay)+ 14;
         endNextPay = (day - dayOfPay) + 28;
         daysRemain = 14 - dayOfPay;
-        System.out.println("budgetData ln 233 daysRemain: " +daysRemain);
         upNextGen();
         upAfterGen();
     }
