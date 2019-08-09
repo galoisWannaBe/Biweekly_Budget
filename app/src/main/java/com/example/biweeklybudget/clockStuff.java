@@ -7,47 +7,39 @@ import java.util.Calendar;
 
 public class clockStuff {
 
-    static int day;
-    static int month;
-    static int year;
-    static int week;
-    static int julDate;
-    static int[] months;
-    static DateFormat dd = new SimpleDateFormat("dd");
-    static DateFormat MM = new SimpleDateFormat("MM");
-    static DateFormat yy = new SimpleDateFormat("yy");
-    static DateFormat ee = new SimpleDateFormat("E");
-    static String dayS = dd.format(Calendar.getInstance().getTime());
-    static String monS = MM.format(Calendar.getInstance().getTime());
-    static String yearS = yy.format(Calendar.getInstance().getTime());
-    static String weekS = ee.format(Calendar.getInstance().getTime());
+    int julDate;
+    int seedPay;
+    int startPPD;
+    int daysRemain;
+    int finPPD;
+    int month;
+    int day;
+    int[] months;
+    int week;
+    DateFormat dd = new SimpleDateFormat("dd");
+    DateFormat MM = new SimpleDateFormat("MM");
+    DateFormat ee = new SimpleDateFormat("E");
+    String dayStr = dd.format(Calendar.getInstance().getTime());
+    String monStr = MM.format(Calendar.getInstance().getTime());
+    String weekStr = ee.format(Calendar.getInstance().getTime());
 
-    static public void init(){
+    private static final clockStuff INSTANCE = new clockStuff();
+
+    public static clockStuff getInstance() {
+        return INSTANCE;
+    }
+
+    private clockStuff(){
         months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        day = Integer.valueOf(dayS);
-        month = Integer.valueOf(monS);
+        day = Integer.parseInt(dayStr);
+        month = Integer.parseInt(monStr);
         julDate = 0;
-        for(int i = 0; i <(month - 1); i++){
+        for(int i = 0; i < (month -1); i++){
             julDate += months[i];
-        }julDate += day;
+        }
+        julDate += day;
 
-    }
-
-    static public int getDay(){
-        day = Integer.valueOf(dayS);
-        return day;
-    }
-    static public int getMonth(){
-        month = Integer.valueOf(monS);
-        return month;
-    }
-    static public int getYear(){
-        year = Integer.valueOf(yearS);
-        return year;
-    }
-    static public int getWeek(){
-        System.out.println("Day of week" +weekS);
-        switch (weekS){
+        switch (weekStr){
             case "Sun":
                 week = 0;
                 break;
@@ -70,10 +62,34 @@ public class clockStuff {
                 week = 6;
                 break;
         }
-        System.out.println("Day of week" +week);
+    }
+
+    public void setSeedPay(int seedPay) {
+        this.seedPay = seedPay;
+        seedPay = seedPay % 14;
+        daysRemain = (julDate % 14);
+        daysRemain = 14 - daysRemain;
+        daysRemain += seedPay;//currently number of days into pay period
+        finPPD = day + daysRemain;
+        daysRemain = 14 - daysRemain;//actually the amount of days remaining in the pay period
+    }
+
+    public int getDay(){
+        return day;
+    }
+    public int getMonth(){
+        return month;
+    }
+    public int getFinPPD(){
+        return finPPD;
+    }
+    public int getDaysRemain(){
+        return daysRemain;
+    }
+    public int getWeek(){
         return week;
     }
-    static public int getJulDate(){
+    public int getJulDate(){
         return julDate;
     }
 
