@@ -24,7 +24,7 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
+        this.setTitle("Settings");
         dateEdit = findViewById(R.id.seed_pay);
         saveSeed = findViewById(R.id.save_pay);
     }

@@ -34,6 +34,7 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weekly_expenses);
+        this.setTitle("Weekly Expenses");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         wRecyclerView = this.findViewById(R.id.weekliesRecyclerView);
         wAdapter = new com.example.biweeklybudget.weeklyAdapter(this);

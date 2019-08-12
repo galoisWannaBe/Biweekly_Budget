@@ -42,11 +42,14 @@ public class AddToList extends AppCompatActivity {
         originClass = bundle.getString("origin_class");
         fromList = bundle.getBoolean("fromList");
         if (fromList) {
+            setTitle("Edit a Monthly Bill");
             ID = bundle.getInt("index");
             getBillByID(ID);
             tvBill.setText(bill.getLabel());
             tvDue.setText(String.valueOf(bill.getDue()));
             tvCost.setText(String.valueOf(bill.getCost()));
+        }else{
+            setTitle("Add a Monthly Bill");
         }
     }
 

@@ -37,6 +37,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
+        this.setTitle("All Bills");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerView);
         mAdapter = new com.example.biweeklybudget.viewAllAdapter(this);

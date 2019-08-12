@@ -62,6 +62,7 @@ public class AddWeekly extends AppCompatActivity {
         fromList = bundle.getBoolean("fromList");
 
         if (fromList){
+            setTitle("Edit a Weekly Expense");
             pos = bundle.getInt("position");
             Weekly weekly = allWeekly.get(pos);
             label = weekly.getLabel();
@@ -71,6 +72,7 @@ public class AddWeekly extends AppCompatActivity {
             costEdit.setText(cost);
         }
         else{
+            setTitle("Add a Weekly Expense");
             days = 0;
         }
         sunday.setChecked((days & SUNDAY) == SUNDAY);

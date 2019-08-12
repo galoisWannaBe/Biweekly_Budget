@@ -34,6 +34,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_next);
+        setTitle("Bills Due This Pay");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         nRecyclerView = findViewById(R.id.recyclerView);
         nAdapter = new upNextAdapter(this);

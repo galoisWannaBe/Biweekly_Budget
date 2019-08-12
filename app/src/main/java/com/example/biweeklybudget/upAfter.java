@@ -33,6 +33,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_after);
+        setTitle("Bills Due Next Pay");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerView);
         mAdapter = new upAfterAdapter(this);
