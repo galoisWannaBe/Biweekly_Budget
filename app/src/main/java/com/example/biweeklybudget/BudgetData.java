@@ -48,7 +48,7 @@ public class BudgetData {
         weekCounter = week;
         for (int i = 0; i < allWeekly.size(); i++){
             days = allWeekly.get(i).getDays();
-            for (int j = 0; j < daysRemain; j++){
+            for (int j = 0; j < (daysRemain - 1); j++){
                 if((days & weekArr[weekCounter]) == weekArr[weekCounter]){
                     weeklyTotal += allWeekly.get(i).getCost();
                 }
