@@ -48,12 +48,18 @@ public class BudgetData {
         weekCounter = week;
         for (int i = 0; i < allWeekly.size(); i++){
             days = allWeekly.get(i).getDays();
-            for (int j = 0; j < (daysRemain - 1); j++){
+            Log.d(TAG, "Current Weekly" +allWeekly.get(i).getLabel());
+            Log.d(TAG, "Days Remaining: " +daysRemain);
+            for (int j = 0; j < daysRemain; j++){
                 if((days & weekArr[weekCounter]) == weekArr[weekCounter]){
                     weeklyTotal += allWeekly.get(i).getCost();
+                    Log.d(TAG, "Added " +allWeekly.get(i).getCost() +" for " +weekCounter);
+                    Log.d(TAG, "Weekly Total: " +weeklyTotal);
                 }
+                Log.d(TAG, j +"Days into the pay");
                 weekCounter++;
                 weekCounter = weekCounter % 7;
+                Log.d(TAG, "WeekCounter" +weekCounter);
             }
         }
         Log.d(TAG, "Weekly expenses totaled to " +weeklyTotal);

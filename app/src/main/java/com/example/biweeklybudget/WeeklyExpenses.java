@@ -28,7 +28,7 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
     private ExpenseViewModel expenseViewModel;
-    private LiveData<List<Weekly>>allWeekly;
+    private List<Weekly>allWeekly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         wLayoutManager = new LinearLayoutManager(this);
         wRecyclerView.setLayoutManager(wLayoutManager);
         wRecyclerView.setAdapter(wAdapter);
-        expenseViewModel.getAllWeekly();
         observeAllWeekly();
+        expenseViewModel.getAllWeekly();
     }
 
     @Override
@@ -59,24 +59,20 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
                     "Cancelled",
                     Toast.LENGTH_LONG).show();
             Log.d(TAG, "action cancelled");
-        } else if (resultCode == RESULT_OK || resultCode == RESULT_DELETED) {
+        } else if(resultCode == RESULT_OK && requestCode == ADD_REQUEST){
             label = bundle.getString("Label");
             cost = bundle.getDouble("Cost");
             days = bundle.getByte("Days");
-            Log.d(TAG, "got " +label +", " +cost +", and " +days +"from Intent data");
-        }
-        if (requestCode == ADD_REQUEST && resultCode == RESULT_OK){
-            Weekly weekly = new Weekly(label, cost, days);
-            expenseViewModel.insertWeekly(weekly);
-            Log.d(TAG, "inserted Weekly");
-        }else if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
+            expenseViewModel.insertWeekly(new Weekly(label, cost, days));
+        }else if(resultCode == RESULT_OK && requestCode == EDIT_REQUEST){
+            label = bundle.getString("Label");
+            cost = bundle.getDouble("Cost");
+            days = bundle.getByte("Days");
             int ID = bundle.getInt("ID");
             expenseViewModel.updateWeekly(ID, label, cost, days);
-            Log.d(TAG, "Updated Weekly at ID: " +ID);
-        }else if (requestCode == EDIT_REQUEST && resultCode == RESULT_DELETED){
+        }else if (resultCode == RESULT_DELETED && requestCode == EDIT_REQUEST){
             int ID = bundle.getInt("ID");
             expenseViewModel.deleteWeekly(ID);
-            Log.d(TAG, "Deleted Weekly at ID: " +ID);
         }
     }
 
@@ -108,17 +104,20 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     public void OnWeeklyClick(int position) {
         Intent intent = new Intent(this, AddWeekly.class);
         Bundle bundle = new Bundle();
+        Weekly weekly = allWeekly.get(position);
         bundle.putBoolean("fromList", true);
-        bundle.putInt("position", position);
+        bundle.putInt("position", weekly.getId());
+        Log.d(TAG, "clicked at position: " +position);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
     public void observeAllWeekly(){
         expenseViewModel.getAllWeekly().observe(this, weeklies -> {
+            allWeekly = weeklies;
             wAdapter.setAllWeekly(weeklies);
             AddWeekly.setAllWeekly(weeklies);
             wAdapter.notifyDataSetChanged();
-            Log.d(TAG, "observed uptdate to Weekly list");
+            Log.d(TAG, "observed update to Weekly list");
         });
     }
 }

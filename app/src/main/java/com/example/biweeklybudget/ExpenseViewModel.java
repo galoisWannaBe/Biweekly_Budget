@@ -51,10 +51,6 @@ public class ExpenseViewModel extends AndroidViewModel {
         return allWeekly;
     }
 
-    public LiveData<Integer> getBillCount() {
-        return billCount;
-    }
-
     public void setSeedPay(int seedPay){
         mRepository.setSeedPay(seedPay);
     }
@@ -84,5 +80,9 @@ public class ExpenseViewModel extends AndroidViewModel {
     }
     void updateWeekly(int id, String label, double cost, byte days){
         mRepository.updateWeeklyAsync(id, label, cost, days);
+    }
+    public LiveData<List<Bill>> getAfterASink(){
+        nextBills = mRepository.getNextBills();
+        return nextBills;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.biweeklybudget;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -24,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
         String projBalanceStr;
         int daysRemain;
         int dayOfWeek;
-        int billCount;
         int seedPay = 0;
+        LiveData<List<Bill>> nextBills;
+        List<Bill> dueBills;
 
         private static final String TAG = "MainActivity";
 
@@ -38,24 +40,25 @@ public class MainActivity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+            expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
             seedPay = prefs.getInt("seedPay", 0);
             Log.d(TAG, "Seedpay" +seedPay);
-            expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             dayOfWeek = expenseViewModel.getDayOfWeek();
+            nextBills = expenseViewModel.getNextBills();
+            Log.d(TAG, "Day of the week: " +dayOfWeek);
             budgetData = new BudgetData();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            expenseViewModel.getNextBills();
+            expenseViewModel.getAfterASink();
             expenseViewModel.getAllWeekly();
-            expenseViewModel.getBillCount();
             expenseViewModel.getAllBills();
             observeNextBills();
             observeAllWeekly();
-            observeBillCount();
             observeAllBills();
+
         }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
@@ -67,11 +70,10 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("seedPay", seed);
             editor.commit();
-            Log.d(TAG, "Editor commited");
             expenseViewModel.setSeedPay(seed);
             daysRemain = expenseViewModel.getDaysRemain();
-            dayOfWeek = expenseViewModel.getDayOfWeek();
             budgetData.setDaysRemain(daysRemain);
+            budgetData.setWeek(dayOfWeek);
             expenseViewModel.getAllBills();
             expenseViewModel.getNextBills();
         }
@@ -116,25 +118,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void observeNextBills(){
-            expenseViewModel.getNextBills().observe(this, bills -> {
-                budgetData.setNextBills(bills);
-                Log.d(TAG, "Change to bills observed");
+            expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
+                @Override
+                public void onChanged(List<Bill> bills) {
+                    budgetData.setNextBills(bills);
+                    dueBills = bills;
+                    Log.d(TAG, "There are " + dueBills.size() + " bills due");
+                    Log.d(TAG, "Change to next bills observed");
+                }
             });
         }
         public void observeAllWeekly(){
             expenseViewModel.getAllWeekly().observe(this, weeklies -> {
                 budgetData.setAllWeekly(weeklies);
+
                 Log.d(TAG, "Change to Weeklies observed");
             });
         }
-        public void observeBillCount(){
-            expenseViewModel.getBillCount().observe(this, integer -> {
-                billCount = integer;
-                Log.d(TAG, "There are " +billCount +" bills");
-            });
-        }
         public void observeAllBills(){
-            expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
+            expenseViewModel.getAllBills().observe(this, bills -> {AddToList.setBills(bills);
+            Log.d(TAG, "Change to all bills observed");
+            });
         }
 }
 

@@ -40,6 +40,7 @@ public class AddWeekly extends AppCompatActivity {
     public int pos;
     public boolean fromList;
     public static List<Weekly> allWeekly;
+    public Weekly currentWeekly;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +65,11 @@ public class AddWeekly extends AppCompatActivity {
         if (fromList){
             setTitle("Edit a Weekly Expense");
             pos = bundle.getInt("position");
-            Weekly weekly = allWeekly.get(pos);
-            label = weekly.getLabel();
-            cost = String.valueOf(weekly.getCost());
-            days = weekly.getDays();
+            getWeeklyByID(pos);
+            label = currentWeekly.getLabel();
+            cost = String.valueOf(currentWeekly.getCost());
+            days = currentWeekly.getDays();
+            Log.d(TAG, "Days: " +days);
             labelEdit.setText(label);
             costEdit.setText(cost);
         }
@@ -86,6 +88,8 @@ public class AddWeekly extends AppCompatActivity {
 
     }
     public void save(View view){
+
+        days = 0;
 
         if (sunday.isChecked())
             days |= SUNDAY;
@@ -152,7 +156,7 @@ public class AddWeekly extends AppCompatActivity {
             backBundle.putByte("Days", days);
             Log.d(TAG, "put " +label +", " +cost +", and " +days +"into bundle");
             if (fromList){
-                int ID = allWeekly.get(pos).getId();
+                int ID = currentWeekly.getId();
                 backBundle.putInt("ID", ID);
                 Log.d(TAG, "ALSO: " +ID);
             }
@@ -165,20 +169,33 @@ public class AddWeekly extends AppCompatActivity {
     public void delete(View view){
         Intent nIntent = new Intent(this, WeeklyExpenses.class);
         Bundle backBundle = new Bundle();
-        backBundle.putInt("position", pos);
+        backBundle.putInt("ID", currentWeekly.getId());
         nIntent.putExtras(backBundle);
         setResult(2, nIntent);
         finish();
     }
     public void cancel(View view){
         Intent pIntent = new Intent(this, WeeklyExpenses.class);
-        Bundle backBundle = new Bundle();
-        backBundle.putInt("position", pos);
-        pIntent.putExtras(backBundle);
         setResult(RESULT_CANCELED, pIntent);
         finish();
     }
     public static void setAllWeekly(List<Weekly> mAllWeekly) {
         allWeekly = mAllWeekly;
+        Log.d(TAG, "AllWeekly set");
+    }
+    public void getWeeklyByID(int ID){
+        int id = ID;
+        Log.d(TAG, "searching for " +id);
+        for (int i = 0; i < allWeekly.size(); i++){
+            Log.d(TAG, "Current ID: " +allWeekly.get(i).getId());
+            if (allWeekly.get(i).getId() == ID){
+                currentWeekly = allWeekly.get(i);
+                i = allWeekly.size();
+            }
+        }
+        Log.d(TAG, "weekly label at ID is: " +currentWeekly.getLabel());
+        if (ID != currentWeekly.getId()){
+            fromList = false;
+        }
     }
 }

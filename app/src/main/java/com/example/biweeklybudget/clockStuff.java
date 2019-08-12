@@ -77,6 +77,7 @@ public class clockStuff {
         daysRemain = 14 - dayOfPay;
         daysRemain += seedPay;//currently number of days into pay period
         finPPD = (day + daysRemain) -1;
+        Log.d(TAG, "Julian pay " +julDate);
     }
 
     public int getDay(){

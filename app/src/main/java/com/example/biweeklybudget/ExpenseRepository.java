@@ -42,6 +42,7 @@ class ExpenseRepository {
         allWeekly = weeklyDao.getWeeklyList();
         dayOfWeek = mClockStuff.getWeek();
         billCount = billDao.getBillCount();
+        Log.d(TAG, "It is the " +dayOfWeek +" day of the week");
         Log.d(TAG, "constructer ran");
     }
 
@@ -106,6 +107,11 @@ class ExpenseRepository {
     }
     void deleteWeekly(int id){
         new deleteWeeklyAsync(weeklyDao).execute(id);
+    }
+    void getNextAsync(){
+
+        ppdParams ppd = new ppdParams(today, finPPD);
+        new getNextByAsync(billDao).execute(ppd);
     }
 
     private static class insertBillAsyncTask extends AsyncTask<Bill, Void, Void>{
@@ -256,5 +262,39 @@ class ExpenseRepository {
         }
     }
 
+    public static class ppdParams{
 
+        int today;
+        int fin;
+
+        public ppdParams(int today, int fin) {
+            this.today = today;
+            this.fin = fin;
+        }
+    }
+
+    private static class getNextByAsync extends AsyncTask<ppdParams, Void, Void>{
+
+        BillDao billDao;
+
+        public getNextByAsync(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(ppdParams... ppdParams) {
+
+            int today = ppdParams[0].today;
+            int fin = ppdParams[0].fin;
+
+            billDao.getNext(today, fin);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d(TAG, "next bills gotted");
+        }
+    }
 }
