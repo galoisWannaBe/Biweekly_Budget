@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             budgetData = new BudgetData();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            expenseViewModel.getAfterASink();
+            expenseViewModel.getNextASink();
             expenseViewModel.getAllWeekly();
             expenseViewModel.getAllBills();
             observeNextBills();

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public final int ADD_REQUEST = 0;
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
+    LiveData<List<Bill>> nextBillsLive;
     List<Bill> nextBills;
     upNextAdapter nAdapter;
 
@@ -43,7 +45,9 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
         expenseViewModel.getNextBills();
+        nextBillsLive = expenseViewModel.getNextASink();
         expenseViewModel.getAllBills();
+
         observeNext();
         observeAll();
 

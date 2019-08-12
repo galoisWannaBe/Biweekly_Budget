@@ -25,6 +25,7 @@ class ExpenseRepository {
     private int dayOfWeek;
     private int begNext;
     private int finNext;
+    // TODO: 8/12/19 Separate Async methods for getNext and getAfter
 
     public ExpenseRepository(Application application) {
         ExpensesDatabase db = ExpensesDatabase.getDatabase(application);
@@ -33,12 +34,21 @@ class ExpenseRepository {
         mClockStuff = clockStuff.getInstance();
         today = mClockStuff.getDay();
         finPPD = mClockStuff.getFinPPD();
-        begNext = finPPD + 1;
-        finNext =finPPD + 14;
         daysRemain = mClockStuff.getDaysRemain();
         allBills = billDao.getAllBills();
-        nextBills = billDao.getNext(today, finPPD);
-        afterBills = billDao.getAfter(begNext, finNext);
+        begNext = mClockStuff.getBegNext();
+        finNext = mClockStuff.getFinNext();
+        if (today < finPPD){
+            nextBills = billDao.getNext(today, finPPD);
+        }else{
+            nextBills = billDao.getNextCrossMonths(today, finPPD);
+        }
+        if (begNext < finNext){
+            afterBills = billDao.getAfter(begNext, finNext);
+        }else{
+            afterBills = billDao.getAfterCrossMonths(begNext, finNext);
+            Log.d(TAG, "crossed month");
+        }
         allWeekly = weeklyDao.getWeeklyList();
         dayOfWeek = mClockStuff.getWeek();
         billCount = billDao.getBillCount();
@@ -50,11 +60,17 @@ class ExpenseRepository {
         mClockStuff.setSeedPay(seed);
         today = mClockStuff.getDay();
         finPPD = mClockStuff.getFinPPD();
-        begNext = finPPD + 1;
-        finNext = finPPD + 14;
         daysRemain = mClockStuff.getDaysRemain();
-        nextBills = billDao.getNext(today, finPPD);
-        afterBills = billDao.getAfter(begNext, finNext);
+        begNext = mClockStuff.getBegNext();
+        finNext = mClockStuff.getFinNext();
+        if (begNext < finNext){
+            afterBills = billDao.getAfter(begNext, finNext);
+            getAfterAsync();
+        }else{
+            afterBills = billDao.getAfterCrossMonths(begNext, finNext);
+            getAfterSplitMo();
+            Log.d(TAG, "crossed month");
+        }
         Log.d(TAG, "Seed pay set");
         Log.d(TAG, daysRemain +"days remaining");
         Log.d(TAG, "Today: " +today +" EndPay: " +finPPD +" begNext: " +begNext +" finNext: " +finNext);
@@ -112,6 +128,22 @@ class ExpenseRepository {
 
         ppdParams ppd = new ppdParams(today, finPPD);
         new getNextByAsync(billDao).execute(ppd);
+    }
+
+    void getNextSplitMo(){
+        ppdParams ppd = new ppdParams(today, finPPD);
+        new getNextSplit(billDao).execute(ppd);
+    }
+
+    void getAfterAsync(){
+
+        ppdParams ppd = new ppdParams(begNext, finNext);
+        new getAfterByAsync(billDao).execute(ppd);
+    }
+    void getAfterSplitMo(){
+
+        ppdParams ppd = new ppdParams(begNext, finNext);
+        new getAfterSplit(billDao).execute(ppd);
     }
 
     private static class insertBillAsyncTask extends AsyncTask<Bill, Void, Void>{
@@ -287,14 +319,77 @@ class ExpenseRepository {
             int today = ppdParams[0].today;
             int fin = ppdParams[0].fin;
 
-            billDao.getNext(today, fin);
+                billDao.getNext(today, fin);
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
             Log.d(TAG, "next bills gotted");
+        }
+    }
+    private static class getNextSplit extends AsyncTask<ppdParams, Void, Void>{
+
+        BillDao billDao;
+
+        public getNextSplit(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(ppdParams... ppdParams) {
+
+            int today = ppdParams[0].today;
+            int fin = ppdParams[0].fin;
+
+            billDao.getAfterCrossMonths(today, fin);
+            return null;
+        }
+    }
+
+    private static class getAfterByAsync extends AsyncTask<ppdParams, Void, Void>{
+
+        BillDao billDao;
+
+        public getAfterByAsync(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(ppdParams... ppdParams) {
+
+            int begPay = ppdParams[0].today;
+            int fin = ppdParams[0].fin;
+
+            if (begPay < fin){
+                billDao.getAfter(begPay, fin);
+            }else{
+                billDao.getAfterCrossMonths(begPay, fin);
+                Log.d(TAG, "getting After by async");
+            }
+            return null;
+        }
+    }
+    private static class getAfterSplit extends AsyncTask<ppdParams, Void, Void>{
+
+        BillDao billDao;
+
+        public getAfterSplit(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(ppdParams... ppdParams) {
+
+            int today = ppdParams[0].today;
+            int fin = ppdParams[0].fin;
+
+            billDao.getAfterCrossMonths(today, fin);
+
+            return null;
         }
     }
 }

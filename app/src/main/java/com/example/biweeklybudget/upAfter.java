@@ -42,6 +42,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         expenseViewModel.getAfterBills();
+        expenseViewModel.getAfterAsync();
         expenseViewModel.getAllBills();
         observeAfter();
         observeAll();

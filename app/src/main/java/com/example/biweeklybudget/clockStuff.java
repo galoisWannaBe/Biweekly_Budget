@@ -20,6 +20,8 @@ public class clockStuff {
     int day;
     int[] months;
     int week;
+    int begNext;
+    int finNext;
     DateFormat dd = new SimpleDateFormat("dd");
     DateFormat MM = new SimpleDateFormat("MM");
     DateFormat ee = new SimpleDateFormat("E");
@@ -77,7 +79,24 @@ public class clockStuff {
         daysRemain = 14 - dayOfPay;
         daysRemain += seedPay;//currently number of days into pay period
         finPPD = (day + daysRemain) -1;
+        Log.d(TAG, "FinPPD: " +finPPD);
+        Log.d(TAG, "month: " +month);
+        Log.d(TAG, "Days in Month: " +months[month]);
+        Log.d(TAG, "FinPPD: " +finPPD);
+        if (finPPD > months[(month - 1)]){
+            finPPD -= months[month];
+        }
+        begNext = finPPD + 1;
+        if(begNext > months[(month - 1)]){
+            begNext -= months[month];
+        }
+        finNext = finPPD + 13;
+        if(finNext > months[(month - 1)]){
+            finNext -= months[(month - 1)];
+        }
+        finNext = finNext % months[month];
         Log.d(TAG, "Julian pay " +julDate);
+
     }
 
     public int getDay(){
@@ -99,4 +118,11 @@ public class clockStuff {
         return julDate;
     }
 
+    public int getBegNext() {
+        return begNext;
+    }
+
+    public int getFinNext() {
+        return finNext;
+    }
 }

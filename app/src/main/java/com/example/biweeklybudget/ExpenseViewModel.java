@@ -81,8 +81,12 @@ public class ExpenseViewModel extends AndroidViewModel {
     void updateWeekly(int id, String label, double cost, byte days){
         mRepository.updateWeeklyAsync(id, label, cost, days);
     }
-    public LiveData<List<Bill>> getAfterASink(){
+    public LiveData<List<Bill>> getNextASink(){
         nextBills = mRepository.getNextBills();
         return nextBills;
+    }
+    public LiveData<List<Bill>> getAfterAsync(){
+        afterBills = mRepository.getAfterBill();
+        return afterBills;
     }
 }
