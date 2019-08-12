@@ -3,12 +3,17 @@ package com.example.biweeklybudget;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class AddWeekly extends AppCompatActivity {
+
+    private static final String TAG = "AddWeekly";
 
     public final byte SUNDAY = 1;
     public final byte MONDAY = 2;
@@ -18,23 +23,24 @@ public class AddWeekly extends AppCompatActivity {
     public final byte FRIDAY = 32;
     public final byte SATURDAY = 64;
 
-    public static String label;
-    public static String cost;
-    public static String days;
+    public String label;
+    public String cost;
+    public byte days;
 
-    public static CheckBox sunday;
-    public static CheckBox monday;
-    public static CheckBox tuesday;
-    public static CheckBox wednesday;
-    public static CheckBox thursday;
-    public static CheckBox friday;
-    public static CheckBox saturday;
+    public CheckBox sunday;
+    public CheckBox monday;
+    public CheckBox tuesday;
+    public CheckBox wednesday;
+    public CheckBox thursday;
+    public CheckBox friday;
+    public CheckBox saturday;
 
-    public static EditText labelEdit;
-    public static EditText costEdit;
-    public static int pos;
-    public static boolean fromList;
-    public static byte daysBin = 0;
+    public EditText labelEdit;
+    public EditText costEdit;
+    public int pos;
+    public boolean fromList;
+    public static List<Weekly> allWeekly;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,48 +63,48 @@ public class AddWeekly extends AppCompatActivity {
 
         if (fromList){
             pos = bundle.getInt("position");
-            label = data.getWeekly(pos, 0);
-            cost = data.getWeekly(pos, 1);
-            daysBin = Byte.parseByte(data.getWeekly(pos, 2));
-
+            Weekly weekly = allWeekly.get(pos);
+            label = weekly.getLabel();
+            cost = String.valueOf(weekly.getCost());
+            days = weekly.getDays();
             labelEdit.setText(label);
             costEdit.setText(cost);
         }
         else{
-            daysBin = 0;
+            days = 0;
         }
-        sunday.setChecked((daysBin & SUNDAY) == SUNDAY);
-        monday.setChecked((daysBin & MONDAY) == MONDAY);
-        tuesday.setChecked((daysBin & TUESDAY) == TUESDAY);
-        wednesday.setChecked((daysBin & WEDNESDAY) == WEDNESDAY);
-        thursday.setChecked((daysBin & THURSDAY) == THURSDAY);
-        friday.setChecked((daysBin & FRIDAY) == FRIDAY);
-        saturday.setChecked((daysBin & SATURDAY) == SATURDAY);
+        sunday.setChecked((days & SUNDAY) == SUNDAY);
+        monday.setChecked((days & MONDAY) == MONDAY);
+        tuesday.setChecked((days & TUESDAY) == TUESDAY);
+        wednesday.setChecked((days & WEDNESDAY) == WEDNESDAY);
+        thursday.setChecked((days & THURSDAY) == THURSDAY);
+        friday.setChecked((days & FRIDAY) == FRIDAY);
+        saturday.setChecked((days & SATURDAY) == SATURDAY);
 
 
     }
     public void save(View view){
 
         if (sunday.isChecked())
-            daysBin |= SUNDAY;
+            days |= SUNDAY;
         if (monday.isChecked())
-            daysBin |= MONDAY;
+            days |= MONDAY;
         if (tuesday.isChecked())
-            daysBin |= TUESDAY;
+            days |= TUESDAY;
         if (wednesday.isChecked())
-            daysBin |= WEDNESDAY;
+            days |= WEDNESDAY;
         if (thursday.isChecked())
-            daysBin |= THURSDAY;
+            days |= THURSDAY;
         if (friday.isChecked())
-            daysBin |= FRIDAY;
+            days |= FRIDAY;
         if (saturday.isChecked())
-            daysBin |= SATURDAY;
+            days |= SATURDAY;
 
         label = labelEdit.getText().toString();
         cost = costEdit.getText().toString();
         if(label.isEmpty()){
             if(cost.isEmpty()){
-                if(daysBin == 0){
+                if(days == 0){
                     Toast.makeText(
                             getApplicationContext(),
                             R.string.weekly_empty,
@@ -109,7 +115,7 @@ public class AddWeekly extends AppCompatActivity {
                             R.string.label_cost_empty,
                             Toast.LENGTH_LONG).show();
                 }
-            }else if (daysBin == 0){
+            }else if (days == 0){
                 Toast.makeText(
                         getApplicationContext(),
                         R.string.label_days_empty,
@@ -119,7 +125,7 @@ public class AddWeekly extends AppCompatActivity {
                     R.string.label_empty,
                     Toast.LENGTH_LONG).show();
         }else if(cost.isEmpty()){
-            if (daysBin == 0){
+            if (days == 0){
                 Toast.makeText(
                         getApplicationContext(),
                         R.string.cost_days_empty,
@@ -130,7 +136,7 @@ public class AddWeekly extends AppCompatActivity {
                         R.string.cost_empty,
                         Toast.LENGTH_LONG).show();
             }
-        }else if (daysBin == 0){
+        }else if (days == 0){
             Toast.makeText(
                     getApplicationContext(),
                     R.string.days_empty,
@@ -140,13 +146,17 @@ public class AddWeekly extends AppCompatActivity {
             Intent mIntent = new Intent(this, WeeklyExpenses.class);
             Bundle backBundle = new Bundle();
             backBundle.putString("Label", label);
-            backBundle.putString("Cost", cost);
-            backBundle.putString("Days", String.valueOf(daysBin));
+            backBundle.putDouble("Cost", Double.parseDouble(cost));
+            backBundle.putByte("Days", days);
+            Log.d(TAG, "put " +label +", " +cost +", and " +days +"into bundle");
             if (fromList){
-                backBundle.putInt("position", pos);
+                int ID = allWeekly.get(pos).getId();
+                backBundle.putInt("ID", ID);
+                Log.d(TAG, "ALSO: " +ID);
             }
             mIntent.putExtras(backBundle);
             setResult(RESULT_OK, mIntent);
+            Log.d(TAG, "RESULT_OK");
             finish();
         }
     }
@@ -166,5 +176,7 @@ public class AddWeekly extends AppCompatActivity {
         setResult(RESULT_CANCELED, pIntent);
         finish();
     }
-
+    public static void setAllWeekly(List<Weekly> mAllWeekly) {
+        allWeekly = mAllWeekly;
+    }
 }

@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.List;
+
 import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextViewHolder>{
 
     private OnBillListener mOnBillListener;
+    private List<Bill> nextBills = Collections.emptyList();
 
     upNextAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -55,18 +59,19 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     @Override
     public void onBindViewHolder(upNextViewHolder holder, int position) {
-        String temp1;
-        String temp2;
-        String temp3;
-        int pos = position;
-        temp1 = data.getDue(pos, 0);
-        temp2 = data.getDue(pos, 1);
-        temp3 = data.getDue(pos, 2);
-        //BillItem currentItem = new BillItem(temp1, temp2, temp3);
+        String label;
+        int due;
+        double cost;
 
-        holder.mTextView1.setText(temp1);
-        holder.mTextView2.setText(temp2);
-        holder.mTextView3.setText(temp3);
+        int pos = position;
+        Bill bill = nextBills.get(pos);
+        label = bill.getLabel();
+        due = bill.getDue();
+        cost = bill.getCost();
+
+        holder.mTextView1.setText(label);
+        holder.mTextView2.setText(String.valueOf(due));
+        holder.mTextView3.setText(String.valueOf(cost));
 
 
     }
@@ -76,7 +81,10 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     @Override
     public int getItemCount() {
-        return data.dueSize();
+        return nextBills.size();
     }
 
+    public void setNextBills(List<Bill> nextBills) {
+        this.nextBills = nextBills;
+    }
 }

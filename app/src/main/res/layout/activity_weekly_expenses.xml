@@ -14,18 +14,42 @@
         tools:layout_editor_absoluteY="193dp">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:orientation="horizontal">
 
-
             <Button
-                android:id="@+id/backMain"
+                android:id="@+id/main"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="backToMain"
-                android:text="Back To Main" />
+                android:onClick="gotoMain"
+                android:text="Budget" />
+
+            <Button
+                android:id="@+id/up_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="gotoUpNext"
+                android:text="Upcoming" />
+
+            <Button
+                android:id="@+id/view_all"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="gotoViewAll"
+                android:text="View all" />
+
+            <Button
+                android:id="@+id/weekly_expense"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Weekly" />
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

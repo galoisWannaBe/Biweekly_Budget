@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.List;
+
 import static androidx.core.content.ContextCompat.getSystemService;
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -22,6 +25,7 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
     public final byte SATURDAY = 64;
     public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
     public final String[] weekStr = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    List<Weekly> allWeekly = Collections.emptyList();
 
     private OnWeeklyListener mOnWeeklyListener;
 
@@ -61,26 +65,20 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
     }
 
     @Override
-    public void onBindViewHolder(WeeklyViewHolder holder, int wPosition) {
-        String temp1;
-        String temp2;
-        String temp3;
-        int wPos = wPosition;
+    public void onBindViewHolder(WeeklyViewHolder holder, int position) {
+        Weekly weekly = allWeekly.get(position);
+        String label = weekly.getLabel();
+        double cost = weekly.getCost();
+        byte days = weekly.getDays();
         StringBuilder sb = new StringBuilder("\0");
         int bitcount = 0;
-        byte weekBin = 0;
-        temp1 = data.getWeekly(wPos, 0);
-        temp2 = data.getWeekly(wPos, 1);
-        temp3 = data.getWeekly(wPos, 2);
-
-        weekBin = Byte.parseByte(temp3);
         for(int i = 0; i < 7; i++){
-            if ((weekBin & weekArr[i]) == weekArr[i]){
+            if ((days & weekArr[i]) == weekArr[i]){
                 bitcount++;
             }
         }
         for(int i = 0; i < 7; i++){
-            if ((weekBin & weekArr[i]) == weekArr[i]){
+            if ((days & weekArr[i]) == weekArr[i]){
                 sb = sb.append(weekStr[i]);
                 if (bitcount > 2){
                     sb = sb.append(", ");
@@ -91,11 +89,9 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
                 bitcount--;
             }
         }
-        temp3 = sb.toString();
-
-        holder.wTextView1.setText(temp1);
-        holder.wTextView2.setText(temp2);
-        holder.wTextView3.setText(temp3);
+        holder.wTextView1.setText(label);
+        holder.wTextView2.setText(String.valueOf(cost));
+        holder.wTextView3.setText(sb.toString());
 
 
 
@@ -103,11 +99,17 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
 
     @Override
     public int getItemCount() {
-        return data.getWeeklySize();
+        return allWeekly.size();
+    }
+
+    void setAllWeekly(List<Weekly> allWeekly) {
+        this.allWeekly = allWeekly;
+        notifyDataSetChanged();
     }
 
     public interface OnWeeklyListener{
         void OnWeeklyClick(int position);
     }
+
 
 }

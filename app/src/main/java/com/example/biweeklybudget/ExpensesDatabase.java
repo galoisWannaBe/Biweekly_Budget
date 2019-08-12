@@ -7,10 +7,12 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.content.Context;
+import android.util.Log;
 
-@Database(entities = {Bill.class, Weekly.class}, version = 1, exportSchema = false)
+@Database(entities = {Bill.class, Weekly.class}, version = 2, exportSchema = false)
 public abstract class ExpensesDatabase extends RoomDatabase {
 
+    private static final String TAG = "ExpensesDatabase";
     public abstract BillDao billDao();
     public abstract WeeklyDao weeklyDao();
 
@@ -28,6 +30,7 @@ public abstract class ExpensesDatabase extends RoomDatabase {
                 }
             }
         }
+        Log.d(TAG, "INSTANCE returned");
         return INSTANCE;
     }
 
@@ -36,6 +39,7 @@ public abstract class ExpensesDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
+            Log.d(TAG, "Database opened");
         }
     };
 }

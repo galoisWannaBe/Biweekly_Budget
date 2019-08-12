@@ -2,10 +2,14 @@ package com.example.biweeklybudget;
 
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.util.Log;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
 public class clockStuff {
+
+    public static final String TAG = "clockStuff";
 
     int julDate;
     int seedPay;
@@ -62,16 +66,17 @@ public class clockStuff {
                 week = 6;
                 break;
         }
+        Log.d(TAG, "Julian Date " +julDate);
+        Log.d(TAG, "Date: " +day);
     }
 
     public void setSeedPay(int seedPay) {
         this.seedPay = seedPay;
         seedPay = seedPay % 14;
-        daysRemain = (julDate % 14);
-        daysRemain = 14 - daysRemain;
+        int dayOfPay = (julDate % 14);
+        daysRemain = 14 - dayOfPay;
         daysRemain += seedPay;//currently number of days into pay period
-        finPPD = day + daysRemain;
-        daysRemain = 14 - daysRemain;//actually the amount of days remaining in the pay period
+        finPPD = (day + daysRemain) -1;
     }
 
     public int getDay(){
@@ -83,7 +88,7 @@ public class clockStuff {
     public int getFinPPD(){
         return finPPD;
     }
-    public int getDaysRemain(){
+    public Integer getDaysRemain(){
         return daysRemain;
     }
     public int getWeek(){

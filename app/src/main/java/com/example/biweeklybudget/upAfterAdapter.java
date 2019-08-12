@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.List;
+
 import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterViewHolder> {
 
     private OnBillListener mOnBillListener;
+    private List<Bill> upAfter = Collections.emptyList();
 
     upAfterAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -54,17 +58,19 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
 
     @Override
     public void onBindViewHolder(upAfterViewHolder holder, int position) {
-        String temp1;
-        String temp2;
-        String temp3;
-        int pos = position;
-        temp1 = data.getAfter(pos, 0);
-        temp2 = data.getAfter(pos, 1);
-        temp3 = data.getAfter(pos, 2);
+        String label;
+        int due;
+        double cost;
 
-        holder.mTextView1.setText(temp1);
-        holder.mTextView2.setText(temp2);
-        holder.mTextView3.setText(temp3);
+        int pos = position;
+        Bill bill = upAfter.get(pos);
+        label = bill.getLabel();
+        due = bill.getDue();
+        cost = bill.getCost();
+
+        holder.mTextView1.setText(label);
+        holder.mTextView2.setText(String.valueOf(due));
+        holder.mTextView3.setText(String.valueOf(cost));
 
 
 
@@ -75,7 +81,10 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
 
     @Override
     public int getItemCount() {
-        return data.afterSize();
+        return upAfter.size();
     }
 
+    public void setUpAfter(List<Bill> upAfter) {
+        this.upAfter = upAfter;
+    }
 }

@@ -30,6 +30,7 @@ public class Bill {
         this.cost = cost;
     }
 
+    @NonNull
     public int getId() {
         return id;
     }

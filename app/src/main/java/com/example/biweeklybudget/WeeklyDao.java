@@ -19,9 +19,9 @@ public interface WeeklyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertWeekly(Weekly weekly);
 
-    @Update
-    void updateWeekly(Weekly weekly);
+    @Query("UPDATE weekly_table SET label = :label, cost = :cost , days = :days WHERE id = :id")
+    void updateWeekly(int id, String label, double cost, byte days);
 
-    @Delete
-    void deleteWeekly(Weekly weekly);
+    @Query("DELETE FROM weekly_table where id = :id")
+    void deleteWeekly(int id);
 }

@@ -7,11 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.List;
+
 import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllViewHolder> {
 
+    private List<Bill> allBills = Collections.emptyList();
     private OnBillListener mOnBillListener;
 
     viewAllAdapter(OnBillListener onBillListener){
@@ -43,9 +47,6 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
         }
     }
 
-    public viewAllAdapter() {
-    }
-    private static Context context;
     @Override
     public ViewAllViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_item, parent, false);
@@ -55,17 +56,19 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
 
     @Override
     public void onBindViewHolder(ViewAllViewHolder holder, int position) {
-        String Label;
-        String Due;
-        String Cost;
-        int pos = position;
-        Label = data.getData(pos, 0);
-        Due = data.getData(pos, 1);
-        Cost = data.getData(pos, 2);
+        String label;
+        int due;
+        double cost;
 
-        holder.mTextView1.setText(Label);
-        holder.mTextView2.setText(Due);
-        holder.mTextView3.setText(Cost);
+        int pos = position;
+        Bill bill = allBills.get(pos);
+        label = bill.getLabel();
+        due = bill.getDue();
+        cost = bill.getCost();
+
+        holder.mTextView1.setText(label);
+        holder.mTextView2.setText(String.valueOf(due));
+        holder.mTextView3.setText(String.valueOf(cost));
 
 
 
@@ -77,7 +80,10 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
 
     @Override
     public int getItemCount() {
-        return data.getSize();
+        return allBills.size();
     }
 
+    public void setAllBills(List<Bill> allBills) {
+        this.allBills = allBills;
+    }
 }

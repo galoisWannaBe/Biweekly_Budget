@@ -1,70 +1,79 @@
 package com.example.biweeklybudget;
 
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
         String balanceStr;
         String projBalanceStr;
-        int seed;
-        int julDate;
-        int dd;
-        int MM;
-        int yy;
-        int ee;
-    public static int q;
-    public static boolean firstRun = true;
+        int daysRemain;
+        int dayOfWeek;
+        int billCount;
+        int seedPay = 0;
+
+        private static final String TAG = "MainActivity";
+
+    ExpenseViewModel expenseViewModel;
+    BudgetData budgetData;
+    Context context;
     //Database vars
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
-
-            //helps distinguish between an add and an edit
-            System.out.println(firstRun);
-            if (firstRun == true) {
-                seed = 112;
-
-                clockStuff.init();
-                julDate = clockStuff.getJulDate();
-                dd = clockStuff.getDay();
-                MM = clockStuff.getMonth();
-                yy = clockStuff.getYear();
-                ee = clockStuff.getWeek();
-                budgetData.init(seed, julDate, dd, MM, yy, ee);
-                q = ListData.listDataInit();
-                for (int i = 0; i < q; i++) {
-                    data.addItem(ListData.getBillElement(i), ListData.getDueElement(i), ListData.getCostElement(i));
-
-                }
-                q = ListData.weeklyInit();
-                for (int i = 0; i < q; i++) {
-                    data.addWeekly(ListData.getWeeklyLabel(i), ListData.getWeeklyCost(i), ListData.getWeeklyDays(i));
-                }
-                budgetData.upNextGen();
-                budgetData.upAfterGen();
-                firstRun = false;
-            }
+            SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
+            seedPay = prefs.getInt("seedPay", 0);
+            Log.d(TAG, "Seedpay" +seedPay);
+            expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+            expenseViewModel.setSeedPay(seedPay);
+            daysRemain = expenseViewModel.getDaysRemain();
+            dayOfWeek = expenseViewModel.getDayOfWeek();
+            budgetData = new BudgetData();
+            budgetData.setWeek(dayOfWeek);
+            budgetData.setDaysRemain(daysRemain);
+            expenseViewModel.getNextBills();
+            expenseViewModel.getAllWeekly();
+            expenseViewModel.getBillCount();
+            expenseViewModel.getAllBills();
+            observeNextBills();
+            observeAllWeekly();
+            observeBillCount();
+            observeAllBills();
         }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
             Bundle bundle = Data.getExtras();
             int seed = bundle.getInt("seed");
-            budgetData.setSeedPay(seed);
+            SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("seedPay", seed);
+            editor.commit();
+            Log.d(TAG, "Editor commited");
+            expenseViewModel.setSeedPay(seed);
+            daysRemain = expenseViewModel.getDaysRemain();
+            dayOfWeek = expenseViewModel.getDayOfWeek();
+            budgetData.setDaysRemain(daysRemain);
+            expenseViewModel.getAllBills();
+            expenseViewModel.getNextBills();
         }
     }
 
@@ -96,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         R.string.null_entry,
                         Toast.LENGTH_LONG).show();
             }else {
-                projBalanceStr = budgetData.calculate(balanceStr);
+                projBalanceStr = budgetData.calculate(Double.parseDouble(balanceStr));
                 TextView textView = findViewById(R.id.projBalance_box);
                 textView.setText(projBalanceStr);
             }
@@ -106,6 +115,27 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
 
-    }
+        public void observeNextBills(){
+            expenseViewModel.getNextBills().observe(this, bills -> {
+                budgetData.setNextBills(bills);
+                Log.d(TAG, "Change to bills observed");
+            });
+        }
+        public void observeAllWeekly(){
+            expenseViewModel.getAllWeekly().observe(this, weeklies -> {
+                budgetData.setAllWeekly(weeklies);
+                Log.d(TAG, "Change to Weeklies observed");
+            });
+        }
+        public void observeBillCount(){
+            expenseViewModel.getBillCount().observe(this, integer -> {
+                billCount = integer;
+                Log.d(TAG, "There are " +billCount +" bills");
+            });
+        }
+        public void observeAllBills(){
+            expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
+        }
+}
 
 

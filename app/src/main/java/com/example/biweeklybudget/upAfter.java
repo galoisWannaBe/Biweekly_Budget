@@ -4,12 +4,21 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillListener{
+    private static final String TAG  ="upAfter";
+
     private RecyclerView mRecyclerView;
     upAfterAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -17,26 +26,32 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public final int ADD_REQUEST = 0;
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
+    ExpenseViewModel expenseViewModel;
+    List<Bill> afterBills;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_after);
-
+        expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerView);
         mAdapter = new upAfterAdapter(this);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        expenseViewModel.getAfterBills();
+        expenseViewModel.getAllBills();
+        observeAfter();
+        observeAll();
     }
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data){
             super.onActivityResult(requestCode, resultCode, Data);
             String label = "\0";
-            String due = "\0";
-            String cost = "\0";
+            int due = 0;
+            double cost = 0;
             int ID = 0;
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(
@@ -46,31 +61,24 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             }else if(resultCode == RESULT_OK){
                 Bundle bundle = Data.getExtras();
                 label = bundle.getString("Label");
-                due = bundle.getString("Due");
-                cost = bundle.getString("Cost");
-            }
-            else{
-                label = "\0";
-                due = "\0";
-                cost = "\0";
+                due = bundle.getInt("Due");
+                cost = bundle.getDouble("Cost");
             }
             if(requestCode == ADD_REQUEST){
                 if(resultCode == RESULT_OK){
-                    data.addItem(label, due, cost);
+                    expenseViewModel.insertBill(new Bill(label, due, cost));
                 }
                 } else if(requestCode == EDIT_REQUEST){
                 if(resultCode == RESULT_OK){
                     Bundle bundle = Data.getExtras();
                     ID = bundle.getInt("ID");
-                    data.addItem(label, due, cost, ID);
+                    expenseViewModel.updateBill(ID, label, due, cost);
                 }else if(resultCode == RESULT_DELETED) {
                     Bundle bundle = Data.getExtras();
                     ID = bundle.getInt("ID");
-                    data.removeItem(ID);
+                    expenseViewModel.deleteBill(ID);
                 }
-            }budgetData.upNextGen();
-            budgetData.upAfterGen();
-            mAdapter.notifyDataSetChanged();
+            }
         }
 
     public void goToAdd(View view) {
@@ -90,9 +98,14 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public void gotoUpNext(View view){
         Intent nIntent = new Intent(upAfter.this, upNext.class);
         startActivity(nIntent);
-    }    public void gotoViewAll(View view){
+    }
+    public void gotoViewAll(View view){
         Intent vIntent = new Intent(upAfter.this, viewAll.class);
         startActivity(vIntent);
+    }
+    public void goToWeekly(View view){
+        Intent intent = new Intent(upAfter.this, WeeklyExpenses.class);
+        startActivity(intent);
     }
 
     @Override
@@ -100,9 +113,27 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("fromList", true);
-        bundle.putInt("index", position);
+        Log.d(TAG, "ID: " +afterBills.get(position).getId());
+        bundle.putInt("index", afterBills.get(position).getId());
         bundle.putString("origin_class", "upAfter");
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
+    }
+
+    public void observeAfter(){
+        expenseViewModel.getAfterBills().observe(this, new Observer<List<Bill>>() {
+            @Override
+            public void onChanged(List<Bill> bills) {
+                afterBills = bills;
+                mAdapter.setUpAfter(bills);
+                mAdapter.notifyDataSetChanged();
+                Log.d(TAG, "getAfterBills observed");
+            }
+        });
+    }
+    public void observeAll(){
+        expenseViewModel.getAllBills().observe(this, bills -> {
+            AddToList.setBills(bills);
+        });
     }
 }
