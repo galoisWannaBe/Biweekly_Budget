@@ -27,8 +27,12 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
     LiveData<List<Bill>> nextBillsLive;
+    LiveData<List<Bill>> nextBillsSplitLive;
     List<Bill> nextBills;
+    List<Bill> nextBillsEndMo;
+    List<Bill> nextBillsBegMo;
     upNextAdapter nAdapter;
+    boolean splitDue;
 
     ExpenseViewModel expenseViewModel;
 
@@ -38,17 +42,24 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         setContentView(R.layout.activity_up_next);
         setTitle("Bills Due This Pay");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+        splitDue = expenseViewModel.isSplitDue();
         nRecyclerView = findViewById(R.id.recyclerView);
         nAdapter = new upNextAdapter(this);
         nRecyclerView.setHasFixedSize(true);
         nLayoutManager = new LinearLayoutManager(this);
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
-        expenseViewModel.getNextBills();
-        nextBillsLive = expenseViewModel.getNextASink();
         expenseViewModel.getAllBills();
-        observeNext();
         observeAll();
+        if (splitDue){
+            expenseViewModel.getNexBillsBegMo();
+            expenseViewModel.getNextBillsEndMo();
+
+        }else{
+            expenseViewModel.getNextBills();
+            nextBillsLive = expenseViewModel.getNextASink();
+            observeNext();
+        }
 
 
     }
@@ -133,7 +144,31 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBills = bills;
+                splitDue = expenseViewModel.isSplitDue();
+                nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextBills(bills);
+                nAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+    public void observeNextSplit(){
+        expenseViewModel.getNextBillsEndMo().observe(this, new Observer<List<Bill>>() {
+            @Override
+            public void onChanged(List<Bill> bills) {
+                nextBillsEndMo = bills;
+                splitDue = expenseViewModel.isSplitDue();
+                nAdapter.isSplitDue(splitDue);
+                nAdapter.setNextSplitEnds(nextBillsEndMo);
+                nAdapter.notifyDataSetChanged();
+            }
+        });
+        expenseViewModel.getNexBillsBegMo().observe(this, new Observer<List<Bill>>() {
+            @Override
+            public void onChanged(List<Bill> bills) {
+                nextBillsBegMo = bills;
+                splitDue = expenseViewModel.isSplitDue();
+                nAdapter.isSplitDue(splitDue);
+                nAdapter.setNextSplitBegins(nextBillsBegMo);
                 nAdapter.notifyDataSetChanged();
             }
         });

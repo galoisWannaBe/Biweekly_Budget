@@ -52,13 +52,8 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         if(splitMo){
             expenseViewModel.getAfterBegMo();
             expenseViewModel.getAfterEndMo();
-            //afterBillsEndLive = expenseViewModel.getAfterBillsEndMo();
-            //afterBillsBegLive = expenseViewModel.getAfterBillsBegMo();
-            //expenseViewModel.getAfterBillsBegMo();
-            //expenseViewModel.getAfterBillsEndMo();
             observeAfterSplit();
-        }
-        else{
+        }else{
             expenseViewModel.getAfterBills();
             expenseViewModel.getAfterAsync();
             observeAfter();

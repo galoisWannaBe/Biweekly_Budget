@@ -17,6 +17,9 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     private OnBillListener mOnBillListener;
     private List<Bill> nextBills = Collections.emptyList();
+    private boolean splitDue;
+    private List<Bill> nextSplitEnds;
+    private List<Bill> nextSplitBegins;
 
     upNextAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -86,5 +89,16 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     public void setNextBills(List<Bill> nextBills) {
         this.nextBills = nextBills;
+    }
+    public void isSplitDue(boolean split){
+        splitDue = split;
+    }
+
+    public void setNextSplitEnds(List<Bill> nextSplitEnds) {
+        this.nextSplitEnds = nextSplitEnds;
+    }
+
+    public void setNextSplitBegins(List<Bill> nextSplitBegins) {
+        this.nextSplitBegins = nextSplitBegins;
     }
 }

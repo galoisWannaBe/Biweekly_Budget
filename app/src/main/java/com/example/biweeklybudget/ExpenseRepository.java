@@ -16,6 +16,8 @@ class ExpenseRepository {
     private LiveData<List<Bill>> afterBills;
     private LiveData<List<Bill>> afterBillsEndMonth;
     private LiveData<List<Bill>> afterBillsBeginningMonth;
+    private LiveData<List<Bill>> nextBillsBegin;
+    private LiveData<List<Bill>> nextBillsEnd;
     private LiveData<List<Weekly>> allWeekly;
     private LiveData<Integer> billCount;
     private BillDao billDao;
@@ -28,7 +30,8 @@ class ExpenseRepository {
     private int begNext;
     private int finNext;
     private boolean splitMo;
-    // TODO: 8/12/19 Separate Async methods for getNext and getAfter
+    private boolean splitDue;
+    // TODO: 8/13/19 find SQL query that will allow me to get rid of the booleans splitMo and splitDue
 
     public ExpenseRepository(Application application) {
         ExpensesDatabase db = ExpensesDatabase.getDatabase(application);
@@ -42,9 +45,12 @@ class ExpenseRepository {
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
         if (today < finPPD){
+            splitDue = false;
             nextBills = billDao.getNext(today, finPPD);
         }else{
-            nextBills = billDao.getNextCrossMonths(today, finPPD);
+            splitDue = true;
+            nextBillsEnd = billDao.getNextSplitEnd(today);
+            nextBillsBegin = billDao.getNextSplitBeg(finPPD);
         }
         if (begNext < finNext){
             splitMo = false;
@@ -62,6 +68,18 @@ class ExpenseRepository {
         Log.d(TAG, "constructer ran");
     }
 
+    public boolean isSplitDue() {
+        return splitDue;
+    }
+
+    public LiveData<List<Bill>> getNextBillsBegin() {
+        return nextBillsBegin;
+    }
+
+    public LiveData<List<Bill>> getNextBillsEnd() {
+        return nextBillsEnd;
+    }
+
     void setSeedPay(int seed){
         mClockStuff.setSeedPay(seed);
         today = mClockStuff.getDay();
@@ -69,6 +87,14 @@ class ExpenseRepository {
         daysRemain = mClockStuff.getDaysRemain();
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
+        if (today < finPPD){
+            splitDue = false;
+            nextBills = billDao.getNext(today, finPPD);
+        }else{
+            splitDue = true;
+            nextBillsEnd = billDao.getNextSplitEnd(today);
+            nextBillsBegin = billDao.getNextSplitBeg(finPPD);
+        }
         if (begNext < finNext){
             splitMo = false;
             afterBills = billDao.getAfter(begNext, finNext);
@@ -151,9 +177,14 @@ class ExpenseRepository {
         new getNextByAsync(billDao).execute(ppd);
     }
 
-    void getNextSplitMo(){
-        ppdParams ppd = new ppdParams(today, finPPD);
-        new getNextSplit(billDao).execute(ppd);
+    void getNextSplitEnd(){
+
+        new getNextSplitEndAsyncTask(billDao).execute(today);
+    }
+
+    void getNextSplitBegins(){
+
+        new getNextSplitBeginAsyncTask(billDao).execute(finPPD);
     }
 
     void getAfterAsync(){
@@ -357,21 +388,34 @@ class ExpenseRepository {
             Log.d(TAG, "next bills gotted");
         }
     }
-    private static class getNextSplit extends AsyncTask<ppdParams, Void, Void>{
+    private static class getNextSplitEndAsyncTask extends AsyncTask<Integer, Void, Void>{
 
         BillDao billDao;
 
-        public getNextSplit(BillDao billDao) {
+        public getNextSplitEndAsyncTask(BillDao billDao) {
             this.billDao = billDao;
         }
 
         @Override
-        protected Void doInBackground(ppdParams... ppdParams) {
+        protected Void doInBackground(Integer... integers) {
 
-            int today = ppdParams[0].today;
-            int fin = ppdParams[0].fin;
+            billDao.getNextSplitEnd(integers[0]);
+            return null;
+        }
+    }
 
-            billDao.getNextCrossMonths(today, fin);
+    private static class getNextSplitBeginAsyncTask extends AsyncTask<Integer, Void, Void>{
+
+        BillDao billDaoBaggins;
+
+        public getNextSplitBeginAsyncTask(BillDao billDaoBaggins) {
+            this.billDaoBaggins = billDaoBaggins;
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+
+            billDaoBaggins.getAfterBeginMonth(integers[0]);
             return null;
         }
     }

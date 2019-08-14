@@ -26,8 +26,14 @@ public interface BillDao {
     @Query("SELECT * from bill_table WHERE due >= :today AND due <= :fin ORDER BY due ASC")
     LiveData<List<Bill>> getNext(int today, int fin);
 
-    @Query("SELECT * from bill_table WHERE due <= :today OR due >= :fin ORDER BY due ASC")
-    LiveData<List<Bill>> getNextCrossMonths(int today, int fin);
+    @Query("SELECT * FROM bill_table WHERE due >= :today and due <= 28 ORDER BY due ASC")
+    LiveData<List<Bill>> getNextSplitEnd(int today);
+
+    @Query("SELECT * FROM bill_table WHERE due <= :fin and due >= 1 ORDER by due ASC")
+    LiveData<List<Bill>> getNextSplitBeg(int fin);
+
+//    @Query("SELECT * from bill_table WHERE due >= :today OR due <= :fin ORDER BY due ASC")
+//    LiveData<List<Bill>> getNextCrossMonths(int today, int fin);
 
     @Query("SELECT * from bill_table WHERE due >= :today AND due <= :fin ORDER BY due ASC")
     LiveData<List<Bill>> getAfter(int today, int fin);
