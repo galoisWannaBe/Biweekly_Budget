@@ -84,7 +84,11 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     @Override
     public int getItemCount() {
-        return nextBills.size();
+        if(splitDue){
+            return (nextSplitEnds.size() + nextSplitBegins.size());
+        }else {
+            return nextBills.size();
+        }
     }
 
     public void setNextBills(List<Bill> nextBills) {
