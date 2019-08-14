@@ -14,6 +14,8 @@ class ExpenseRepository {
     private LiveData<List<Bill>> allBills;
     private LiveData<List<Bill>> nextBills;
     private LiveData<List<Bill>> afterBills;
+    private LiveData<List<Bill>> afterBillsEndMonth;
+    private LiveData<List<Bill>> afterBillsBeginningMonth;
     private LiveData<List<Weekly>> allWeekly;
     private LiveData<Integer> billCount;
     private BillDao billDao;
@@ -25,6 +27,7 @@ class ExpenseRepository {
     private int dayOfWeek;
     private int begNext;
     private int finNext;
+    private boolean splitMo;
     // TODO: 8/12/19 Separate Async methods for getNext and getAfter
 
     public ExpenseRepository(Application application) {
@@ -44,9 +47,12 @@ class ExpenseRepository {
             nextBills = billDao.getNextCrossMonths(today, finPPD);
         }
         if (begNext < finNext){
+            splitMo = false;
             afterBills = billDao.getAfter(begNext, finNext);
         }else{
-            afterBills = billDao.getAfterCrossMonths(begNext, finNext);
+            splitMo = true;
+           afterBillsEndMonth = billDao.getAfterEndMonth(begNext);
+           afterBillsBeginningMonth = billDao.getAfterBeginMonth(finNext);
             Log.d(TAG, "crossed month");
         }
         allWeekly = weeklyDao.getWeeklyList();
@@ -64,11 +70,14 @@ class ExpenseRepository {
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
         if (begNext < finNext){
+            splitMo = false;
             afterBills = billDao.getAfter(begNext, finNext);
+
             getAfterAsync();
         }else{
-            afterBills = billDao.getAfterCrossMonths(begNext, finNext);
-            getAfterSplitMo();
+            splitMo = true;
+            afterBillsEndMonth = billDao.getAfterEndMonth(begNext);
+            afterBillsBeginningMonth = billDao.getAfterBeginMonth(finNext);
             Log.d(TAG, "crossed month");
         }
         Log.d(TAG, "Seed pay set");
@@ -95,6 +104,18 @@ class ExpenseRepository {
     }
     public LiveData<Integer> getBillCount(){
         return billCount;
+    }
+
+    public LiveData<List<Bill>> getAfterBillsEndMonth() {
+        return afterBillsEndMonth;
+    }
+
+    public LiveData<List<Bill>> getAfterBillsBeginningMonth() {
+        return afterBillsBeginningMonth;
+    }
+
+    public boolean isSplitMo() {
+        return splitMo;
     }
 
     public int getDayOfWeek() {
@@ -140,10 +161,15 @@ class ExpenseRepository {
         ppdParams ppd = new ppdParams(begNext, finNext);
         new getAfterByAsync(billDao).execute(ppd);
     }
-    void getAfterSplitMo(){
 
-        ppdParams ppd = new ppdParams(begNext, finNext);
-        new getAfterSplit(billDao).execute(ppd);
+    void getAfterEndingAsync(){
+
+        new getAfterEndMonthAsync(billDao).execute(begNext);
+    }
+
+    void getAfterBeginningAsync(){
+
+        new getAfterBeginMonthAsync(billDao).execute(finNext);
     }
 
     private static class insertBillAsyncTask extends AsyncTask<Bill, Void, Void>{
@@ -345,7 +371,7 @@ class ExpenseRepository {
             int today = ppdParams[0].today;
             int fin = ppdParams[0].fin;
 
-            billDao.getAfterCrossMonths(today, fin);
+            billDao.getNextCrossMonths(today, fin);
             return null;
         }
     }
@@ -367,28 +393,40 @@ class ExpenseRepository {
             if (begPay < fin){
                 billDao.getAfter(begPay, fin);
             }else{
-                billDao.getAfterCrossMonths(begPay, fin);
+                billDao.getAfter(begPay, fin);
                 Log.d(TAG, "getting After by async");
             }
             return null;
         }
     }
-    private static class getAfterSplit extends AsyncTask<ppdParams, Void, Void>{
+    private static class getAfterEndMonthAsync extends AsyncTask<Integer, Void, Void>{
 
-        BillDao billDao;
+        private BillDao billDao;
 
-        public getAfterSplit(BillDao billDao) {
+        private getAfterEndMonthAsync(BillDao billDao) {
             this.billDao = billDao;
         }
 
         @Override
-        protected Void doInBackground(ppdParams... ppdParams) {
+        protected Void doInBackground(Integer... integers) {
 
-            int today = ppdParams[0].today;
-            int fin = ppdParams[0].fin;
+            billDao.getAfterEndMonth(integers[0]);
+            return null;
+        }
+    }
 
-            billDao.getAfterCrossMonths(today, fin);
+    private static class getAfterBeginMonthAsync extends AsyncTask<Integer, Void, Void>{
 
+        private BillDao billDao;
+
+        public getAfterBeginMonthAsync(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+
+            billDao.getAfterBeginMonth(integers[0]);
             return null;
         }
     }

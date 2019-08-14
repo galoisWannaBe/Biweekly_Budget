@@ -18,8 +18,11 @@ public class ExpenseViewModel extends AndroidViewModel {
     private LiveData<List<Bill>> allBills;
     private LiveData<List<Bill>> nextBills;
     private LiveData<List<Bill>> afterBills;
+    private LiveData<List<Bill>> afterBillsEndMo;
+    private LiveData<List<Bill>> afterBillsBegMo;
     private LiveData<List<Weekly>> allWeekly;
     private LiveData<Integer> billCount;
+    private boolean splitMo;
     private int today;
     private int daysRemain;
     private int dayOfWeek;
@@ -32,7 +35,12 @@ public class ExpenseViewModel extends AndroidViewModel {
         allWeekly = mRepository.getAllWeekly();
         daysRemain = mRepository.getDaysRemain();
         billCount = mRepository.getBillCount();
+        splitMo = mRepository.isSplitMo();
         Log.d(TAG, "Constructor ran");
+    }
+
+    public boolean isSplitMo() {
+        return splitMo;
     }
 
     public LiveData<List<Bill>> getAllBills() {
@@ -43,8 +51,15 @@ public class ExpenseViewModel extends AndroidViewModel {
         return nextBills;
     }
 
-    public LiveData<List<Bill>> getAfterBills(){
+    public LiveData<List<Bill>> getAfterBills() {
         return afterBills;
+    }
+    public LiveData<List<Bill>> getAfterBillsEndMo() {
+        return afterBillsEndMo;
+    }
+
+    public LiveData<List<Bill>> getAfterBillsBegMo() {
+        return afterBillsBegMo;
     }
 
     public LiveData<List<Weekly>> getAllWeekly() {
@@ -88,5 +103,13 @@ public class ExpenseViewModel extends AndroidViewModel {
     public LiveData<List<Bill>> getAfterAsync(){
         afterBills = mRepository.getAfterBill();
         return afterBills;
+    }
+    public LiveData<List<Bill>> getAfterEndMo(){
+        afterBillsEndMo = mRepository.getAfterBillsEndMonth();
+        return afterBillsEndMo;
+    }
+    public LiveData<List<Bill>> getAfterBegMo(){
+        afterBillsBegMo = mRepository.getAfterBillsBeginningMonth();
+        return afterBillsBegMo;
     }
 }

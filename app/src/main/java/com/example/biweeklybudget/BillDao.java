@@ -33,9 +33,14 @@ public interface BillDao {
     LiveData<List<Bill>> getAfter(int today, int fin);
 
 //  the following query returns the entire correct list, but doesn't order them cyclically
-    @Query("SELECT * from bill_table WHERE due >= :today AND due <= 28 UNION SELECT * FROM bill_table WHERE due <= :fin AND due >= 1 ORDER BY due ASC")
-    LiveData<List<Bill>> getAfterCrossMonths(int today, int fin);
+//    @Query("SELECT * from bill_table WHERE due >= :begNext AND due <= 28 UNION SELECT * FROM bill_table WHERE due <= :fin AND due >= 1 ORDER BY due ASC")
+//    LiveData<List<Bill>> getAfterCrossMonths(int begNext, int fin);
 
+    @Query("SELECT * FROM bill_table WHERE due >= :begNext and due <= 28 ORDER BY due ASC")
+    LiveData<List<Bill>> getAfterEndMonth(int begNext);
+
+    @Query("SELECT * FROM bill_table WHERE due <= :fin and due >= 1 ORDER BY due ASC")
+    LiveData<List<Bill>> getAfterBeginMonth(int fin);
 
     @Query("SELECT COUNT(id) from bill_table")
     LiveData<Integer> getBillCount();

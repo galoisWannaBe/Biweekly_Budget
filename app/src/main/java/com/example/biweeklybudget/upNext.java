@@ -47,7 +47,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         expenseViewModel.getNextBills();
         nextBillsLive = expenseViewModel.getNextASink();
         expenseViewModel.getAllBills();
-
         observeNext();
         observeAll();
 
@@ -142,4 +141,5 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
     }
+
 }

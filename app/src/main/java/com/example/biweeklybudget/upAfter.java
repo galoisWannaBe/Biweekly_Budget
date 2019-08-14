@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,12 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public final int RESULT_DELETED = 2;
     ExpenseViewModel expenseViewModel;
     List<Bill> afterBills;
+    List<Bill> afterBillsEndMo;
+    List<Bill> afterBillsBegMo;
+    LiveData<List<Bill>> afterBillsEndLive;
+    LiveData<List<Bill>> afterBillsBegLive;
+    LiveData<List<Bill>> afterLive;
+    boolean splitMo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +48,23 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        expenseViewModel.getAfterBills();
-        expenseViewModel.getAfterAsync();
+        splitMo = expenseViewModel.isSplitMo();
+        if(splitMo){
+            expenseViewModel.getAfterBegMo();
+            expenseViewModel.getAfterEndMo();
+            //afterBillsEndLive = expenseViewModel.getAfterBillsEndMo();
+            //afterBillsBegLive = expenseViewModel.getAfterBillsBegMo();
+            //expenseViewModel.getAfterBillsBegMo();
+            //expenseViewModel.getAfterBillsEndMo();
+            observeAfterSplit();
+        }
+        else{
+            expenseViewModel.getAfterBills();
+            expenseViewModel.getAfterAsync();
+            observeAfter();
+        }
         expenseViewModel.getAllBills();
-        observeAfter();
+        afterLive = expenseViewModel.getAfterBills();
         observeAll();
     }
 
@@ -123,16 +143,33 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     }
 
     public void observeAfter(){
-        expenseViewModel.getAfterBills().observe(this, new Observer<List<Bill>>() {
-            @Override
-            public void onChanged(List<Bill> bills) {
+        splitMo = expenseViewModel.isSplitMo();
+            expenseViewModel.getAfterBills().observe(this, bills -> {
                 afterBills = bills;
+                splitMo = expenseViewModel.isSplitMo();
+                mAdapter.setSplitMo(splitMo);
                 mAdapter.setUpAfter(bills);
                 mAdapter.notifyDataSetChanged();
                 Log.d(TAG, "getAfterBills observed");
-            }
+            });
+    }
+
+    public void observeAfterSplit(){
+        expenseViewModel.getAfterBegMo().observe(this, bills -> {
+            afterBillsBegMo = bills;
+            splitMo = expenseViewModel.isSplitMo();
+            mAdapter.setSplitMo(splitMo);
+            mAdapter.setUpAfterBegMo(afterBillsBegMo);
+            mAdapter.notifyDataSetChanged();
+            Log.d(TAG, "splitMo; ALSO");
+        });
+        expenseViewModel.getAfterEndMo().observe(this, bills -> {
+            afterBillsEndMo = bills;
+            mAdapter.setUpAfterEndMo(afterBillsEndMo);
+            mAdapter.notifyDataSetChanged();
         });
     }
+
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> {
             AddToList.setBills(bills);

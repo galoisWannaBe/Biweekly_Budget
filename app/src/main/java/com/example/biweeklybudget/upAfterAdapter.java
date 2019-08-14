@@ -17,6 +17,9 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
 
     private OnBillListener mOnBillListener;
     private List<Bill> upAfter = Collections.emptyList();
+    private List<Bill> upAfterBegMo = Collections.emptyList();
+    private List<Bill> upAfterEndMo = Collections.emptyList();
+    boolean splitMo = false;
 
     upAfterAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -61,9 +64,18 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
         String label;
         int due;
         double cost;
-
+        Bill bill;
         int pos = position;
-        Bill bill = upAfter.get(pos);
+
+        if (splitMo){
+            if (pos < upAfterEndMo.size()) {
+                bill = upAfterEndMo.get(pos);
+            }else{
+                bill = upAfterBegMo.get(pos - upAfterEndMo.size());
+            }
+        }else {
+            bill = upAfter.get(pos);
+            }
         label = bill.getLabel();
         due = bill.getDue();
         cost = bill.getCost();
@@ -81,10 +93,26 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
 
     @Override
     public int getItemCount() {
-        return upAfter.size();
+        if(splitMo){
+            return (upAfterBegMo.size() + upAfterEndMo.size());
+        }else {
+            return upAfter.size();
+        }
     }
 
     public void setUpAfter(List<Bill> upAfter) {
         this.upAfter = upAfter;
+    }
+
+    public void setUpAfterBegMo(List<Bill> upAfterBegMo) {
+        this.upAfterBegMo = upAfterBegMo;
+    }
+
+    public void setUpAfterEndMo(List<Bill> upAfterEndMo) {
+        this.upAfterEndMo = upAfterEndMo;
+    }
+
+    public void setSplitMo(boolean splitMo) {
+        this.splitMo = splitMo;
     }
 }
