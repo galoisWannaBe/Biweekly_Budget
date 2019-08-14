@@ -20,6 +20,9 @@ import java.util.List;
 public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillListener{
     private static final String TAG  ="upAfter";
 
+    LiveData<List<Bill>> afterCrossLive;
+    List<Bill> afterCross;
+
     private RecyclerView mRecyclerView;
     upAfterAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -50,8 +53,9 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mRecyclerView.setAdapter(mAdapter);
         splitMo = expenseViewModel.isSplitMo();
         if(splitMo){
-            expenseViewModel.getAfterBegMo();
-            expenseViewModel.getAfterEndMo();
+            expenseViewModel.getAfterCross();
+            //expenseViewModel.getAfterBegMo();
+            //expenseViewModel.getAfterEndMo();
             observeAfterSplit();
         }else{
             expenseViewModel.getAfterBills();
@@ -149,6 +153,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             });
     }
 
+    /*
     public void observeAfterSplit(){
         expenseViewModel.getAfterBegMo().observe(this, bills -> {
             afterBillsBegMo = bills;
@@ -162,6 +167,17 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             afterBillsEndMo = bills;
             mAdapter.setUpAfterEndMo(afterBillsEndMo);
             mAdapter.notifyDataSetChanged();
+        });
+    }
+
+     */
+
+    public void observeAfterSplit(){
+
+        expenseViewModel.getAfterCross().observe(this, bills ->  {
+                afterBills = bills;
+                mAdapter.setUpAfter(afterBills);
+                mAdapter.notifyDataSetChanged();
         });
     }
 

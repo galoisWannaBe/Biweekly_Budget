@@ -11,6 +11,8 @@ import java.util.List;
 class ExpenseRepository {
     private static final String TAG = "ExpenseRepository";
 
+    LiveData<List<Bill>> afterCross;
+
     private LiveData<List<Bill>> allBills;
     private LiveData<List<Bill>> nextBills;
     private LiveData<List<Bill>> afterBills;
@@ -57,6 +59,7 @@ class ExpenseRepository {
             afterBills = billDao.getAfter(begNext, finNext);
         }else{
             splitMo = true;
+            afterCross = billDao.crossAfterSingle(begNext, finNext);
            afterBillsEndMonth = billDao.getAfterEndMonth(begNext);
            afterBillsBeginningMonth = billDao.getAfterBeginMonth(finNext);
             Log.d(TAG, "crossed month");
@@ -471,6 +474,33 @@ class ExpenseRepository {
         protected Void doInBackground(Integer... integers) {
 
             billDao.getAfterBeginMonth(integers[0]);
+            return null;
+        }
+    }
+
+    void getAfterCrossMethod(){
+
+        ppdParams ppd = new ppdParams(begNext, finNext);
+
+        new getAfterByAsync(billDao).execute(ppd);
+
+    }
+
+    private static class getAfterCrossAsync extends AsyncTask<ppdParams, Void, Void>{
+
+        private BillDao billDao;
+
+        public getAfterCrossAsync(BillDao billDao) {
+            this.billDao = billDao;
+        }
+
+        @Override
+        protected Void doInBackground(ppdParams... ppdParams) {
+
+            int begNext = ppdParams[0].today;
+            int finNext = ppdParams[0].fin;
+
+            billDao.crossAfterSingle(begNext, finNext);
             return null;
         }
     }

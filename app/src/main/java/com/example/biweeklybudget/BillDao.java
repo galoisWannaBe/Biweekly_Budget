@@ -51,5 +51,15 @@ public interface BillDao {
     @Query("SELECT COUNT(id) from bill_table")
     LiveData<Integer> getBillCount();
 
+    /*
+    @Query("ALTER TABLE bill_table ADD month_rank;" +
+            "UPDATE bill_table SET month_rank = 1 WHERE due >= :begNext;" +
+            "UPDATE bill_table SET month_rank = 2 WHERE due <= :fin;" +
+            "SELECT * from bill_table WHERE month_rank = 1 OR month_rank = 2 ORDER BY month_rank, due ASC")
+    LiveData<List<Bill>> getAfterCrossMonth(int begNext, int fin);
+     */
+
+    @Query("SELECT * FROM bill_table WHERE due >= :begNext AND Due <= 28 UNION SELECT * FROM bill_table WHERE due <= :finNext GROUP BY due >= :finNext ORDER BY due ASC")
+    LiveData<List<Bill>> crossAfterSingle(int begNext, int finNext);
     //@Query("SELECT * from bill_table WHERE due >= :today")
 }

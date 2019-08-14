@@ -45,9 +45,10 @@ public class BudgetData {
     public void addWeekly(){
         weeklyTotal = 0;
         byte days;
-        weekCounter = week;
+        //weekCounter = week;
         for (int i = 0; i < allWeekly.size(); i++){
             days = allWeekly.get(i).getDays();
+            weekCounter = week;
             Log.d(TAG, "Current Weekly" +allWeekly.get(i).getLabel());
             Log.d(TAG, "Days Remaining: " +daysRemain);
             for (int j = 0; j < daysRemain; j++){
