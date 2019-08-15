@@ -104,30 +104,5 @@ public class BudgetData {
         this.week = week;
     }
 
-    public void calculateMostRecentPay(int seed){
-        int payDay = 0;
-        while (payDay <= julianDate){
-            payDay += 14;
-        }
-        payDay -= 14;
-        payDay += seed;
-        int i = 0;
-        while (payDay > 0){
-            payDay -= months[i];
-            i++;
-        }
-        payMonth = i;
-        payDate = payDay + months[i];
-    }
-    public void setJulianDate(int julianDate){
-        this.julianDate = julianDate;
-    }
 
-    public int getPayMonth() {
-        return payMonth;
-    }
-
-    public int getPayDate() {
-        return payDate;
-    }
 }

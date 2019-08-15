@@ -19,6 +19,7 @@ public class Settings extends AppCompatActivity {
     int jul;
     String dateStr;
     int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    clockStuff mClockStuff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,18 @@ public class Settings extends AppCompatActivity {
         this.setTitle("Settings");
         dateEdit = findViewById(R.id.seed_pay);
         saveSeed = findViewById(R.id.save_pay);
+        mClockStuff = clockStuff.getInstance();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        jul = bundle.getInt("seed");
+        mClockStuff.setSeedPay(jul);
+        mon = mClockStuff.getPayMonth();
+        day = mClockStuff.getPayDate();
+
+        int recentPay = mon * 100;
+        recentPay += day;
+
+        dateEdit.setText(String.valueOf(recentPay));
     }
 
     public void saveSeed(View view){

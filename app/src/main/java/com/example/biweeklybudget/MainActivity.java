@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         }
         public void goToSettings(View view){
             Intent intent = new Intent(this, Settings.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("seed", seedPay);
+            intent.putExtras(bundle);
             startActivityForResult(intent, 0);
         }
 

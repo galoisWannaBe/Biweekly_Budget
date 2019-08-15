@@ -22,6 +22,8 @@ public class clockStuff {
     int week;
     int begNext;
     int finNext;
+    int payMonth;
+    int payDate;
     DateFormat dd = new SimpleDateFormat("dd");
     DateFormat MM = new SimpleDateFormat("MM");
     DateFormat ee = new SimpleDateFormat("E");
@@ -124,5 +126,31 @@ public class clockStuff {
 
     public int getFinNext() {
         return finNext;
+    }
+    public void calculateMostRecentPay(int seed){
+        int payDay = 0;
+        while (payDay <= julDate){
+            payDay += 14;
+        }
+        payDay -= 14;
+        payDay += seed;
+        int i = 0;
+        while (payDay > 0){
+            payDay -= months[i];
+            i++;
+        }
+        payMonth = i + 1;
+        payDate = payDay + months[i] + 1;
+    }
+    public void setJulianDate(int julianDate){
+        this.julDate = julianDate;
+    }
+
+    public int getPayMonth() {
+        return payMonth;
+    }
+
+    public int getPayDate() {
+        return payDate;
     }
 }

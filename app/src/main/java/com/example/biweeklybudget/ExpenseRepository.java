@@ -68,6 +68,10 @@ class ExpenseRepository {
         Log.d(TAG, "constructer ran");
     }
 
+    public int getJulDate(){
+        return mClockStuff.getJulDate();
+    }
+
     public boolean isSplitDue() {
         return splitDue;
     }
