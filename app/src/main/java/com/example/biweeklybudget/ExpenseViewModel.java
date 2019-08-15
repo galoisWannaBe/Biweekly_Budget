@@ -15,8 +15,6 @@ public class ExpenseViewModel extends AndroidViewModel {
 
     private ExpenseRepository mRepository;
 
-    private LiveData<List<Bill>> afterCross;
-
     private LiveData<List<Bill>> allBills;
     private LiveData<List<Bill>> nextBills;
     private LiveData<List<Bill>> afterBills;
@@ -56,10 +54,6 @@ public class ExpenseViewModel extends AndroidViewModel {
         splitMo = mRepository.isSplitMo();
         splitDue = mRepository.isSplitDue();
         Log.d(TAG, "Constructor ran");
-    }
-
-    public LiveData<List<Bill>> getAfterCross(){
-        return afterCross;
     }
 
     public boolean isSplitMo() {

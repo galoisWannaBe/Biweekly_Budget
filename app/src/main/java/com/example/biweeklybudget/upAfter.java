@@ -53,9 +53,8 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mRecyclerView.setAdapter(mAdapter);
         splitMo = expenseViewModel.isSplitMo();
         if(splitMo){
-            expenseViewModel.getAfterCross();
-            //expenseViewModel.getAfterBegMo();
-            //expenseViewModel.getAfterEndMo();
+            expenseViewModel.getAfterBegMo();
+            expenseViewModel.getAfterEndMo();
             observeAfterSplit();
         }else{
             expenseViewModel.getAfterBills();
@@ -153,7 +152,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             });
     }
 
-    /*
+
     public void observeAfterSplit(){
         expenseViewModel.getAfterBegMo().observe(this, bills -> {
             afterBillsBegMo = bills;
@@ -170,16 +169,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         });
     }
 
-     */
 
-    public void observeAfterSplit(){
-
-        expenseViewModel.getAfterCross().observe(this, bills ->  {
-                afterBills = bills;
-                mAdapter.setUpAfter(afterBills);
-                mAdapter.notifyDataSetChanged();
-        });
-    }
 
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> {

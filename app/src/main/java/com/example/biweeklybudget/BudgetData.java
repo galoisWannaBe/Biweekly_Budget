@@ -28,6 +28,10 @@ public class BudgetData {
     public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
     public List<Bill> nextBills;
     public List<Weekly> allWeekly;
+    public int julianDate = 0;
+    public int payMonth;
+    public int payDate;
+    int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     BudgetData() {
         balance = 0;
@@ -98,5 +102,32 @@ public class BudgetData {
 
     public void setWeek(int week) {
         this.week = week;
+    }
+
+    public void calculateMostRecentPay(int seed){
+        int payDay = 0;
+        while (payDay <= julianDate){
+            payDay += 14;
+        }
+        payDay -= 14;
+        payDay += seed;
+        int i = 0;
+        while (payDay > 0){
+            payDay -= months[i];
+            i++;
+        }
+        payMonth = i;
+        payDate = payDay + months[i];
+    }
+    public void setJulianDate(int julianDate){
+        this.julianDate = julianDate;
+    }
+
+    public int getPayMonth() {
+        return payMonth;
+    }
+
+    public int getPayDate() {
+        return payDate;
     }
 }
