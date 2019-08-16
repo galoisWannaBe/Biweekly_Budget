@@ -3,78 +3,92 @@ package com.example.biweeklybudget;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
+
+    public static final String TAG = "Settings";
 
     EditText dateEdit;
     Button saveSeed;
     int date = 0;
     StringBuilder sb;
-    int mon;
-    int day;
+    private int mon;
+    private int day;
+    private int currentYear;
     int jul;
     String dateStr;
     int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     clockStuff mClockStuff;
+    CalendarView calendarView;
+    DatePicker datePicker;
+    int newMonth;
+    int newDay;
+    int newYear;
+    boolean isUnchanged = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         this.setTitle("Settings");
-        dateEdit = findViewById(R.id.seed_pay);
+        //dateEdit = findViewById(R.id.seed_pay);
+        datePicker = findViewById(R.id.datePicker);
         saveSeed = findViewById(R.id.save_pay);
         mClockStuff = clockStuff.getInstance();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         jul = bundle.getInt("seed");
-        mClockStuff.setSeedPay(jul);
-        mon = mClockStuff.getPayMonth();
-        day = mClockStuff.getPayDate();
+        mClockStuff.calculateMostRecentPay(jul);
+        mon = (mClockStuff.getPayMonth() - 1);
+        day = mClockStuff.getStartPPD();
+        currentYear = mClockStuff.getYear();
+        isUnchanged = true;
+        datePicker.init(currentYear, mon, day, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mon = monthOfYear + 1;
+                day = dayOfMonth;
+                newYear = year;
+                isUnchanged = false;
+                Log.d(TAG, mon +"/" +day +"/" +year);
+                Log.d(TAG, mon +"/" +day +"/" +newYear);
+            }
+        });
 
-        int recentPay = mon * 100;
-        recentPay += day;
-
-        dateEdit.setText(String.valueOf(recentPay));
     }
 
     public void saveSeed(View view){
-            dateStr = dateEdit.getText().toString();
-            if (dateStr.isEmpty()){
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Please enter a valid date",
-                        Toast.LENGTH_LONG).show();
-            }else {
-                date = Integer.parseInt(dateStr);
-                jul = 0;
-                if (date >= 101 && date <= 131 || date >= 201 && date <= 228 || date >= 301 && date <= 331 || date >= 401 && date <= 430 || date >= 501 && date <= 531 || date >= 601 && date <= 630 || date >= 701 && date <= 731 || date >= 801 && date <= 831 || date >= 901 && date <= 930 || date >= 1001 && date <= 1031 || date >= 1101 && date <= 1130 || date >= 1201 && date <= 1231) {
-                    day = date % 100;
-                    date -= day;
-                    date = date / 100;
-                    mon = date - 1;
-                    for(int i = 0; i < mon; i++){
+
+                    jul = 0;
+                    if(isUnchanged){
+                        mon++;
+                    }
+                    int i = 0;
+                    for(i = 0; i < mon; i++){
                         jul += months[i];
+                        Log.d(TAG, "Counting julian date" +jul);
                     }
                     jul += day;
+                    jul --;
+                    jul -= months[i];
+
                     jul = jul % 14;
+                    Log.d(TAG, "Seed pay: " +jul);
                     Intent intent = new Intent(this, MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("seed", jul);
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
                     finish();
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Please enter a valid date",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
+
     }
 
 }

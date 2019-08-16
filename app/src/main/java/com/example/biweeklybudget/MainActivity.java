@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         int seedPay = 0;
         LiveData<List<Bill>> nextBills;
         List<Bill> dueBills;
+        boolean splitDue;
 
         private static final String TAG = "MainActivity";
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
             seedPay = prefs.getInt("seedPay", 0);
+            //seedPay = 0;
             Log.d(TAG, "Seedpay" +seedPay);
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
@@ -52,8 +54,14 @@ public class MainActivity extends AppCompatActivity {
             budgetData = new BudgetData();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            expenseViewModel.getNextASink();
+            splitDue = expenseViewModel.isSplitDue();
             expenseViewModel.getAllWeekly();
+            if(splitDue){
+                expenseViewModel.getNextBillsEndMo();
+                expenseViewModel.getAfterBillsBegMo();
+            }else{
+                expenseViewModel.getNextASink();
+            }
             expenseViewModel.getAllBills();
             observeNextBills();
             observeAllWeekly();
@@ -65,17 +73,21 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, Data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
             Bundle bundle = Data.getExtras();
-            int seed = bundle.getInt("seed");
+            seedPay = bundle.getInt("seed");
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("seedPay", seed);
+            editor.putInt("seedPay", seedPay);
             editor.commit();
-            expenseViewModel.setSeedPay(seed);
+            expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             budgetData.setDaysRemain(daysRemain);
             budgetData.setWeek(dayOfWeek);
             expenseViewModel.getAllBills();
-            expenseViewModel.getNextBills();
+            if(splitDue){
+                expenseViewModel.upDateNextSlpit();
+            }else {
+                expenseViewModel.getNextBills();
+            }
         }
     }
 

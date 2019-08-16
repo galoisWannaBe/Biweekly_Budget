@@ -39,6 +39,8 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     LiveData<List<Bill>> afterLive;
     boolean splitMo;
 
+    // TODO: 8/15/19 Fix onClick for split month
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

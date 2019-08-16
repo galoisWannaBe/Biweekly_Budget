@@ -18,18 +18,23 @@ public class clockStuff {
     int finPPD;
     int month;
     int day;
+    int year;
     int[] months;
     int week;
+    int dayOfPay;
     int begNext;
     int finNext;
     int payMonth;
     int payDate;
+    int startSeedNaught;
     DateFormat dd = new SimpleDateFormat("dd");
     DateFormat MM = new SimpleDateFormat("MM");
     DateFormat ee = new SimpleDateFormat("E");
+    DateFormat yy = new SimpleDateFormat("yyyy");
     String dayStr = dd.format(Calendar.getInstance().getTime());
     String monStr = MM.format(Calendar.getInstance().getTime());
     String weekStr = ee.format(Calendar.getInstance().getTime());
+    String yearStr = yy.format(Calendar.getInstance().getTime());
 
     private static final clockStuff INSTANCE = new clockStuff();
 
@@ -41,6 +46,8 @@ public class clockStuff {
         months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         day = Integer.parseInt(dayStr);
         month = Integer.parseInt(monStr);
+        year = Integer.parseInt(yearStr);
+        seedPay = 0;
         julDate = 0;
         for(int i = 0; i < (month -1); i++){
             julDate += months[i];
@@ -70,23 +77,35 @@ public class clockStuff {
                 week = 6;
                 break;
         }
+        dayOfPay = (julDate % 14);
+        startPPD = day - dayOfPay;
+        daysRemain = 14 - dayOfPay;
+        daysRemain += seedPay;
+        finPPD = (day + daysRemain) -1;
+        startSeedNaught = startPPD;
+        begNext = finPPD + 1;
+        finNext = begNext + 13;
         Log.d(TAG, "Julian Date " +julDate);
         Log.d(TAG, "Date: " +day);
     }
 
+    // TODO: 8/15/19 clockstuff constructor and setSeed 
+/*
     public void setSeedPay(int seedPay) {
         this.seedPay = seedPay;
         seedPay = seedPay % 14;
+        Log.d(TAG, "SeedPay after modulus: " +seedPay);
         int dayOfPay = (julDate % 14);
+        Log.d(TAG, "Day of pay: " +dayOfPay);
         daysRemain = 14 - dayOfPay;
         daysRemain += seedPay;//currently number of days into pay period
         finPPD = (day + daysRemain) -1;
         Log.d(TAG, "FinPPD: " +finPPD);
         Log.d(TAG, "month: " +month);
         Log.d(TAG, "Days in Month: " +months[month]);
-        Log.d(TAG, "FinPPD: " +finPPD);
         if (finPPD > months[(month - 1)]){
             finPPD -= months[month];
+            Log.d(TAG, "FinPPD: " +finPPD);
         }
         begNext = finPPD + 1;
         if(begNext > months[(month - 1)]){
@@ -97,7 +116,30 @@ public class clockStuff {
             finNext -= months[(month - 1)];
         }
         finNext = finNext % months[month];
-        Log.d(TAG, "Julian pay " +julDate);
+    }
+
+ */
+    public void setSeedPay(int seed){
+        seedPay = seed % 14;
+        Log.d(TAG, "seedPay: " +seedPay);
+        startPPD = startSeedNaught + seedPay;
+        if (startPPD > day){
+            startPPD -= 14;
+        }
+        daysRemain = finPPD - day;
+        dayOfPay = finPPD - daysRemain;
+        finPPD = startPPD + 13;
+        if (finPPD > months[(month - 1)]){
+            finPPD -= months[(month-1)];
+        }
+        begNext = finPPD + 1;
+        if (begNext > months[(month - 1)]) {
+                begNext -= months[(month - 1)];
+        }
+        finNext = begNext + 13;
+        if (finNext > months[(month -1)]){
+            finNext -= months[(month - 1)];
+        }
 
     }
 
@@ -129,18 +171,26 @@ public class clockStuff {
     }
     public void calculateMostRecentPay(int seed){
         int payDay = 0;
+        Log.d(TAG, "Julian date: " +julDate);
         while (payDay <= julDate){
             payDay += 14;
+            Log.d(TAG, "JulianPay during loop: " +payDay);
         }
         payDay -= 14;
-        payDay += seed;
+        payDay += (seed % 14);
+        Log.d(TAG, "julian pay date" +payDay);
         int i = 0;
-        while (payDay > 0){
-            payDay -= months[i];
-            i++;
+        while(i < 12){
+            if ((payDay - months[i]) <= 0){
+                break;
+            } else {
+                payDay -= months[i];
+                i++;
+            }
+            Log.d(TAG, "Month: " +i);
         }
-        payMonth = i + 1;
-        payDate = payDay + months[i] + 1;
+        payMonth = (i + 1);
+        payDate = payDay;
     }
     public void setJulianDate(int julianDate){
         this.julDate = julianDate;
@@ -152,5 +202,13 @@ public class clockStuff {
 
     public int getPayDate() {
         return payDate;
+    }
+
+    public int getYear(){
+        return year;
+    }
+
+    public int getStartPPD() {
+        return startPPD;
     }
 }

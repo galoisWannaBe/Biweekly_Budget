@@ -44,7 +44,9 @@ class ExpenseRepository {
         allBills = billDao.getAllBills();
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
-        if (today < finPPD){
+        Log.d(TAG, "today: " +today);
+        Log.d(TAG, "FinPPD: " +finPPD);
+        if (today <= finPPD){
             splitDue = false;
             nextBills = billDao.getNext(today, finPPD);
         }else{
@@ -52,7 +54,7 @@ class ExpenseRepository {
             nextBillsEnd = billDao.getNextSplitEnd(today);
             nextBillsBegin = billDao.getNextSplitBeg(finPPD);
         }
-        if (begNext < finNext){
+        if (begNext <= finNext){
             splitMo = false;
             afterBills = billDao.getAfter(begNext, finNext);
         }else{
@@ -65,11 +67,7 @@ class ExpenseRepository {
         dayOfWeek = mClockStuff.getWeek();
         billCount = billDao.getBillCount();
         Log.d(TAG, "It is the " +dayOfWeek +" day of the week");
-        Log.d(TAG, "constructer ran");
-    }
-
-    public int getJulDate(){
-        return mClockStuff.getJulDate();
+        Log.d(TAG, "constructor ran");
     }
 
     public boolean isSplitDue() {

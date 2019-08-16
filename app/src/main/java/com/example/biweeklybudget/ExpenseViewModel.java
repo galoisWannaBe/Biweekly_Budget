@@ -129,4 +129,8 @@ public class ExpenseViewModel extends AndroidViewModel {
         afterBillsBegMo = mRepository.getAfterBillsBeginningMonth();
         return afterBillsBegMo;
     }
+    public void upDateNextSlpit(){
+        mRepository.getNextBillsEnd();
+        mRepository.getNextSplitBegins();
+    }
 }
