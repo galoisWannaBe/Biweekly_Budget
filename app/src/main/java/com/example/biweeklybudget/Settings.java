@@ -46,8 +46,7 @@ public class Settings extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         jul = bundle.getInt("seed");
-        mClockStuff.calculateMostRecentPay(jul);
-        mon = (mClockStuff.getPayMonth() - 1);
+        mon = (mClockStuff.getMonth() - 1);
         day = mClockStuff.getStartPPD();
         currentYear = mClockStuff.getYear();
         isUnchanged = true;

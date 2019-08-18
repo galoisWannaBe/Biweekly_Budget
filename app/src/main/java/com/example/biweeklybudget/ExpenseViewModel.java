@@ -26,6 +26,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     private LiveData<Integer> billCount;
     private boolean splitMo;
     private boolean splitDue;
+    private LiveData<Boolean> liveSplitDue;
     private int today;
     private int daysRemain;
     private int dayOfWeek;
@@ -51,6 +52,7 @@ public class ExpenseViewModel extends AndroidViewModel {
         allWeekly = mRepository.getAllWeekly();
         daysRemain = mRepository.getDaysRemain();
         billCount = mRepository.getBillCount();
+        liveSplitDue = mRepository.isSplitDueLive();
         splitMo = mRepository.isSplitMo();
         splitDue = mRepository.isSplitDue();
         Log.d(TAG, "Constructor ran");
@@ -58,6 +60,10 @@ public class ExpenseViewModel extends AndroidViewModel {
 
     public boolean isSplitMo() {
         return splitMo;
+    }
+
+    public LiveData<Boolean> getLiveSplitDue(){
+        return liveSplitDue;
     }
 
     public LiveData<List<Bill>> getAllBills() {
@@ -114,6 +120,7 @@ public class ExpenseViewModel extends AndroidViewModel {
         mRepository.updateWeeklyAsync(id, label, cost, days);
     }
     public LiveData<List<Bill>> getNextASink(){
+        Log.d(TAG, "getNextAsink ran in viewModel");
         nextBills = mRepository.getNextBills();
         return nextBills;
     }
@@ -129,8 +136,10 @@ public class ExpenseViewModel extends AndroidViewModel {
         afterBillsBegMo = mRepository.getAfterBillsBeginningMonth();
         return afterBillsBegMo;
     }
-    public void upDateNextSlpit(){
+    public void upDateNextSplit(){
         mRepository.getNextBillsEnd();
+    }
+    public void updateNextSplitBegin(){
         mRepository.getNextSplitBegins();
     }
 }

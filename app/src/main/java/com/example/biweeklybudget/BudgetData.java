@@ -3,6 +3,7 @@ package com.example.biweeklybudget;
 import android.util.Log;
 
 import java.lang.annotation.Target;
+import java.util.Collections;
 import java.util.List;
 
 public class BudgetData {
@@ -26,12 +27,15 @@ public class BudgetData {
     public final byte FRIDAY = 32;
     public final byte SATURDAY = 64;
     public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
-    public List<Bill> nextBills;
+    public List<Bill> nextBills = Collections.emptyList();
     public List<Weekly> allWeekly;
     public int julianDate = 0;
     public int payMonth;
     public int payDate;
     int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    List<Bill> dueSplitEnd = Collections.emptyList();
+    List<Bill> dueSplitBeginning = Collections.emptyList();
+    boolean splitDue = false;
 
     BudgetData() {
         balance = 0;
@@ -41,8 +45,18 @@ public class BudgetData {
 
     public void addBills() {
         ttlbills = 0;
-        for(int i = 0; i < nextBills.size(); i++){
-            ttlbills += nextBills.get(i).getCost();
+        Log.d(TAG, "SplitMo? " +splitDue);
+        if(splitDue){
+            for (int i = 0; i < dueSplitEnd.size(); i++){
+                ttlbills += dueSplitEnd.get(i).getCost();
+            }
+            for (int i = 0; i < dueSplitBeginning.size(); i++){
+                ttlbills += dueSplitBeginning.get(i).getCost();
+            }
+        }else {
+            for (int i = 0; i < nextBills.size(); i++) {
+                ttlbills += nextBills.get(i).getCost();
+            }
         }
         Log.d(TAG, "Bills totaled to " +ttlbills);
     }
@@ -87,6 +101,7 @@ public class BudgetData {
    }
 
     public void setNextBills(List<Bill> nextBills) {
+        splitDue = false;
         this.nextBills = nextBills;
         Log.d(TAG, "Set NextBills");
     }
@@ -104,5 +119,15 @@ public class BudgetData {
         this.week = week;
     }
 
+    public void setDueSplitEnd(List<Bill> dueSplitEnd) {
+        splitDue = true;
+        this.dueSplitEnd = dueSplitEnd;
+        Log.d(TAG, "Set NextBills EndMo");
+    }
 
+    public void setDueSplitBeginning(List<Bill> dueSplitBeginning) {
+        splitDue = true;
+        this.dueSplitBeginning = dueSplitBeginning;
+        Log.d(TAG, "Set NextBills Beginning Mo");
+    }
 }

@@ -28,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
         int seedPay = 0;
         LiveData<List<Bill>> nextBills;
         List<Bill> dueBills;
+        List<Bill> dueSplitEnd;
+        List<Bill> dueSplitBeginning;
+        LiveData<List<Bill>> dueLive;
+        LiveData<Boolean> liveSplitDue;
         boolean splitDue;
 
         private static final String TAG = "MainActivity";
@@ -54,16 +58,20 @@ public class MainActivity extends AppCompatActivity {
             budgetData = new BudgetData();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            splitDue = expenseViewModel.isSplitDue();
             expenseViewModel.getAllWeekly();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
                 expenseViewModel.getAfterBillsBegMo();
             }else{
-                expenseViewModel.getNextASink();
+                dueLive = expenseViewModel.getNextASink();
             }
             expenseViewModel.getAllBills();
-            observeNextBills();
+            if(splitDue){
+                observeNextSplitEnds();
+                observeNextSplitBegins();
+            }else{
+                observeNextBills();
+            }
             observeAllWeekly();
             observeAllBills();
 
@@ -84,10 +92,16 @@ public class MainActivity extends AppCompatActivity {
             budgetData.setWeek(dayOfWeek);
             expenseViewModel.getAllBills();
             if(splitDue){
-                expenseViewModel.upDateNextSlpit();
+                expenseViewModel.upDateNextSplit();
+                expenseViewModel.updateNextSplitBegin();
             }else {
-                expenseViewModel.getNextBills();
+                dueLive = expenseViewModel.getNextASink();
+                Log.d(TAG, "ran getNextAsink in MainActivity");
             }
+            EditText editText = findViewById(R.id.balance);
+            editText.getText().clear();
+            TextView textView = findViewById(R.id.projBalance_box);
+            textView.setText("");
         }
     }
 
@@ -113,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
         public void calculate(View view) {
             EditText editText = findViewById(R.id.balance);
             balanceStr = editText.getText().toString();
+            observeNextBills();
+            expenseViewModel.getNextASink();
+            Log.d(TAG, "getNextAsink ran");
             if(balanceStr.isEmpty()){
                 Toast.makeText(
                         getApplicationContext(),
@@ -134,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void observeNextBills(){
             expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
+
                 @Override
                 public void onChanged(List<Bill> bills) {
                     budgetData.setNextBills(bills);
@@ -155,6 +173,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Change to all bills observed");
             });
         }
+        public void observeNextSplitEnds(){
+            expenseViewModel.getNextBillsEndMo().observe(this, bills -> {
+                dueSplitEnd = bills;
+                budgetData.setDueSplitEnd(bills);
+            });
+        }
+        public void observeNextSplitBegins(){
+            expenseViewModel.getNexBillsBegMo().observe(this, bills -> {
+                dueSplitBeginning = bills;
+                budgetData.setDueSplitBeginning(bills);
+            });
+        }
+
 }
 
 

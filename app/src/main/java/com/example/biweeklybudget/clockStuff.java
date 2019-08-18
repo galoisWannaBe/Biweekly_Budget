@@ -146,18 +146,23 @@ public class clockStuff {
     public int getDay(){
         return day;
     }
+
     public int getMonth(){
         return month;
     }
+
     public int getFinPPD(){
         return finPPD;
     }
+
     public Integer getDaysRemain(){
         return daysRemain;
     }
+
     public int getWeek(){
         return week;
     }
+
     public int getJulDate(){
         return julDate;
     }
@@ -169,39 +174,13 @@ public class clockStuff {
     public int getFinNext() {
         return finNext;
     }
-    public void calculateMostRecentPay(int seed){
-        int payDay = 0;
-        Log.d(TAG, "Julian date: " +julDate);
-        while (payDay <= julDate){
-            payDay += 14;
-            Log.d(TAG, "JulianPay during loop: " +payDay);
-        }
-        payDay -= 14;
-        payDay += (seed % 14);
-        Log.d(TAG, "julian pay date" +payDay);
-        int i = 0;
-        while(i < 12){
-            if ((payDay - months[i]) <= 0){
-                break;
-            } else {
-                payDay -= months[i];
-                i++;
-            }
-            Log.d(TAG, "Month: " +i);
-        }
-        payMonth = (i + 1);
-        payDate = payDay;
-    }
+
     public void setJulianDate(int julianDate){
         this.julDate = julianDate;
     }
 
     public int getPayMonth() {
         return payMonth;
-    }
-
-    public int getPayDate() {
-        return payDate;
     }
 
     public int getYear(){

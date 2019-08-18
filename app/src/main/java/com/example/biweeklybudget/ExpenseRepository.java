@@ -1,6 +1,7 @@
 package com.example.biweeklybudget;
 
 import android.app.Application;
+import android.app.TaskStackBuilder;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -31,6 +32,7 @@ class ExpenseRepository {
     private int finNext;
     private boolean splitMo;
     private boolean splitDue;
+    private LiveData<Boolean> liveSplitDue;
     // TODO: 8/13/19 find SQL query that will allow me to get rid of the booleans splitMo and splitDue
 
     public ExpenseRepository(Application application) {
@@ -74,6 +76,10 @@ class ExpenseRepository {
         return splitDue;
     }
 
+    public LiveData<Boolean> isSplitDueLive(){
+        return liveSplitDue;
+    }
+
     public LiveData<List<Bill>> getNextBillsBegin() {
         return nextBillsBegin;
     }
@@ -89,13 +95,22 @@ class ExpenseRepository {
         daysRemain = mClockStuff.getDaysRemain();
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
+        Log.d(TAG, "setSeedPay ran in Repository");
+        Log.d(TAG, "Today is still: " +today);
+        Log.d(TAG, "finPPD: " +finPPD);
+        Log.d(TAG, "daysRemain: " +daysRemain);
+        Log.d(TAG, "begNext: " +begNext);
+        Log.d(TAG, "finNext: " +finNext);
+
         if (today < finPPD){
             splitDue = false;
             nextBills = billDao.getNext(today, finPPD);
+            Log.d(TAG,"Found SplitDue (it wasn't)");
         }else{
             splitDue = true;
             nextBillsEnd = billDao.getNextSplitEnd(today);
             nextBillsBegin = billDao.getNextSplitBeg(finPPD);
+            Log.d(TAG, "Found SplitDue (it was)");
         }
         if (begNext < finNext){
             splitMo = false;
@@ -175,6 +190,7 @@ class ExpenseRepository {
     }
     void getNextAsync(){
 
+        Log.d(TAG, "getNextAsync ran in repository");
         ppdParams ppd = new ppdParams(today, finPPD);
         new getNextByAsync(billDao).execute(ppd);
     }
