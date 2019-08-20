@@ -59,11 +59,14 @@ public class MainActivity extends AppCompatActivity {
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
             expenseViewModel.getAllWeekly();
+            splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
                 expenseViewModel.getAfterBillsBegMo();
             }else{
                 dueLive = expenseViewModel.getNextASink();
+                expenseViewModel.getNextBills();
+                Log.d(TAG, "getNextAsink ran");
             }
             expenseViewModel.getAllBills();
             if(splitDue){
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 observeNextSplitBegins();
             }else{
                 observeNextBills();
+                dueLive = expenseViewModel.getNextASink();
+                expenseViewModel.getNextBills();
             }
             observeAllWeekly();
             observeAllBills();
@@ -89,15 +94,16 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             budgetData.setDaysRemain(daysRemain);
-            budgetData.setWeek(dayOfWeek);
             expenseViewModel.getAllBills();
+            splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
-                expenseViewModel.upDateNextSplit();
-                expenseViewModel.updateNextSplitBegin();
+                //splitDue stuff
             }else {
-                dueLive = expenseViewModel.getNextASink();
+                expenseViewModel.getNextBills();
+                observeNextBills();
                 Log.d(TAG, "ran getNextAsink in MainActivity");
             }
+            budgetData.setDaysRemain(daysRemain);
             EditText editText = findViewById(R.id.balance);
             editText.getText().clear();
             TextView textView = findViewById(R.id.projBalance_box);
@@ -110,21 +116,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(mIntent);
         }
 
-        public void gotoUpNext(View view) {
+    public void gotoUpNext(View view) {
             Intent nIntent = new Intent(MainActivity.this, upNext.class);
             startActivity(nIntent);
         }
 
-        public void gotoViewAll(View view){
+    public void gotoViewAll(View view){
             Intent vIntent = new Intent(MainActivity.this, viewAll.class);
             startActivity(vIntent);
         }
-        public void gotoWeeklyExpenses(View view){
+    public void gotoWeeklyExpenses(View view){
             Intent pintent = new Intent(this, WeeklyExpenses.class);
             startActivity(pintent);
         }
 
-        public void calculate(View view) {
+    public void calculate(View view) {
             EditText editText = findViewById(R.id.balance);
             balanceStr = editText.getText().toString();
             observeNextBills();
@@ -141,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(projBalanceStr);
             }
         }
-        public void goToSettings(View view){
+    public void goToSettings(View view){
             Intent intent = new Intent(this, Settings.class);
             Bundle bundle = new Bundle();
             bundle.putInt("seed", seedPay);
@@ -149,14 +155,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
 
-        public void observeNextBills(){
-            expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
+    public void observeNextBills(){
+        expenseViewModel.getNextASink().observe(this, new Observer<List<Bill>>() {
 
-                @Override
+            @Override
                 public void onChanged(List<Bill> bills) {
+                    //dueBills = bills;
                     budgetData.setNextBills(bills);
-                    dueBills = bills;
-                    Log.d(TAG, "There are " + dueBills.size() + " bills due");
+                    Log.d(TAG, "There are " + bills.size() + " bills due");
                     Log.d(TAG, "Change to next bills observed");
                 }
             });

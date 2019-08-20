@@ -13,7 +13,7 @@ class ExpenseRepository {
     private static final String TAG = "ExpenseRepository";
 
     private LiveData<List<Bill>> allBills;
-    private LiveData<List<Bill>> nextBills;
+    private static LiveData<List<Bill>> nextBills;
     private LiveData<List<Bill>> afterBills;
     private LiveData<List<Bill>> afterBillsEndMonth;
     private LiveData<List<Bill>> afterBillsBeginningMonth;
@@ -33,6 +33,9 @@ class ExpenseRepository {
     private boolean splitMo;
     private boolean splitDue;
     private LiveData<Boolean> liveSplitDue;
+    BudgetData budgetData;
+    static BudgetData sBudgetData;
+
     // TODO: 8/13/19 find SQL query that will allow me to get rid of the booleans splitMo and splitDue
 
     public ExpenseRepository(Application application) {
@@ -40,6 +43,8 @@ class ExpenseRepository {
         billDao = db.billDao();
         weeklyDao = db.weeklyDao();
         mClockStuff = clockStuff.getInstance();
+        budgetData = BudgetData.getInstance();
+        sBudgetData = BudgetData.getInstance();
         today = mClockStuff.getDay();
         finPPD = mClockStuff.getFinPPD();
         daysRemain = mClockStuff.getDaysRemain();
@@ -402,6 +407,8 @@ class ExpenseRepository {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            sBudgetData.setNextBills(nextBills.getValue());
+            // TODO: 8/20/19 Test the previous line; apply liberally if successful 
             Log.d(TAG, "next bills gotted");
         }
     }

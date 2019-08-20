@@ -111,6 +111,14 @@ public class BudgetData {
         this.nextBills = nextBills;
         splitDue = false;
         Log.d(TAG, "Set NextBills");
+        if (nextBills.size() == 0){
+            System.out.println("No Bills");
+        }else{
+            for (int i = 0; i < nextBills.size(); i++){
+                System.out.println(nextBills.get(i).getLabel() +", " +nextBills.get(i).getDue());
+            }
+            System.out.println("End");
+        }
     }
     public void setNextSplitEndMo(List<Bill> bills){
         nextBillsEndMo = bills;
