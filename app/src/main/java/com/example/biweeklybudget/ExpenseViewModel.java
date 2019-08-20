@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     private int today;
     private int daysRemain;
     private int dayOfWeek;
+    BudgetData budgetData;
 
     public LiveData<List<Bill>> getNextBillsEndMo() {
         return nextBillsEndMo;
@@ -55,8 +57,17 @@ public class ExpenseViewModel extends AndroidViewModel {
         liveSplitDue = mRepository.isSplitDueLive();
         splitMo = mRepository.isSplitMo();
         splitDue = mRepository.isSplitDue();
+        budgetData = BudgetData.getInstance();
+        /*
+        mRepository.getNextBills().observe(this, new Observer<List<Bill>>() {
+            @Override
+            public void onChanged(List<Bill> bills) {
+                budgetData.setNextBills(bills);
+            }
+        });
         Log.d(TAG, "Constructor ran");
-    }
+        */
+         }
 
     public boolean isSplitMo() {
         return splitMo;
@@ -142,4 +153,5 @@ public class ExpenseViewModel extends AndroidViewModel {
     public void updateNextSplitBegin(){
         mRepository.getNextSplitBegins();
     }
+
 }
