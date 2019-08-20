@@ -90,14 +90,14 @@ public class MainActivity extends AppCompatActivity {
             daysRemain = expenseViewModel.getDaysRemain();
             budgetData.setDaysRemain(daysRemain);
             budgetData.setWeek(dayOfWeek);
+            Log.d(TAG, "There are " +daysRemain +" days remaining in the pay");
             expenseViewModel.getAllBills();
-            if(splitDue){
-                expenseViewModel.upDateNextSplit();
-                expenseViewModel.updateNextSplitBegin();
-            }else {
-                dueLive = expenseViewModel.getNextASink();
-                Log.d(TAG, "ran getNextAsink in MainActivity");
-            }
+            expenseViewModel.upDateNextSplit();
+            expenseViewModel.updateNextSplitBegin();
+            expenseViewModel.getNextASink();
+            expenseViewModel.getNextBills();
+            expenseViewModel.getNexBillsBegMo();
+            expenseViewModel.getNextBillsEndMo();
             EditText editText = findViewById(R.id.balance);
             editText.getText().clear();
             TextView textView = findViewById(R.id.projBalance_box);

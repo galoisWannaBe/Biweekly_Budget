@@ -54,11 +54,14 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         if (splitDue){
             expenseViewModel.getNexBillsBegMo();
             expenseViewModel.getNextBillsEndMo();
+            observeNextSplit();
+            Log.d(TAG, "started observers");
 
         }else{
             expenseViewModel.getNextBills();
             nextBillsLive = expenseViewModel.getNextASink();
             observeNext();
+            Log.d(TAG, "started observers");
         }
 
 
