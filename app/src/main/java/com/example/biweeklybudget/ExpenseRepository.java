@@ -402,7 +402,6 @@ class ExpenseRepository {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             Log.d(TAG, "next bills gotted");
         }
     }

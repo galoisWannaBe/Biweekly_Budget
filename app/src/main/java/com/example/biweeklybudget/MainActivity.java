@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             dayOfWeek = expenseViewModel.getDayOfWeek();
             nextBills = expenseViewModel.getNextBills();
             Log.d(TAG, "Day of the week: " +dayOfWeek);
-            budgetData = new BudgetData();
+            budgetData = BudgetData.getInstance();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
             expenseViewModel.getAllWeekly();
@@ -176,13 +176,13 @@ public class MainActivity extends AppCompatActivity {
         public void observeNextSplitEnds(){
             expenseViewModel.getNextBillsEndMo().observe(this, bills -> {
                 dueSplitEnd = bills;
-                budgetData.setDueSplitEnd(bills);
+                budgetData.setNextSplitEndMo(bills);
             });
         }
         public void observeNextSplitBegins(){
             expenseViewModel.getNexBillsBegMo().observe(this, bills -> {
                 dueSplitBeginning = bills;
-                budgetData.setDueSplitBeginning(bills);
+                budgetData.setNextBillsBegMo(bills);
             });
         }
 

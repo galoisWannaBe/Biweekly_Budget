@@ -2,8 +2,9 @@ package com.example.biweeklybudget;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import java.lang.annotation.Target;
-import java.util.Collections;
 import java.util.List;
 
 public class BudgetData {
@@ -27,17 +28,24 @@ public class BudgetData {
     public final byte FRIDAY = 32;
     public final byte SATURDAY = 64;
     public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
-    public List<Bill> nextBills = Collections.emptyList();
+    public List<Bill> nextBills;
+    public List<Bill> nextBillsBegMo;
+    public List<Bill> nextBillsEndMo;
     public List<Weekly> allWeekly;
     public int julianDate = 0;
     public int payMonth;
     public int payDate;
     int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    List<Bill> dueSplitEnd = Collections.emptyList();
-    List<Bill> dueSplitBeginning = Collections.emptyList();
-    boolean splitDue = false;
+    boolean splitDue;
+    LiveData<List<Bill>> liveBillsDue;
 
-    BudgetData() {
+    public static final BudgetData INSTANCE = new BudgetData();
+
+    public static BudgetData getInstance(){
+        return INSTANCE;
+    }
+
+    private BudgetData() {
         balance = 0;
         ttlbills = 0;
         weeklyTotal = 0;
@@ -45,13 +53,12 @@ public class BudgetData {
 
     public void addBills() {
         ttlbills = 0;
-        Log.d(TAG, "SplitMo? " +splitDue);
-        if(splitDue){
-            for (int i = 0; i < dueSplitEnd.size(); i++){
-                ttlbills += dueSplitEnd.get(i).getCost();
+        if (splitDue){
+            for (int i = 0; i < nextBillsBegMo.size(); i++){
+                ttlbills += nextBillsBegMo.get(i).getCost();
             }
-            for (int i = 0; i < dueSplitBeginning.size(); i++){
-                ttlbills += dueSplitBeginning.get(i).getCost();
+            for (int i = 0; i < nextBillsEndMo.size(); i++){
+                ttlbills += nextBillsEndMo.get(i).getCost();
             }
         }else {
             for (int i = 0; i < nextBills.size(); i++) {
@@ -101,9 +108,17 @@ public class BudgetData {
    }
 
     public void setNextBills(List<Bill> nextBills) {
-        splitDue = false;
         this.nextBills = nextBills;
+        splitDue = false;
         Log.d(TAG, "Set NextBills");
+    }
+    public void setNextSplitEndMo(List<Bill> bills){
+        nextBillsEndMo = bills;
+        splitDue = true;
+    }
+    public void setNextBillsBegMo(List<Bill> bills){
+        nextBillsBegMo = bills;
+        splitDue = true;
     }
 
     public void setAllWeekly(List<Weekly> allWeekly) {
@@ -119,15 +134,7 @@ public class BudgetData {
         this.week = week;
     }
 
-    public void setDueSplitEnd(List<Bill> dueSplitEnd) {
-        splitDue = true;
-        this.dueSplitEnd = dueSplitEnd;
-        Log.d(TAG, "Set NextBills EndMo");
-    }
-
-    public void setDueSplitBeginning(List<Bill> dueSplitBeginning) {
-        splitDue = true;
-        this.dueSplitBeginning = dueSplitBeginning;
-        Log.d(TAG, "Set NextBills Beginning Mo");
+    public void setLiveBillsDue(LiveData<List<Bill>> liveBillsDue) {
+        this.liveBillsDue = liveBillsDue;
     }
 }
