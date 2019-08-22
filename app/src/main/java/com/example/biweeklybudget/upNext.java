@@ -32,7 +32,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     List<Bill> nextBillsEndMo;
     List<Bill> nextBillsBegMo;
     upNextAdapter nAdapter;
-    boolean splitDue;
+    static boolean splitDue;
 
     ExpenseViewModel expenseViewModel;
 
@@ -178,6 +178,9 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     }
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
+    }
+    public static void setSplitDue(boolean IsSplitDue){
+        splitDue = IsSplitDue;
     }
 
 }

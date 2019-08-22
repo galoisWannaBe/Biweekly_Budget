@@ -2,6 +2,8 @@ package com.example.biweeklybudget;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,27 +68,27 @@ public class Settings extends AppCompatActivity {
 
     public void saveSeed(View view){
 
-                    jul = 0;
-                    if(isUnchanged){
-                        mon++;
-                    }
-                    int i = 0;
-                    for(i = 0; i < mon; i++){
-                        jul += months[i];
-                        Log.d(TAG, "Counting julian date" +jul);
-                    }
-                    jul += day;
-                    jul --;
-                    jul -= months[i];
+        jul = 0;
+        if(isUnchanged){
+            mon++;
+        }
+        int i = 0;
+        for(i = 0; i < mon; i++){
+            jul += months[i];
+            Log.d(TAG, "Counting julian date" +jul);
+        }
+        jul += day;
+        jul --;
+        jul -= months[i];
+        jul = jul % 14;
 
-                    jul = jul % 14;
-                    Log.d(TAG, "Seed pay: " +jul);
-                    Intent intent = new Intent(this, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("seed", jul);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                    finish();
+        Log.d(TAG, "Seed pay: " +jul);
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("seed", jul);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
 
     }
 

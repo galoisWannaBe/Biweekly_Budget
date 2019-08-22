@@ -93,44 +93,27 @@ class ExpenseRepository {
         return nextBillsEnd;
     }
 
-    void setSeedPay(int seed){
-        mClockStuff.setSeedPay(seed);
-        today = mClockStuff.getDay();
+    void setSeedPay(int seedPay){
+        mClockStuff.setSeedPay(seedPay);
         finPPD = mClockStuff.getFinPPD();
-        daysRemain = mClockStuff.getDaysRemain();
-        begNext = mClockStuff.getBegNext();
-        finNext = mClockStuff.getFinNext();
-        Log.d(TAG, "setSeedPay ran in Repository");
-        Log.d(TAG, "Today is still: " +today);
-        Log.d(TAG, "finPPD: " +finPPD);
-        Log.d(TAG, "daysRemain: " +daysRemain);
-        Log.d(TAG, "begNext: " +begNext);
-        Log.d(TAG, "finNext: " +finNext);
-
         if (today < finPPD){
             splitDue = false;
             nextBills = billDao.getNext(today, finPPD);
-            Log.d(TAG,"Found SplitDue (it wasn't)");
         }else{
             splitDue = true;
             nextBillsEnd = billDao.getNextSplitEnd(today);
             nextBillsBegin = billDao.getNextSplitBeg(finPPD);
-            Log.d(TAG, "Found SplitDue (it was)");
         }
-        if (begNext < finNext){
+        begNext = mClockStuff.getBegNext();
+        finNext = mClockStuff.getFinNext();
+        if (begNext < finPPD){
             splitMo = false;
             afterBills = billDao.getAfter(begNext, finNext);
-
-            getAfterAsync();
         }else{
             splitMo = true;
             afterBillsEndMonth = billDao.getAfterEndMonth(begNext);
             afterBillsBeginningMonth = billDao.getAfterBeginMonth(finNext);
-            Log.d(TAG, "crossed month");
         }
-        Log.d(TAG, "Seed pay set");
-        Log.d(TAG, daysRemain +"days remaining");
-        Log.d(TAG, "Today: " +today +" EndPay: " +finPPD +" begNext: " +begNext +" finNext: " +finNext);
     }
 
     public LiveData<List<Bill>> getAllBills(){

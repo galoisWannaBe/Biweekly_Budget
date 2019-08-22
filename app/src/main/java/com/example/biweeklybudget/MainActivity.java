@@ -87,27 +87,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 0 && resultCode == RESULT_OK) {
             Bundle bundle = Data.getExtras();
             seedPay = bundle.getInt("seed");
-            SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("seedPay", seedPay);
-            editor.commit();
             expenseViewModel.setSeedPay(seedPay);
-            daysRemain = expenseViewModel.getDaysRemain();
-            budgetData.setDaysRemain(daysRemain);
-            expenseViewModel.getAllBills();
-            splitDue = expenseViewModel.isSplitDue();
-            if(splitDue){
-                //splitDue stuff
-            }else {
-                expenseViewModel.getNextBills();
-                observeNextBills();
-                Log.d(TAG, "ran getNextAsink in MainActivity");
-            }
-            budgetData.setDaysRemain(daysRemain);
             EditText editText = findViewById(R.id.balance);
             editText.getText().clear();
             TextView textView = findViewById(R.id.projBalance_box);
             textView.setText("");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -156,12 +142,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     public void observeNextBills(){
-        expenseViewModel.getNextASink().observe(this, new Observer<List<Bill>>() {
+        expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
 
             @Override
                 public void onChanged(List<Bill> bills) {
                     //dueBills = bills;
                     budgetData.setNextBills(bills);
+                    upNext.setSplitDue(false);
                     Log.d(TAG, "There are " + bills.size() + " bills due");
                     Log.d(TAG, "Change to next bills observed");
                 }
