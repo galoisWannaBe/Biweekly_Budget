@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
+            expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             Bundle bundle = Data.getExtras();
             seedPay = bundle.getInt("seed");
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
@@ -93,22 +94,27 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
+            Log.d(TAG, "There are " +daysRemain +" days remaining");
             budgetData.setDaysRemain(daysRemain);
             expenseViewModel.getAllBills();
             splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
-                //splitDue stuff
+                expenseViewModel.getNextBillsEndMo();
+                expenseViewModel.getNexBillsBegMo();
+                observeNextSplitEnds();
+                observeNextSplitBegins();
+                Log.d(TAG, "ran getNext beginning and ending");
             }else {
                 expenseViewModel.getNextBills();
                 observeNextBills();
                 Log.d(TAG, "ran getNextAsink in MainActivity");
             }
             budgetData.setDaysRemain(daysRemain);
-            EditText editText = findViewById(R.id.balance);
-            editText.getText().clear();
-            TextView textView = findViewById(R.id.projBalance_box);
-            textView.setText("");
         }
+        EditText editText = findViewById(R.id.balance);
+        editText.getText().clear();
+        TextView textView = findViewById(R.id.projBalance_box);
+        textView.setText("");
     }
 
     public void gotoMain(View view) {

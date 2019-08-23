@@ -26,7 +26,9 @@ class ExpenseRepository {
     private clockStuff mClockStuff;
     private int today;
     private int finPPD;
+    //private LiveData<Integer> daysRemain;
     private int daysRemain;
+
     private int dayOfWeek;
     private int begNext;
     private int finNext;
@@ -98,6 +100,7 @@ class ExpenseRepository {
         today = mClockStuff.getDay();
         finPPD = mClockStuff.getFinPPD();
         daysRemain = mClockStuff.getDaysRemain();
+        Log.d(TAG, "There are " +daysRemain +" days remaining");
         begNext = mClockStuff.getBegNext();
         finNext = mClockStuff.getFinNext();
         Log.d(TAG, "setSeedPay ran in Repository");

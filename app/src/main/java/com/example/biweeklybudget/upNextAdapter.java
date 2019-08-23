@@ -62,15 +62,31 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     @Override
     public void onBindViewHolder(upNextViewHolder holder, int position) {
-        String label;
-        int due;
-        double cost;
+        String label = "\0";
+        int due = 0;
+        double cost = 0;
 
         int pos = position;
-        Bill bill = nextBills.get(pos);
-        label = bill.getLabel();
-        due = bill.getDue();
-        cost = bill.getCost();
+
+        if(splitDue){
+            if(pos < nextSplitEnds.size()){
+                Bill bill = nextSplitEnds.get(pos);
+                label = bill.getLabel();
+                due = bill.getDue();
+                cost = bill.getCost();
+            }else{
+                int i = pos - nextSplitEnds.size();
+                Bill bill = nextSplitBegins.get(i);
+                label = bill.getLabel();
+                due = bill.getDue();
+                cost = bill.getCost();
+            }
+        }else{
+            Bill bill = nextBills.get(pos);
+            label = bill.getLabel();
+            due = bill.getDue();
+            cost = bill.getCost();
+        }
 
         holder.mTextView1.setText(label);
         holder.mTextView2.setText(String.valueOf(due));

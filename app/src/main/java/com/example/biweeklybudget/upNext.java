@@ -1,20 +1,18 @@
 package com.example.biweeklybudget;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     List<Bill> nextBillsEndMo;
     List<Bill> nextBillsBegMo;
     upNextAdapter nAdapter;
-    boolean splitDue;
+    boolean splitDue = false;
 
     ExpenseViewModel expenseViewModel;
 
@@ -42,7 +40,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         setContentView(R.layout.activity_up_next);
         setTitle("Bills Due This Pay");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
-        splitDue = expenseViewModel.isSplitDue();
         nRecyclerView = findViewById(R.id.recyclerView);
         nAdapter = new upNextAdapter(this);
         nRecyclerView.setHasFixedSize(true);
@@ -50,6 +47,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
         expenseViewModel.getAllBills();
+        splitDue = expenseViewModel.isSplitDue();
         observeAll();
         if (splitDue){
             expenseViewModel.getNexBillsBegMo();
@@ -147,7 +145,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBills = bills;
-                splitDue = expenseViewModel.isSplitDue();
                 nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextBills(bills);
                 nAdapter.notifyDataSetChanged();
@@ -159,7 +156,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBillsEndMo = bills;
-                splitDue = expenseViewModel.isSplitDue();
                 nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextSplitEnds(nextBillsEndMo);
                 nAdapter.notifyDataSetChanged();
@@ -169,7 +165,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBillsBegMo = bills;
-                splitDue = expenseViewModel.isSplitDue();
                 nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextSplitBegins(nextBillsBegMo);
                 nAdapter.notifyDataSetChanged();

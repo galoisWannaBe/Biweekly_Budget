@@ -34,15 +34,15 @@ public class ExpenseViewModel extends AndroidViewModel {
     BudgetData budgetData;
 
     public LiveData<List<Bill>> getNextBillsEndMo() {
-        return nextBillsEndMo;
+        return mRepository.getNextBillsEnd();
     }
 
     public LiveData<List<Bill>> getNexBillsBegMo() {
-        return nexBillsBegMo;
+        return mRepository.getNextBillsBegin();
     }
 
     public boolean isSplitDue() {
-        return splitDue;
+        return mRepository.isSplitDue();
     }
 
     public ExpenseViewModel(@NonNull Application application) {
@@ -97,7 +97,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Weekly>> getAllWeekly() {
-        return allWeekly;
+        return mRepository.getAllWeekly();
     }
 
     public void setSeedPay(int seedPay){

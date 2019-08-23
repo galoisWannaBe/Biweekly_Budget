@@ -140,6 +140,10 @@ public class clockStuff {
         if (finNext > months[(month -1)]){
             finNext -= months[(month - 1)];
         }
+        daysRemain = finPPD - day;
+        if (finPPD < day){
+            daysRemain += months[(month - 1)];
+        }
 
     }
 
