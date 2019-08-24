@@ -33,14 +33,6 @@ public class ExpenseViewModel extends AndroidViewModel {
     private int dayOfWeek;
     BudgetData budgetData;
 
-    public LiveData<List<Bill>> getNextBillsEndMo() {
-        return mRepository.getNextBillsEnd();
-    }
-
-    public LiveData<List<Bill>> getNexBillsBegMo() {
-        return mRepository.getNextBillsBegin();
-    }
-
     public boolean isSplitDue() {
         return mRepository.isSplitDue();
     }
@@ -68,6 +60,16 @@ public class ExpenseViewModel extends AndroidViewModel {
         Log.d(TAG, "Constructor ran");
         */
          }
+
+    public LiveData<List<Bill>> getNextBillsEndMo() {
+        Log.d(TAG, "EndMo");
+        return mRepository.getNextBillsEnd();
+    }
+
+    public LiveData<List<Bill>> getNexBillsBegMo() {
+        Log.d(TAG, "BegMo");
+        return mRepository.getNextBillsBegin();
+    }
 
     public boolean isSplitMo() {
         return splitMo;

@@ -29,10 +29,10 @@ public class BudgetData {
     public final byte FRIDAY = 32;
     public final byte SATURDAY = 64;
     public final byte[] weekArr = new byte[]{SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
-    public List<Bill> nextBills = Collections.emptyList();
-    public List<Bill> nextBillsBegMo = Collections.emptyList();
-    public List<Bill> nextBillsEndMo = Collections.emptyList();
-    public List<Weekly> allWeekly = Collections.emptyList();
+    public List<Bill> nextBills;
+    public List<Bill> nextBillsBegMo;
+    public List<Bill> nextBillsEndMo;
+    public List<Weekly> allWeekly;
     public int julianDate = 0;
     public int payMonth;
     public int payDate;
@@ -50,6 +50,10 @@ public class BudgetData {
         balance = 0;
         ttlbills = 0;
         weeklyTotal = 0;
+        nextBills = Collections.emptyList();
+        nextBillsBegMo = Collections.emptyList();
+        nextBillsEndMo = Collections.emptyList();
+        allWeekly = Collections.emptyList();
     }
 
     public void addBills() {
@@ -74,21 +78,13 @@ public class BudgetData {
         //weekCounter = week;
         for (int i = 0; i < allWeekly.size(); i++){
             days = allWeekly.get(i).getDays();
-            Log.d(TAG, "Current expense: " +allWeekly.get(i).getLabel());
             weekCounter = week;
-            //Log.d(TAG, "Current Weekly" +allWeekly.get(i).getLabel());
-            Log.d(TAG, "Days Remaining: " +daysRemain);
             for (int j = 0; j <= daysRemain; j++){
-                Log.d(TAG, "Current day: " +weekCounter);
                 if((days & weekArr[weekCounter]) == weekArr[weekCounter]){
                     weeklyTotal += allWeekly.get(i).getCost();
-                    Log.d(TAG, "Added " +allWeekly.get(i).getLabel() +" for " +weekCounter);
-                    //Log.d(TAG, "Weekly Total: " +weeklyTotal);
                 }
-                //Log.d(TAG, j +"Days into the pay");
                 weekCounter++;
                 weekCounter = weekCounter % 7;
-                //Log.d(TAG, "WeekCounter" +weekCounter);
             }
         }
         Log.d(TAG, "Weekly expenses totaled to " +weeklyTotal);
@@ -126,10 +122,22 @@ public class BudgetData {
     public void setNextSplitEndMo(List<Bill> bills){
         nextBillsEndMo = bills;
         splitDue = true;
+        double endTtl = 0;
+        Log.d(TAG, "Set Bills endmo");
+        Log.d(TAG, "There are " +nextBillsEndMo.size() +" bills until the end of the month");
+        for (int i = 0; i < nextBillsEndMo.size(); i++){
+             endTtl += nextBillsEndMo.get(i).getCost();
+        }Log.d(TAG, "Endmo totaled to " +endTtl);
     }
     public void setNextBillsBegMo(List<Bill> bills){
         nextBillsBegMo = bills;
         splitDue = true;
+        double begTtl = 0;
+        Log.d(TAG, "Set Bills begmo");
+        Log.d(TAG, "There are " +nextBillsBegMo.size() +" bills after the beginning of next month");
+        for (int i = 0; i < nextBillsBegMo.size(); i++){
+            begTtl += nextBillsBegMo.get(i).getCost();
+        }Log.d(TAG, "Begmo totaled to " +begTtl);
     }
 
     public void setAllWeekly(List<Weekly> allWeekly) {
@@ -139,7 +147,6 @@ public class BudgetData {
 
     public void setDaysRemain(int daysRemain) {
         this.daysRemain = daysRemain;
-        Log.d(TAG, "There are " +daysRemain +" remaining in BudgetData");
     }
 
     public void setWeek(int week) {

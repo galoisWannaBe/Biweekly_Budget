@@ -79,22 +79,6 @@ class ExpenseRepository {
         Log.d(TAG, "constructor ran");
     }
 
-    public boolean isSplitDue() {
-        return splitDue;
-    }
-
-    public LiveData<Boolean> isSplitDueLive(){
-        return liveSplitDue;
-    }
-
-    public LiveData<List<Bill>> getNextBillsBegin() {
-        return nextBillsBegin;
-    }
-
-    public LiveData<List<Bill>> getNextBillsEnd() {
-        return nextBillsEnd;
-    }
-
     void setSeedPay(int seed){
         mClockStuff.setSeedPay(seed);
         today = mClockStuff.getDay();
@@ -134,6 +118,22 @@ class ExpenseRepository {
         Log.d(TAG, "Seed pay set");
         Log.d(TAG, daysRemain +"days remaining");
         Log.d(TAG, "Today: " +today +" EndPay: " +finPPD +" begNext: " +begNext +" finNext: " +finNext);
+    }
+
+    public boolean isSplitDue() {
+        return splitDue;
+    }
+
+    public LiveData<Boolean> isSplitDueLive(){
+        return liveSplitDue;
+    }
+
+    public LiveData<List<Bill>> getNextBillsBegin() {
+        return nextBillsBegin;
+    }
+
+    public LiveData<List<Bill>> getNextBillsEnd() {
+        return nextBillsEnd;
     }
 
     public LiveData<List<Bill>> getAllBills(){

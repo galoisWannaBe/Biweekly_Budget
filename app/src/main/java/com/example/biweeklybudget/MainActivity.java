@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     //Database vars
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
             splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
-                expenseViewModel.getAfterBillsBegMo();
+                expenseViewModel.getNexBillsBegMo();
+                observeNextSplitBegins();
+                observeNextSplitEnds();
             }else{
                 dueLive = expenseViewModel.getNextASink();
                 expenseViewModel.getNextBills();
@@ -84,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
+        expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             Bundle bundle = Data.getExtras();
             seedPay = bundle.getInt("seed");
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
@@ -94,22 +96,43 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
-            Log.d(TAG, "There are " +daysRemain +" days remaining");
-            budgetData.setDaysRemain(daysRemain);
+            Log.d(TAG, "There are " + daysRemain + " days remaining");
             expenseViewModel.getAllBills();
             splitDue = expenseViewModel.isSplitDue();
-            if(splitDue){
-                expenseViewModel.getNextBillsEndMo();
-                expenseViewModel.getNexBillsBegMo();
-                observeNextSplitEnds();
-                observeNextSplitBegins();
-                Log.d(TAG, "ran getNext beginning and ending");
-            }else {
-                expenseViewModel.getNextBills();
-                observeNextBills();
-                Log.d(TAG, "ran getNextAsink in MainActivity");
-            }
             budgetData.setDaysRemain(daysRemain);
+        }
+        if (splitDue) {
+            expenseViewModel.getNextBillsEndMo();
+            expenseViewModel.getNexBillsBegMo();
+            observeNextSplitEnds();
+            observeNextSplitBegins();
+            Log.d(TAG, "ran getNext beginning and ending");
+        } else {
+            expenseViewModel.getNextBills();
+            observeNextBills();
+            Log.d(TAG, "ran getNextBills in MainActivity");
+        }
+        EditText editText = findViewById(R.id.balance);
+        editText.getText().clear();
+        TextView textView = findViewById(R.id.projBalance_box);
+        textView.setText("");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+        Log.d(TAG, "Greetings from onResume");
+        if (splitDue){
+            observeNextSplitEnds();
+            observeNextSplitBegins();
+            expenseViewModel.getNextBillsEndMo();
+            expenseViewModel.getNexBillsBegMo();
+            Log.d(TAG, "splitted due");
+        }else{
+            observeNextBills();
+            expenseViewModel.getNextBills();
+            Log.d(TAG, "not splitted");
         }
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
@@ -173,28 +196,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        public void observeAllWeekly(){
+    public void observeAllWeekly(){
             expenseViewModel.getAllWeekly().observe(this, weeklies -> {
                 budgetData.setAllWeekly(weeklies);
 
                 Log.d(TAG, "Change to Weeklies observed");
             });
         }
-        public void observeAllBills(){
+    public void observeAllBills(){
             expenseViewModel.getAllBills().observe(this, bills -> {AddToList.setBills(bills);
             Log.d(TAG, "Change to all bills observed");
             });
         }
-        public void observeNextSplitEnds(){
+    public void observeNextSplitEnds(){
             expenseViewModel.getNextBillsEndMo().observe(this, bills -> {
                 dueSplitEnd = bills;
                 budgetData.setNextSplitEndMo(bills);
             });
         }
-        public void observeNextSplitBegins(){
+    public void observeNextSplitBegins(){
             expenseViewModel.getNexBillsBegMo().observe(this, bills -> {
                 dueSplitBeginning = bills;
                 budgetData.setNextBillsBegMo(bills);
+                Log.d(TAG, "Change to nextSplitBegins observed");
             });
         }
 
