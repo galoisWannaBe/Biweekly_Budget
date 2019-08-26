@@ -112,6 +112,17 @@ public class MainActivity extends AppCompatActivity {
             observeNextBills();
             Log.d(TAG, "ran getNextBills in MainActivity");
         }
+        if( resultCode == RESULT_CANCELED){
+            if(splitDue){
+                expenseViewModel.getNextBillsEndMo();
+                expenseViewModel.getNexBillsBegMo();
+                observeNextSplitEnds();
+                observeNextSplitEnds();
+            } else {
+                expenseViewModel.getNextBills();
+                observeNextBills();
+            }
+        }
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);
@@ -221,6 +232,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Change to nextSplitBegins observed");
             });
         }
+    public void setObservers(){
+
+    }
+
+
 
 }
 

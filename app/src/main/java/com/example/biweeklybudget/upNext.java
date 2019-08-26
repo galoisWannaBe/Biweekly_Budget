@@ -175,4 +175,9 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MainActivity.
+    }
 }
