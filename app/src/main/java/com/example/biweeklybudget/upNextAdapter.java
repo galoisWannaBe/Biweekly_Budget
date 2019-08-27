@@ -16,10 +16,10 @@ import static androidx.core.content.ContextCompat.startActivity;
 public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextViewHolder>{
 
     private OnBillListener mOnBillListener;
-    private List<Bill> nextBills = Collections.emptyList();
-    private boolean splitDue;
-    private List<Bill> nextSplitEnds;
-    private List<Bill> nextSplitBegins;
+    private static List<Bill> nextBills = Collections.emptyList();
+    private static boolean splitDue;
+    private static List<Bill> nextSplitEnds;
+    private static List<Bill> nextSplitBegins;
 
     upNextAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -107,18 +107,23 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
         }
     }
 
-    public void setNextBills(List<Bill> nextBills) {
-        this.nextBills = nextBills;
+    public static void setNextBills(List<Bill> NextBills) {
+        splitDue = false;
+        nextBills = NextBills;
     }
+    /*
     public void isSplitDue(boolean split){
         splitDue = split;
     }
 
-    public void setNextSplitEnds(List<Bill> nextSplitEnds) {
-        this.nextSplitEnds = nextSplitEnds;
+     */
+
+    public static void setNextSplitEnds(List<Bill> NextSplitEnds) {
+        splitDue = true;
+        nextSplitEnds = NextSplitEnds;
     }
 
-    public void setNextSplitBegins(List<Bill> nextSplitBegins) {
-        this.nextSplitBegins = nextSplitBegins;
+    public static void setNextSplitBegins(List<Bill> NextSplitBegins) {
+        nextSplitBegins = NextSplitBegins;
     }
 }

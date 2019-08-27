@@ -22,13 +22,13 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     private static final String TAG = "Weekly Expenses";
 
     private RecyclerView wRecyclerView;
-    private  weeklyAdapter wAdapter;
+    private static weeklyAdapter wAdapter;
     private RecyclerView.LayoutManager wLayoutManager;
     public final int ADD_REQUEST = 0;
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
     private ExpenseViewModel expenseViewModel;
-    private List<Weekly>allWeekly;
+    private static List<Weekly>allWeekly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,5 +119,10 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
             wAdapter.notifyDataSetChanged();
             Log.d(TAG, "observed update to Weekly list");
         });
+    }
+
+    public static void setAllWeekly(List<Weekly> AllWeekly) {
+        allWeekly = AllWeekly;
+        wAdapter.setAllWeekly(allWeekly);
     }
 }

@@ -53,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             dayOfWeek = expenseViewModel.getDayOfWeek();
-            nextBills = expenseViewModel.getNextBills();
+            //nextBills = expenseViewModel.getNextBills();
             Log.d(TAG, "Day of the week: " +dayOfWeek);
             budgetData = BudgetData.getInstance();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            expenseViewModel.getAllWeekly();
+            //expenseViewModel.getAllWeekly();
+            /*
             splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 observeNextSplitBegins();
                 observeNextSplitEnds();
             }else{
-                dueLive = expenseViewModel.getNextASink();
                 expenseViewModel.getNextBills();
                 Log.d(TAG, "getNextAsink ran");
             }
@@ -75,12 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 observeNextSplitEnds();
                 observeNextSplitBegins();
             }else{
-                observeNextBills();
-                dueLive = expenseViewModel.getNextASink();
                 expenseViewModel.getNextBills();
+                observeNextBills();
             }
             observeAllWeekly();
             observeAllBills();
+
+             */
 
         }
     @Override
@@ -97,54 +98,62 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             Log.d(TAG, "There are " + daysRemain + " days remaining");
-            expenseViewModel.getAllBills();
+            //expenseViewModel.getAllBills();
             splitDue = expenseViewModel.isSplitDue();
             budgetData.setDaysRemain(daysRemain);
+            /*
         }
-        if (splitDue) {
+        if(splitDue){
             expenseViewModel.getNextBillsEndMo();
             expenseViewModel.getNexBillsBegMo();
+            observeNextSplitBegins();
+            observeNextSplitEnds();
+        }else{
+            expenseViewModel.getNextBills();
+            Log.d(TAG, "getNextAsink ran");
+        }
+        expenseViewModel.getAllBills();
+        if(splitDue){
             observeNextSplitEnds();
             observeNextSplitBegins();
-            Log.d(TAG, "ran getNext beginning and ending");
-        } else {
+        }else{
             expenseViewModel.getNextBills();
             observeNextBills();
-            Log.d(TAG, "ran getNextBills in MainActivity");
         }
-        if( resultCode == RESULT_CANCELED){
-            if(splitDue){
-                expenseViewModel.getNextBillsEndMo();
-                expenseViewModel.getNexBillsBegMo();
-                observeNextSplitEnds();
-                observeNextSplitEnds();
-            } else {
-                expenseViewModel.getNextBills();
-                observeNextBills();
-            }
-        }
+
+             */
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);
         textView.setText("");
     }
 
+
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
         Log.d(TAG, "Greetings from onResume");
-        if (splitDue){
-            observeNextSplitEnds();
-            observeNextSplitBegins();
+        if(splitDue){
             expenseViewModel.getNextBillsEndMo();
             expenseViewModel.getNexBillsBegMo();
-            Log.d(TAG, "splitted due");
+            observeNextSplitBegins();
+            observeNextSplitEnds();
         }else{
-            observeNextBills();
             expenseViewModel.getNextBills();
-            Log.d(TAG, "not splitted");
+            Log.d(TAG, "getNextAsink ran");
         }
+        expenseViewModel.getAllBills();
+        if(splitDue){
+            observeNextSplitEnds();
+            observeNextSplitBegins();
+        }else{
+            expenseViewModel.getNextBills();
+            observeNextBills();
+        }
+
+     */
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);

@@ -15,7 +15,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllViewHolder> {
 
-    private List<Bill> allBills = Collections.emptyList();
+    private static List<Bill> allBills = Collections.emptyList();
     private OnBillListener mOnBillListener;
 
     viewAllAdapter(OnBillListener onBillListener){
@@ -83,7 +83,7 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
         return allBills.size();
     }
 
-    public void setAllBills(List<Bill> allBills) {
-        this.allBills = allBills;
+    public static void setAllBills(List<Bill> AllBills) {
+        allBills = AllBills;
     }
 }

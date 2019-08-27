@@ -26,11 +26,11 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public final int RESULT_DELETED = 2;
     LiveData<List<Bill>> nextBillsLive;
     LiveData<List<Bill>> nextBillsSplitLive;
-    List<Bill> nextBills;
-    List<Bill> nextBillsEndMo;
-    List<Bill> nextBillsBegMo;
-    upNextAdapter nAdapter;
-    boolean splitDue = false;
+    static List<Bill> nextBills;
+    static List<Bill> nextBillsEndMo;
+    static List<Bill> nextBillsBegMo;
+    static upNextAdapter nAdapter;
+    static boolean splitDue = false;
 
     ExpenseViewModel expenseViewModel;
 
@@ -46,23 +46,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         nLayoutManager = new LinearLayoutManager(this);
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
-        expenseViewModel.getAllBills();
         splitDue = expenseViewModel.isSplitDue();
-        observeAll();
-        if (splitDue){
-            expenseViewModel.getNexBillsBegMo();
-            expenseViewModel.getNextBillsEndMo();
-            observeNextSplit();
-            Log.d(TAG, "started observers");
-
-        }else{
-            expenseViewModel.getNextBills();
-            nextBillsLive = expenseViewModel.getNextASink();
-            observeNext();
-            Log.d(TAG, "started observers");
-        }
-
-
     }
 
     @Override
@@ -140,6 +124,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
+    /*
     public void observeNext(){
         expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
             @Override
@@ -171,13 +156,30 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
             }
         });
     }
+
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        MainActivity.
+     */
+
+    public static void setNextBills(List<Bill> NextBills) {
+        splitDue = false;
+        nextBills = NextBills;
+        nAdapter.setNextBills(nextBills);
+        nAdapter.notifyDataSetChanged();
+    }
+
+    public static void setNextBillsEndMo(List<Bill> NextBillsEndMo) {
+        splitDue = true;
+        nextBillsEndMo = NextBillsEndMo;
+        nAdapter.setNextSplitEnds(nextBillsEndMo);
+        nAdapter.notifyDataSetChanged();
+    }
+
+    public static void setNextBillsBegMo(List<Bill> NextBillsBegMo) {
+        nextBillsBegMo = NextBillsBegMo;
+        nAdapter.setNextSplitBegins(nextBillsBegMo);
+        nAdapter.notifyDataSetChanged();
     }
 }

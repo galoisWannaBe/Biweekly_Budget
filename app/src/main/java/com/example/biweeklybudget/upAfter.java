@@ -24,16 +24,16 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     List<Bill> afterCross;
 
     private RecyclerView mRecyclerView;
-    upAfterAdapter mAdapter;
+    static upAfterAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     public static int q;
     public final int ADD_REQUEST = 0;
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
     ExpenseViewModel expenseViewModel;
-    List<Bill> afterBills;
-    List<Bill> afterBillsEndMo;
-    List<Bill> afterBillsBegMo;
+    static List<Bill> afterBills;
+    static List<Bill> afterBillsEndMo;
+    static List<Bill> afterBillsBegMo;
     LiveData<List<Bill>> afterBillsEndLive;
     LiveData<List<Bill>> afterBillsBegLive;
     LiveData<List<Bill>> afterLive;
@@ -53,7 +53,8 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        splitMo = expenseViewModel.isSplitMo();
+        //splitMo = expenseViewModel.isSplitMo();
+        /*
         if(splitMo){
             expenseViewModel.getAfterBegMo();
             expenseViewModel.getAfterEndMo();
@@ -66,7 +67,11 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         expenseViewModel.getAllBills();
         afterLive = expenseViewModel.getAfterBills();
         observeAll();
+
+         */
     }
+
+
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data){
@@ -141,6 +146,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
+    /*
 
     public void observeAfter(){
         splitMo = expenseViewModel.isSplitMo();
@@ -177,5 +183,26 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         expenseViewModel.getAllBills().observe(this, bills -> {
             AddToList.setBills(bills);
         });
+    }
+
+     */
+
+    public static void setAfterBills(List<Bill> AfterBills) {
+        afterBills = AfterBills;
+        mAdapter.setUpAfter(afterBills);
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    public static void setAfterBillsEndMo(List<Bill> AfterBillsEndMo) {
+        afterBillsEndMo = AfterBillsEndMo;
+        mAdapter.setUpAfterEndMo(afterBillsEndMo);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public static void setAfterBillsBegMo(List<Bill> AfterBillsBegMo) {
+        afterBillsBegMo = AfterBillsBegMo;
+        mAdapter.setUpAfterBegMo(afterBillsBegMo);
+        mAdapter.notifyDataSetChanged();
     }
 }

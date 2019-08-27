@@ -16,10 +16,10 @@ import static androidx.core.content.ContextCompat.startActivity;
 public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterViewHolder> {
 
     private OnBillListener mOnBillListener;
-    private List<Bill> upAfter = Collections.emptyList();
-    private List<Bill> upAfterBegMo = Collections.emptyList();
-    private List<Bill> upAfterEndMo = Collections.emptyList();
-    boolean splitMo = false;
+    private static List<Bill> upAfter = Collections.emptyList();
+    private static List<Bill> upAfterBegMo = Collections.emptyList();
+    private static List<Bill> upAfterEndMo = Collections.emptyList();
+    static boolean splitMo = false;
 
     upAfterAdapter(OnBillListener onBillListener){
         this.mOnBillListener = onBillListener;
@@ -100,19 +100,24 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
         }
     }
 
-    public void setUpAfter(List<Bill> upAfter) {
-        this.upAfter = upAfter;
+    public static void setUpAfter(List<Bill> UpAfter) {
+        splitMo = false;
+        upAfter = UpAfter;
     }
 
-    public void setUpAfterBegMo(List<Bill> upAfterBegMo) {
-        this.upAfterBegMo = upAfterBegMo;
+    public static void setUpAfterBegMo(List<Bill> UpAfterBegMo) {
+        splitMo = true;
+        upAfterBegMo = UpAfterBegMo;
     }
 
-    public void setUpAfterEndMo(List<Bill> upAfterEndMo) {
-        this.upAfterEndMo = upAfterEndMo;
+    public static void setUpAfterEndMo(List<Bill> UpAfterEndMo) {
+        upAfterEndMo = UpAfterEndMo;
     }
 
+/*
     public void setSplitMo(boolean splitMo) {
         this.splitMo = splitMo;
     }
+
+ */
 }

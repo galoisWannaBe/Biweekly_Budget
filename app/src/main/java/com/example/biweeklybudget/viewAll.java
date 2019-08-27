@@ -28,8 +28,8 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
     public final int ADD_REQUEST = 0;
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
-    viewAllAdapter mAdapter;
-    List<Bill> allBills;
+    static viewAllAdapter mAdapter;
+    static List<Bill> allBills;
 
     ExpenseViewModel expenseViewModel;
 
@@ -46,7 +46,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         expenseViewModel.getAllBills();
-        observeAllBills();
+        //observeAllBills();
     }
 
     @Override
@@ -127,6 +127,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
+    /*
     public void observeAllBills(){
         expenseViewModel.getAllBills().observe(this, new Observer<List<Bill>>() {
             @Override
@@ -139,4 +140,10 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         });
     }
 
+     */
+
+    public static void setAllBills(List<Bill> AllBills) {
+        allBills = AllBills;
+        mAdapter.notifyDataSetChanged();
+    }
 }
