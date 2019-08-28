@@ -3,6 +3,7 @@ package com.example.biweeklybudget;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.lang.annotation.Target;
 import java.util.Collections;
@@ -15,6 +16,9 @@ public class BudgetData {
     public double balance;
     public double ttlbills;
     public double projBalance;
+    double endTtl;
+    double begTtl;
+    double nextTTl;
     public int daysRemain;
     public int day;
     public int week;
@@ -39,6 +43,7 @@ public class BudgetData {
     int[] months = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     boolean splitDue;
     LiveData<List<Bill>> liveBillsDue;
+    ExpenseViewModel expenseViewModel;
 
     public static volatile BudgetData INSTANCE = new BudgetData();
 
@@ -54,6 +59,7 @@ public class BudgetData {
         nextBillsBegMo = Collections.emptyList();
         nextBillsEndMo = Collections.emptyList();
         allWeekly = Collections.emptyList();
+
     }
 
     public void addBills() {
@@ -95,9 +101,15 @@ public class BudgetData {
         if (nextBills.isEmpty() && allWeekly.isEmpty()){
             return "Error; monthly bills and weekly expenses are empty";
         }else {
-            addBills();
             addWeekly();
-            ttlbills = ttlbills + weeklyTotal;
+            if(nextBills.size() > 0){
+                ttlbills = nextTTl + weeklyTotal;
+            }
+            if(nextBillsEndMo.size() > 0 || nextBillsBegMo.size() > 0){
+                ttlbills = begTtl + endTtl + weeklyTotal;
+            }
+            Log.d(TAG, "bank balance: " +getBalance);
+            Log.d(TAG, "ttl bills: " +ttlbills);
             projBalance = getBalance - ttlbills;
             return String.valueOf(projBalance);
         }
@@ -108,21 +120,18 @@ public class BudgetData {
 
     public void setNextBills(List<Bill> nextBills) {
         this.nextBills = nextBills;
-        splitDue = false;
-        Log.d(TAG, "Set NextBills");
-        if (nextBills.size() == 0){
-            System.out.println("No Bills");
-        }else{
-            for (int i = 0; i < nextBills.size(); i++){
-                System.out.println(nextBills.get(i).getLabel() +", " +nextBills.get(i).getDue());
-            }
-            System.out.println("End");
+        nextTTl = 0;
+        endTtl = 0;
+        begTtl = 0;
+        for(int i = 0; i < nextBills.size(); i++){
+            nextTTl += nextBills.get(i).getCost();
         }
+        Log.d(TAG, "NextBills totals to " +nextTTl);
     }
     public void setNextSplitEndMo(List<Bill> bills){
         nextBillsEndMo = bills;
-        splitDue = true;
-        double endTtl = 0;
+        endTtl = 0;
+        nextTTl = 0;
         Log.d(TAG, "Set Bills endmo");
         Log.d(TAG, "There are " +nextBillsEndMo.size() +" bills until the end of the month");
         for (int i = 0; i < nextBillsEndMo.size(); i++){
@@ -131,8 +140,8 @@ public class BudgetData {
     }
     public void setNextBillsBegMo(List<Bill> bills){
         nextBillsBegMo = bills;
-        splitDue = true;
-        double begTtl = 0;
+        begTtl = 0;
+        nextTTl = 0;
         Log.d(TAG, "Set Bills begmo");
         Log.d(TAG, "There are " +nextBillsBegMo.size() +" bills after the beginning of next month");
         for (int i = 0; i < nextBillsBegMo.size(); i++){
@@ -155,5 +164,8 @@ public class BudgetData {
 
     public void setLiveBillsDue(LiveData<List<Bill>> liveBillsDue) {
         this.liveBillsDue = liveBillsDue;
+    }
+    public void setSplit(boolean splitDue, boolean splitNext){
+        this.splitDue = splitDue;
     }
 }

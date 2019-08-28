@@ -114,10 +114,7 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
         upAfterEndMo = UpAfterEndMo;
     }
 
-/*
     public void setSplitMo(boolean splitMo) {
         this.splitMo = splitMo;
     }
-
- */
 }

@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel.setSeedPay(seedPay);
             daysRemain = expenseViewModel.getDaysRemain();
             dayOfWeek = expenseViewModel.getDayOfWeek();
-            //nextBills = expenseViewModel.getNextBills();
+            nextBills = expenseViewModel.getNextBills();
             Log.d(TAG, "Day of the week: " +dayOfWeek);
             budgetData = BudgetData.getInstance();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
-            //expenseViewModel.getAllWeekly();
-            /*
+            expenseViewModel.getAllWeekly();
+
             splitDue = expenseViewModel.isSplitDue();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
@@ -67,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 observeNextSplitBegins();
                 observeNextSplitEnds();
             }else{
-                expenseViewModel.getNextBills();
+                expenseViewModel.getNextASink();
+                //not actually and async method
                 Log.d(TAG, "getNextAsink ran");
             }
             expenseViewModel.getAllBills();
@@ -80,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
             }
             observeAllWeekly();
             observeAllBills();
-
-             */
-
         }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
@@ -101,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             //expenseViewModel.getAllBills();
             splitDue = expenseViewModel.isSplitDue();
             budgetData.setDaysRemain(daysRemain);
-            /*
         }
         if(splitDue){
             expenseViewModel.getNextBillsEndMo();
@@ -109,19 +106,11 @@ public class MainActivity extends AppCompatActivity {
             observeNextSplitBegins();
             observeNextSplitEnds();
         }else{
-            expenseViewModel.getNextBills();
+            expenseViewModel.getNextASink();
+            observeNextBills();
             Log.d(TAG, "getNextAsink ran");
         }
         expenseViewModel.getAllBills();
-        if(splitDue){
-            observeNextSplitEnds();
-            observeNextSplitBegins();
-        }else{
-            expenseViewModel.getNextBills();
-            observeNextBills();
-        }
-
-             */
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);
@@ -129,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
     @Override
     protected void onResume() {
         super.onResume();
@@ -148,12 +136,11 @@ public class MainActivity extends AppCompatActivity {
         if(splitDue){
             observeNextSplitEnds();
             observeNextSplitBegins();
-        }else{
-            expenseViewModel.getNextBills();
+        }else {
+            expenseViewModel.getNextASink();
             observeNextBills();
         }
 
-     */
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);
@@ -182,9 +169,16 @@ public class MainActivity extends AppCompatActivity {
     public void calculate(View view) {
             EditText editText = findViewById(R.id.balance);
             balanceStr = editText.getText().toString();
-            observeNextBills();
-            expenseViewModel.getNextASink();
-            Log.d(TAG, "getNextAsink ran");
+            if(splitDue){
+                expenseViewModel.getNextBillsEndMo();
+                expenseViewModel.getNexBillsBegMo();
+                observeNextSplitEnds();
+                observeNextSplitBegins();
+            }else {
+                expenseViewModel.getNextBills();
+                observeNextBills();
+                Log.d(TAG, "getNextAsink ran");
+            }
             if(balanceStr.isEmpty()){
                 Toast.makeText(
                         getApplicationContext(),
@@ -205,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     public void observeNextBills(){
-        expenseViewModel.getNextASink().observe(this, new Observer<List<Bill>>() {
+        expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
 
             @Override
                 public void onChanged(List<Bill> bills) {
@@ -241,11 +235,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Change to nextSplitBegins observed");
             });
         }
-    public void setObservers(){
-
-    }
-
-
 
 }
 

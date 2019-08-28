@@ -111,12 +111,9 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
         splitDue = false;
         nextBills = NextBills;
     }
-    /*
     public void isSplitDue(boolean split){
         splitDue = split;
     }
-
-     */
 
     public static void setNextSplitEnds(List<Bill> NextSplitEnds) {
         splitDue = true;

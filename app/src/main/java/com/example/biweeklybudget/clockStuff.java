@@ -85,6 +85,13 @@ public class clockStuff {
         startSeedNaught = startPPD;
         begNext = finPPD + 1;
         finNext = begNext + 13;
+        if (finPPD > months[(month - 1)]){
+            finPPD -= months[(month - 1)];
+        }if( begNext > months[(month - 1)]){
+            begNext -= months[(month -1)];
+        }if ( finNext > months[(month - 1)]){
+            finNext -= months[(month - 1)];
+        }
         Log.d(TAG, "Julian Date " +julDate);
         Log.d(TAG, "Date: " +day);
     }
@@ -131,6 +138,7 @@ public class clockStuff {
         finPPD = startPPD + 13;
         if (finPPD > months[(month - 1)]){
             finPPD -= months[(month-1)];
+            Log.d(TAG, "FinPPd was trimmed");
         }
         begNext = finPPD + 1;
         if (begNext > months[(month - 1)]) {

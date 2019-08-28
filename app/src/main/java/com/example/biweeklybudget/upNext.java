@@ -47,6 +47,14 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
         splitDue = expenseViewModel.isSplitDue();
+        if(splitDue){
+            expenseViewModel.getNextBillsEndMo();
+            expenseViewModel.getAfterBillsBegMo();
+            observeNextSplit();
+        }else{
+            expenseViewModel.getNextBills();
+            observeNext();
+        }
     }
 
     @Override
@@ -117,14 +125,25 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public void OnBillClick(int position) {
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("index", nextBills.get(position).getId());
+        int pos = position;
+        int id;
+        if (splitDue){
+            if (pos > nextBillsEndMo.size()){
+                pos -= nextBillsEndMo.size();
+                id = nextBillsBegMo.get(pos).getId();
+            }else{
+                id = nextBillsEndMo.get(pos).getId();
+            }
+        }else{
+            id = nextBills.get(pos).getId();
+        }
+        bundle.putInt("index", id);
         Log.d(TAG, "Index was just set to " +nextBills);
         bundle.putString("origin_class", "upNext");
         bundle.putBoolean("fromList", true);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
-    /*
     public void observeNext(){
         expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
             @Override
@@ -160,8 +179,6 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> AddToList.setBills(bills));
     }
-
-     */
 
     public static void setNextBills(List<Bill> NextBills) {
         splitDue = false;

@@ -115,6 +115,7 @@ class ExpenseRepository {
             afterBillsBeginningMonth = billDao.getAfterBeginMonth(finNext);
             Log.d(TAG, "crossed month");
         }
+        budgetData.setSplit(splitDue, splitMo);
         Log.d(TAG, "Seed pay set");
         Log.d(TAG, daysRemain +"days remaining");
         Log.d(TAG, "Today: " +today +" EndPay: " +finPPD +" begNext: " +begNext +" finNext: " +finNext);

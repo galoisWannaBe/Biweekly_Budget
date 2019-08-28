@@ -53,8 +53,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        //splitMo = expenseViewModel.isSplitMo();
-        /*
+        splitMo = expenseViewModel.isSplitMo();
         if(splitMo){
             expenseViewModel.getAfterBegMo();
             expenseViewModel.getAfterEndMo();
@@ -67,8 +66,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         expenseViewModel.getAllBills();
         afterLive = expenseViewModel.getAfterBills();
         observeAll();
-
-         */
     }
 
 
@@ -146,7 +143,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
-    /*
 
     public void observeAfter(){
         splitMo = expenseViewModel.isSplitMo();
@@ -184,8 +180,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             AddToList.setBills(bills);
         });
     }
-
-     */
 
     public static void setAfterBills(List<Bill> AfterBills) {
         afterBills = AfterBills;
