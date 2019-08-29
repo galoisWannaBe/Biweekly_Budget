@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.lang.annotation.Target;
+import java.security.PublicKey;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,12 +20,18 @@ public class BudgetData {
     double endTtl;
     double begTtl;
     double nextTTl;
+    double afterTtl;
+    double afterEnd;
+    double afterBeg;
+    double allAfterTtl;
+    double allBillsTtl;
     public int daysRemain;
     public int day;
     public int week;
     public int weekCounter;
     public double cost;
     public double weeklyTotal;
+    public double weeklyWholePay;
     public final byte SUNDAY = 1;
     public final byte MONDAY = 2;
     public final byte TUESDAY = 4;
@@ -36,6 +43,10 @@ public class BudgetData {
     public List<Bill> nextBills;
     public List<Bill> nextBillsBegMo;
     public List<Bill> nextBillsEndMo;
+    public List<Bill> afterBills;
+    public List<Bill> afterBillsEnd;
+    public List<Bill> afterBillsBegin;
+    public List<Bill> allBills;
     public List<Weekly> allWeekly;
     public int julianDate = 0;
     public int payMonth;
@@ -58,8 +69,17 @@ public class BudgetData {
         nextBills = Collections.emptyList();
         nextBillsBegMo = Collections.emptyList();
         nextBillsEndMo = Collections.emptyList();
+        afterBills = Collections.emptyList();
+        afterBillsEnd = Collections.emptyList();
+        afterBillsBegin = Collections.emptyList();
         allWeekly = Collections.emptyList();
 
+    }
+
+    public double getTtlbills() {
+        ttlbills = nextTTl + endTtl + begTtl;
+        Log.d(TAG, nextBills +" + " +endTtl +" + " +begTtl +" = " +ttlbills);
+        return ttlbills;
     }
 
     public void addBills() {
@@ -149,9 +169,57 @@ public class BudgetData {
         }Log.d(TAG, "Begmo totaled to " +begTtl);
     }
 
+    public void setAfterBills(List<Bill> afterBills) {
+        this.afterBills = afterBills;
+        afterTtl = 0;
+        afterEnd = 0;
+        afterBeg = 0;
+        for (int i = 0; i < afterBills.size(); i++){
+            afterTtl += afterBills.get(i).getCost();
+        }
+    }
+
+    public void setAfterBillsEnd(List<Bill> afterBillsEnd) {
+        this.afterBillsEnd = afterBillsEnd;
+        afterTtl = 0;
+        afterEnd = 0;
+        for (int i = 0; i < afterBillsEnd.size(); i++) {
+            afterEnd += afterBillsEnd.get(i).getCost();
+        }
+    }
+
+    public void setAfterBillsBegin(List<Bill> afterBillsBegin) {
+        this.afterBillsBegin = afterBillsBegin;
+        afterTtl = 0;
+        afterBeg = 0;
+        for (int i = 0; i < afterBillsBegin.size(); i++){
+            afterBeg += afterBillsBegin.get(i).getCost();
+        }
+    }
+
     public void setAllWeekly(List<Weekly> allWeekly) {
         this.allWeekly = allWeekly;
+        weeklyWholePay = 0;
+        for (int i = 0; i < allWeekly.size(); i++){
+            weeklyWholePay += allWeekly.get(i).getCost();
+        }
+        addWeekly();
         Log.d(TAG, "Set Weeklies");
+    }
+
+    public double getWeeklyTotal() {
+        Log.d(TAG, "There are $" +weeklyTotal +" worth of expenses for the rest of the pay");
+        return weeklyTotal;
+    }
+
+    public double getWeeklyWholePay() {
+        Log.d(TAG, "There a total of $" +weeklyWholePay +" in weekly expenses paid for a whole pay");
+        return weeklyWholePay;
+    }
+
+    public double getAfterTtl(){
+        allAfterTtl = afterTtl + afterEnd + afterBeg;
+        return allAfterTtl;
     }
 
     public void setDaysRemain(int daysRemain) {
@@ -167,5 +235,20 @@ public class BudgetData {
     }
     public void setSplit(boolean splitDue, boolean splitNext){
         this.splitDue = splitDue;
+    }
+
+    public void setAllBills(List<Bill> allBills) {
+        this.allBills = allBills;
+        allBillsTtl = 0;
+        Log.d(TAG, allBills.size() +" bills are being added");
+        for (int i = 0; i < allBills.size(); i++){
+            allBillsTtl += allBills.get(i).getCost();
+        }
+        Log.d(TAG, "You pay $" +allBillsTtl +" each month in bills");
+    }
+
+    public double getAllBillsTtl() {
+        Log.d(TAG, "All Bills totalted to: " +allBillsTtl);
+        return allBillsTtl;
     }
 }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -38,8 +39,10 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     LiveData<List<Bill>> afterBillsBegLive;
     LiveData<List<Bill>> afterLive;
     boolean splitMo;
+    double billTtl;
+    TextView ttlView;
 
-    // TODO: 8/15/19 Fix onClick for split month
+    BudgetData budgetData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +57,17 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         splitMo = expenseViewModel.isSplitMo();
+        budgetData = BudgetData.getInstance();
+        billTtl = 0;
+        observeAll();
         if(splitMo){
             expenseViewModel.getAfterBegMo();
             expenseViewModel.getAfterEndMo();
             observeAfterSplit();
         }else{
             expenseViewModel.getAfterBills();
-            expenseViewModel.getAfterAsync();
             observeAfter();
         }
-        expenseViewModel.getAllBills();
-        afterLive = expenseViewModel.getAfterBills();
-        observeAll();
     }
 
 
@@ -87,12 +89,16 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
                 label = bundle.getString("Label");
                 due = bundle.getInt("Due");
                 cost = bundle.getDouble("Cost");
+            } else {
+                label = "\0";
+                due = 0;
+                cost = 0;
             }
             if(requestCode == ADD_REQUEST){
                 if(resultCode == RESULT_OK){
                     expenseViewModel.insertBill(new Bill(label, due, cost));
                 }
-                } else if(requestCode == EDIT_REQUEST){
+            } else if(requestCode == EDIT_REQUEST){
                 if(resultCode == RESULT_OK){
                     Bundle bundle = Data.getExtras();
                     ID = bundle.getInt("ID");
@@ -104,6 +110,23 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
                 }
             }
         }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        expenseViewModel.getAllBills();
+        observeAll();
+
+        if (splitMo) {
+            expenseViewModel.getAfterBillsEndMo();
+            expenseViewModel.getAfterBillsBegMo();
+            observeAfterSplit();
+        } else {
+            expenseViewModel.getAfterBills();
+            observeAfter();
+        }
+    }
 
     public void goToAdd(View view) {
         Intent intent = new Intent(this, AddToList.class);
@@ -136,23 +159,36 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public void OnBillclick(int position) {
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
+        int pos = position;
+        int id;
+        if(splitMo) {
+            if (pos > afterBillsEndMo.size()) {
+                pos -= afterBillsEndMo.size();
+                id = afterBillsBegMo.get(pos).getId();
+            } else {
+                id = afterBillsEndMo.get(pos).getId();
+            }
+        } else {
+            id = afterBills.get(pos).getId();
+        }
         bundle.putBoolean("fromList", true);
         Log.d(TAG, "ID: " +afterBills.get(position).getId());
-        bundle.putInt("index", afterBills.get(position).getId());
+        bundle.putInt("index", id);
         bundle.putString("origin_class", "upAfter");
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }
 
     public void observeAfter(){
-        splitMo = expenseViewModel.isSplitMo();
             expenseViewModel.getAfterBills().observe(this, bills -> {
                 afterBills = bills;
-                splitMo = expenseViewModel.isSplitMo();
                 mAdapter.setSplitMo(splitMo);
                 mAdapter.setUpAfter(bills);
                 mAdapter.notifyDataSetChanged();
                 Log.d(TAG, "getAfterBills observed");
+                budgetData.setAfterBills(afterBills);
+                ttlView = findViewById(R.id.total_box_after);
+                ttlView.setText(String.valueOf(budgetData.getAfterTtl()));
             });
     }
 
@@ -160,43 +196,43 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     public void observeAfterSplit(){
         expenseViewModel.getAfterBegMo().observe(this, bills -> {
             afterBillsBegMo = bills;
-            splitMo = expenseViewModel.isSplitMo();
-            mAdapter.setSplitMo(splitMo);
             mAdapter.setUpAfterBegMo(afterBillsBegMo);
             mAdapter.notifyDataSetChanged();
             Log.d(TAG, "splitMo; ALSO");
+            budgetData.setAfterBillsBegin(afterBillsBegMo);
+            ttlView = findViewById(R.id.total_box_after);
+            ttlView.setText(String.valueOf(budgetData.getAfterTtl()));
         });
         expenseViewModel.getAfterEndMo().observe(this, bills -> {
             afterBillsEndMo = bills;
             mAdapter.setUpAfterEndMo(afterBillsEndMo);
             mAdapter.notifyDataSetChanged();
+            budgetData.setAfterBillsEnd(afterBillsEndMo);
+            ttlView = findViewById(R.id.total_box_after);
+            ttlView.setText(String.valueOf(budgetData.getAfterTtl()));
         });
     }
-
-
-
     public void observeAll(){
         expenseViewModel.getAllBills().observe(this, bills -> {
             AddToList.setBills(bills);
         });
     }
-
     public static void setAfterBills(List<Bill> AfterBills) {
         afterBills = AfterBills;
-        mAdapter.setUpAfter(afterBills);
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.setUpAfter(afterBills);
+        //mAdapter.notifyDataSetChanged();
 
     }
 
     public static void setAfterBillsEndMo(List<Bill> AfterBillsEndMo) {
         afterBillsEndMo = AfterBillsEndMo;
-        mAdapter.setUpAfterEndMo(afterBillsEndMo);
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.setUpAfterEndMo(afterBillsEndMo);
+        //mAdapter.notifyDataSetChanged();
     }
 
     public static void setAfterBillsBegMo(List<Bill> AfterBillsBegMo) {
         afterBillsBegMo = AfterBillsBegMo;
-        mAdapter.setUpAfterBegMo(afterBillsBegMo);
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.setUpAfterBegMo(afterBillsBegMo);
+        //mAdapter.notifyDataSetChanged();
     }
 }

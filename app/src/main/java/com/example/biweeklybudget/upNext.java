@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +32,10 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
     static List<Bill> nextBillsBegMo;
     static upNextAdapter nAdapter;
     static boolean splitDue = false;
+    TextView ttlView;
+    double billTtl;
 
+    BudgetData budgetData;
     ExpenseViewModel expenseViewModel;
 
     @Override
@@ -47,12 +51,15 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         nRecyclerView.setLayoutManager(nLayoutManager);
         nRecyclerView.setAdapter(nAdapter);
         splitDue = expenseViewModel.isSplitDue();
+        budgetData = BudgetData.getInstance();
+        billTtl = 0;
+        observeAll();
         if(splitDue){
             expenseViewModel.getNextBillsEndMo();
             expenseViewModel.getAfterBillsBegMo();
             observeNextSplit();
         }else{
-            expenseViewModel.getNextBills();
+            expenseViewModel.getNextASink();
             observeNext();
         }
     }
@@ -93,6 +100,29 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
                 expenseViewModel.deleteBill(ID);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "on resume ran");
+
+        expenseViewModel.getAllBills();
+        observeAll();
+
+        if (splitDue) {
+            expenseViewModel.getNexBillsBegMo();
+            expenseViewModel.getNextBillsEndMo();
+            observeNextSplit();
+            Log.d(TAG, "Observing next bills, but like, it's for a split month");
+        }else {
+            expenseViewModel.getNextASink();
+            observeNext();
+        }
+
+        //ttlView = findViewById(R.id.total_box);
+        //ttlView.setText(String.valueOf(budgetData.getTtlbills()));
+
     }
 
     public void goToAdd(View view) {
@@ -145,13 +175,16 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         startActivityForResult(intent, EDIT_REQUEST);
     }
     public void observeNext(){
-        expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
+        expenseViewModel.getNextASink().observe(this, new Observer<List<Bill>>() {
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBills = bills;
-                nAdapter.isSplitDue(splitDue);
+                //nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextBills(bills);
                 nAdapter.notifyDataSetChanged();
+                budgetData.setNextBills(nextBills);
+                ttlView = findViewById(R.id.total_box);
+                ttlView.setText(String.valueOf(budgetData.getTtlbills()));
             }
         });
     }
@@ -159,19 +192,28 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         expenseViewModel.getNextBillsEndMo().observe(this, new Observer<List<Bill>>() {
             @Override
             public void onChanged(List<Bill> bills) {
+                Log.d(TAG, "Change detected!");
                 nextBillsEndMo = bills;
-                nAdapter.isSplitDue(splitDue);
+                //nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextSplitEnds(nextBillsEndMo);
                 nAdapter.notifyDataSetChanged();
+                budgetData.setNextSplitEndMo(nextBillsEndMo);
+                ttlView = findViewById(R.id.total_box);
+                ttlView.setText(String.valueOf(budgetData.getTtlbills()));
+                //ttlView.setText("Change detected");
             }
         });
         expenseViewModel.getNexBillsBegMo().observe(this, new Observer<List<Bill>>() {
             @Override
             public void onChanged(List<Bill> bills) {
                 nextBillsBegMo = bills;
-                nAdapter.isSplitDue(splitDue);
+                //nAdapter.isSplitDue(splitDue);
                 nAdapter.setNextSplitBegins(nextBillsBegMo);
                 nAdapter.notifyDataSetChanged();
+                budgetData.setNextBillsBegMo(nextBillsBegMo);
+                ttlView = findViewById(R.id.total_box);
+                ttlView.setText(String.valueOf(budgetData.getTtlbills()));
+                Log.d(TAG, "Other change detectect");
             }
         });
     }

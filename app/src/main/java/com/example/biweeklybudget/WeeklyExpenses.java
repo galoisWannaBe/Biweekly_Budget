@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -28,7 +29,12 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     public final int EDIT_REQUEST = 1;
     public final int RESULT_DELETED = 2;
     private ExpenseViewModel expenseViewModel;
+    BudgetData budgetData;
     private static List<Weekly>allWeekly;
+    double remainTtl;
+    double ppdTtl;
+    TextView remainView;
+    TextView ttlView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +42,17 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         setContentView(R.layout.activity_weekly_expenses);
         this.setTitle("Weekly Expenses");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+        budgetData = BudgetData.getInstance();
         wRecyclerView = this.findViewById(R.id.weekliesRecyclerView);
         wAdapter = new com.example.biweeklybudget.weeklyAdapter(this);
         wRecyclerView.setHasFixedSize(true);
         wLayoutManager = new LinearLayoutManager(this);
         wRecyclerView.setLayoutManager(wLayoutManager);
         wRecyclerView.setAdapter(wAdapter);
-        observeAllWeekly();
+        remainTtl = 0;
+        ppdTtl = 0;
         expenseViewModel.getAllWeekly();
+        observeAllWeekly();
     }
 
     @Override
@@ -74,6 +83,14 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
             int ID = bundle.getInt("ID");
             expenseViewModel.deleteWeekly(ID);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        expenseViewModel.getAllWeekly();
+        observeAllWeekly();
     }
 
     public void gotoMain(View view){
@@ -113,16 +130,23 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     }
     public void observeAllWeekly(){
         expenseViewModel.getAllWeekly().observe(this, weeklies -> {
-            allWeekly = weeklies;
-            wAdapter.setAllWeekly(weeklies);
-            AddWeekly.setAllWeekly(weeklies);
-            wAdapter.notifyDataSetChanged();
-            Log.d(TAG, "observed update to Weekly list");
-        });
+        allWeekly = weeklies;
+        AddWeekly.setAllWeekly(allWeekly);
+        wAdapter.setAllWeekly(allWeekly);
+        wAdapter.notifyDataSetChanged();
+        Log.d(TAG,"observed update to Weekly list");
+        budgetData.setAllWeekly(allWeekly);
+        ttlView = findViewById(R.id.total_ppd);
+        remainView =findViewById(R.id.ttl_biweek);
+        ttlView.setText(String.valueOf(budgetData.getWeeklyWholePay()));
+        remainView.setText(String.valueOf(budgetData.getWeeklyTotal()));
+    });
     }
 
     public static void setAllWeekly(List<Weekly> AllWeekly) {
         allWeekly = AllWeekly;
-        wAdapter.setAllWeekly(allWeekly);
+        Log.d(TAG, "set Weeklies for real");
+        Log.d(TAG, "There are " +allWeekly.size() +" weekly expenses");
+        //wAdapter.setAllWeekly(allWeekly);
     }
 }

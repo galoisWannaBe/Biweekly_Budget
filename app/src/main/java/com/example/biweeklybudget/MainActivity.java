@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         LiveData<List<Bill>> dueLive;
         LiveData<Boolean> liveSplitDue;
         boolean splitDue;
+        boolean splitMo;
 
         private static final String TAG = "MainActivity";
 
@@ -58,10 +59,13 @@ public class MainActivity extends AppCompatActivity {
             budgetData = BudgetData.getInstance();
             budgetData.setWeek(dayOfWeek);
             budgetData.setDaysRemain(daysRemain);
+            expenseViewModel.getAllBills();
             expenseViewModel.getAllWeekly();
+        observeAllWeekly();
+        observeAllBills();
 
-            splitDue = expenseViewModel.isSplitDue();
-            if(splitDue){
+        splitDue = expenseViewModel.isSplitDue();
+        if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
                 expenseViewModel.getNexBillsBegMo();
                 observeNextSplitBegins();
@@ -71,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 //not actually and async method
                 Log.d(TAG, "getNextAsink ran");
             }
-            expenseViewModel.getAllBills();
             if(splitDue){
                 observeNextSplitEnds();
                 observeNextSplitBegins();
@@ -79,8 +82,16 @@ public class MainActivity extends AppCompatActivity {
                 expenseViewModel.getNextBills();
                 observeNextBills();
             }
-            observeAllWeekly();
-            observeAllBills();
+            splitMo = expenseViewModel.isSplitMo();
+            if(splitMo){
+                expenseViewModel.getAfterBillsEndMo();
+                expenseViewModel.getAfterBillsBegMo();
+                observeAfterSplit();
+            } else {
+                expenseViewModel.getAfterBills();
+                observeAfter();
+            }
+
         }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
@@ -129,16 +140,8 @@ public class MainActivity extends AppCompatActivity {
             observeNextSplitBegins();
             observeNextSplitEnds();
         }else{
-            expenseViewModel.getNextBills();
-            Log.d(TAG, "getNextAsink ran");
-        }
-        expenseViewModel.getAllBills();
-        if(splitDue){
-            observeNextSplitEnds();
-            observeNextSplitBegins();
-        }else {
             expenseViewModel.getNextASink();
-            observeNextBills();
+            Log.d(TAG, "getNextAsink ran");
         }
 
         EditText editText = findViewById(R.id.balance);
@@ -213,12 +216,14 @@ public class MainActivity extends AppCompatActivity {
     public void observeAllWeekly(){
             expenseViewModel.getAllWeekly().observe(this, weeklies -> {
                 budgetData.setAllWeekly(weeklies);
-
+                WeeklyExpenses.setAllWeekly(weeklies);
                 Log.d(TAG, "Change to Weeklies observed");
             });
         }
     public void observeAllBills(){
-            expenseViewModel.getAllBills().observe(this, bills -> {AddToList.setBills(bills);
+            expenseViewModel.getAllBills().observe(this, bills -> {
+                AddToList.setBills(bills);
+            viewAll.setAllBills(bills);
             Log.d(TAG, "Change to all bills observed");
             });
         }
@@ -234,7 +239,21 @@ public class MainActivity extends AppCompatActivity {
                 budgetData.setNextBillsBegMo(bills);
                 Log.d(TAG, "Change to nextSplitBegins observed");
             });
-        }
+    }
+    public void observeAfter(){
+        expenseViewModel.getAfterBills().observe(this, bills-> {
+            upAfter.setAfterBills(bills);
+        });
+    }
+    public void observeAfterSplit(){
+        expenseViewModel.getAfterBillsEndMo().observe(this, bills-> {
+            upAfter.setAfterBillsEndMo(bills);
+        });
+
+        expenseViewModel.getAfterBillsBegMo().observe(this, bills -> {
+            upAfter.setAfterBillsBegMo(bills);
+        });
+    }
 
 }
 

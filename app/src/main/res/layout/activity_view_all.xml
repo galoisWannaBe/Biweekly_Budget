@@ -63,12 +63,42 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/total_box_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="Total" />
+
+                <Space
+                    android:id="@+id/empty_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="75dp"
             android:onClick="goToAdd"
             android:text="Add" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

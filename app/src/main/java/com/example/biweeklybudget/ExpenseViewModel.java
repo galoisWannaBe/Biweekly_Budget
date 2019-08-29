@@ -82,7 +82,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Bill>> getAllBills() {
-        return allBills;
+        return mRepository.getAllBills();
     }
 
     public LiveData<List<Bill>> getNextBills() {
@@ -90,14 +90,14 @@ public class ExpenseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Bill>> getAfterBills() {
-        return afterBills;
+        return mRepository.getAfterBill();
     }
     public LiveData<List<Bill>> getAfterBillsEndMo() {
-        return afterBillsEndMo;
+        return mRepository.getAfterBillsEndMonth();
     }
 
     public LiveData<List<Bill>> getAfterBillsBegMo() {
-        return afterBillsBegMo;
+        return mRepository.getAfterBillsBeginningMonth();
     }
 
     public LiveData<List<Weekly>> getAllWeekly() {

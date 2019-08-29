@@ -264,6 +264,12 @@ class ExpenseRepository {
             mBillAsync.deleteBill(integers[0]);
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mBillAsync.getAllBills();
+        }
     }
 
     public static class updateParams{
@@ -290,6 +296,13 @@ class ExpenseRepository {
         }
 
         @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d(TAG, "Updated bill");
+            mBillAsync.getAllBills();
+        }
+
+        @Override
         protected Void doInBackground(updateParams... updateParams) {
 
             int ID = updateParams[0].ID;
@@ -299,6 +312,7 @@ class ExpenseRepository {
 
             mBillAsync.updateBill(ID, label, due, cost);
             return null;
+
 
 
         }
@@ -341,6 +355,11 @@ class ExpenseRepository {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            asyncWeekly.getWeeklyList();
+        }
     }
 
     private static class updateWeekly{
@@ -376,6 +395,12 @@ class ExpenseRepository {
             weekSyncDao.updateWeekly(ID, label, cost, days);
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            weekSyncDao.getWeeklyList();
+        }
     }
 
     public static class ppdParams{
@@ -406,14 +431,6 @@ class ExpenseRepository {
                 billDao.getNext(today, fin);
 
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            sBudgetData.setNextBills(nextBills.getValue());
-            // TODO: 8/20/19 Test the previous line; apply liberally if successful 
-            Log.d(TAG, "next bills gotted");
         }
     }
     private static class getNextSplitEndAsyncTask extends AsyncTask<Integer, Void, Void>{

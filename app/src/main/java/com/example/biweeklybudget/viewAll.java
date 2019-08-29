@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -30,7 +31,10 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
     public final int RESULT_DELETED = 2;
     static viewAllAdapter mAdapter;
     static List<Bill> allBills;
+    double billTtl;
+    TextView ttlView;
 
+    BudgetData budgetData;
     ExpenseViewModel expenseViewModel;
 
     @Override
@@ -39,12 +43,14 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         setContentView(R.layout.activity_view_all);
         this.setTitle("All Bills");
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+        budgetData = BudgetData.getInstance();
         mRecyclerView = findViewById(R.id.recyclerView);
         mAdapter = new com.example.biweeklybudget.viewAllAdapter(this);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        billTtl = 0;
         expenseViewModel.getAllBills();
         observeAllBills();
     }
@@ -90,6 +96,14 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        expenseViewModel.getAllBills();
+        observeAllBills();
+    }
+
     public void goToAdd(View view) {
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
@@ -132,15 +146,20 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
             @Override
             public void onChanged(List<Bill> bills) {
                 allBills = bills;
-                mAdapter.setAllBills(bills);
+                mAdapter.setAllBills(allBills);
                 mAdapter.notifyDataSetChanged();
                 Log.d(TAG, "Update to bills observed");
+                budgetData.setAllBills(allBills);
+                ttlView = findViewById(R.id.total_box_all);
+                ttlView.setText(String.valueOf(budgetData.getAllBillsTtl()));
             }
         });
     }
 
     public static void setAllBills(List<Bill> AllBills) {
         allBills = AllBills;
-        mAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Actually set the bills");
+        Log.d(TAG, "There are " +allBills.size() +" bills");
+        //mAdapter.notifyDataSetChanged();
     }
 }

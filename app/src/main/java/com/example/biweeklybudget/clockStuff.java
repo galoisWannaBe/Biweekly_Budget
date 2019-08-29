@@ -95,37 +95,6 @@ public class clockStuff {
         Log.d(TAG, "Julian Date " +julDate);
         Log.d(TAG, "Date: " +day);
     }
-
-    // TODO: 8/15/19 clockstuff constructor and setSeed 
-/*
-    public void setSeedPay(int seedPay) {
-        this.seedPay = seedPay;
-        seedPay = seedPay % 14;
-        Log.d(TAG, "SeedPay after modulus: " +seedPay);
-        int dayOfPay = (julDate % 14);
-        Log.d(TAG, "Day of pay: " +dayOfPay);
-        daysRemain = 14 - dayOfPay;
-        daysRemain += seedPay;//currently number of days into pay period
-        finPPD = (day + daysRemain) -1;
-        Log.d(TAG, "FinPPD: " +finPPD);
-        Log.d(TAG, "month: " +month);
-        Log.d(TAG, "Days in Month: " +months[month]);
-        if (finPPD > months[(month - 1)]){
-            finPPD -= months[month];
-            Log.d(TAG, "FinPPD: " +finPPD);
-        }
-        begNext = finPPD + 1;
-        if(begNext > months[(month - 1)]){
-            begNext -= months[month];
-        }
-        finNext = finPPD + 13;
-        if(finNext > months[(month - 1)]){
-            finNext -= months[(month - 1)];
-        }
-        finNext = finNext % months[month];
-    }
-
- */
     public void setSeedPay(int seed){
         seedPay = seed % 14;
         Log.d(TAG, "seedPay: " +seedPay);
