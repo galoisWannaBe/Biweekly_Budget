@@ -1,7 +1,6 @@
 package com.example.biweeklybudget;
 
 import android.app.Application;
-import android.app.TaskStackBuilder;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -191,8 +190,8 @@ class ExpenseRepository {
         new insertWeeklyAsync(weeklyDao).execute(weekly);
     }
     void updateWeeklyAsync(int id, String label, double cost, byte days){
-        updateWeekly mUpdateWeekly= new updateWeekly(id, label, cost, days);
-        new updateWeeklyAsync(weeklyDao).execute(mUpdateWeekly);
+        WeeklyParams weeklyParams = new WeeklyParams(id, label, cost, days);
+        new updateWeeklyAsync(weeklyDao).execute(weeklyParams);
     }
     void deleteWeekly(int id){
         new deleteWeeklyAsync(weeklyDao).execute(id);
@@ -362,14 +361,14 @@ class ExpenseRepository {
         }
     }
 
-    private static class updateWeekly{
+    private static class WeeklyParams {
 
         int ID;
         String label;
         double cost;
         byte days;
 
-        public updateWeekly(int ID, String label, double cost, byte days) {
+        public WeeklyParams(int ID, String label, double cost, byte days) {
             this.ID = ID;
             this.label = label;
             this.cost = cost;
@@ -377,7 +376,7 @@ class ExpenseRepository {
         }
     }
 
-    private static class updateWeeklyAsync extends AsyncTask<updateWeekly, Void, Void>{
+    private static class updateWeeklyAsync extends AsyncTask<WeeklyParams, Void, Void>{
 
         WeeklyDao weekSyncDao;
 
@@ -386,7 +385,7 @@ class ExpenseRepository {
         }
 
         @Override
-        protected Void doInBackground(updateWeekly... updateWeeklies) {
+        protected Void doInBackground(WeeklyParams... updateWeeklies) {
             int ID = updateWeeklies[0].ID;
             String label = updateWeeklies[0].label;
             double cost = updateWeeklies[0].cost;

@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.lang.annotation.Target;
 import java.security.PublicKey;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class BudgetData {
 
@@ -55,6 +58,7 @@ public class BudgetData {
     boolean splitDue;
     LiveData<List<Bill>> liveBillsDue;
     ExpenseViewModel expenseViewModel;
+    NumberFormat formatter;
 
     public static volatile BudgetData INSTANCE = new BudgetData();
 
@@ -73,6 +77,7 @@ public class BudgetData {
         afterBillsEnd = Collections.emptyList();
         afterBillsBegin = Collections.emptyList();
         allWeekly = Collections.emptyList();
+        formatter = NumberFormat.getCurrencyInstance();
 
     }
 
@@ -129,9 +134,10 @@ public class BudgetData {
                 ttlbills = begTtl + endTtl + weeklyTotal;
             }
             Log.d(TAG, "bank balance: " +getBalance);
-            Log.d(TAG, "ttl bills: " +ttlbills);
             projBalance = getBalance - ttlbills;
-            return String.valueOf(projBalance);
+            Log.d(TAG, "ttl bills: " +ttlbills);
+            String a = formatter.format(projBalance);
+            return a;
         }
     }
    public void updatePPDInfo(int daysRemain){
@@ -201,20 +207,42 @@ public class BudgetData {
         this.allWeekly = allWeekly;
         weeklyWholePay = 0;
         for (int i = 0; i < allWeekly.size(); i++){
-            weeklyWholePay += allWeekly.get(i).getCost();
+            Weekly weekly = allWeekly.get(i);
+            byte days = weekly.getDays();
+            for (int j = 0; j < 7; j++) {
+                if ((days & weekArr[j]) == weekArr[j]) {
+                    weeklyWholePay += (weekly.getCost() * 2);
+                }
+            }
         }
-        addWeekly();
+
+        weeklyTotal = 0;
+        byte days;
+        //weekCounter = week;
+        for (int i = 0; i < allWeekly.size(); i++){
+            days = allWeekly.get(i).getDays();
+            weekCounter = week;
+            for (int j = 0; j <= daysRemain; j++){
+                if((days & weekArr[weekCounter]) == weekArr[weekCounter]){
+                    weeklyTotal += allWeekly.get(i).getCost();
+                }
+                weekCounter++;
+                weekCounter = weekCounter % 7;
+            }
+        }
+        Log.d(TAG, "Weekly expenses totaled to " +weeklyTotal);
         Log.d(TAG, "Set Weeklies");
+        Log.d(TAG, "Whole pay: $" +weeklyWholePay);
     }
 
-    public double getWeeklyTotal() {
+    public String getWeeklyTotal() {
         Log.d(TAG, "There are $" +weeklyTotal +" worth of expenses for the rest of the pay");
-        return weeklyTotal;
+        return formatter.format(weeklyTotal);
     }
 
-    public double getWeeklyWholePay() {
+    public String getWeeklyWholePay() {
         Log.d(TAG, "There a total of $" +weeklyWholePay +" in weekly expenses paid for a whole pay");
-        return weeklyWholePay;
+        return formatter.format(weeklyWholePay);
     }
 
     public double getAfterTtl(){

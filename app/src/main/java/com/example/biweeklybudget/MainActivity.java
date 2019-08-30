@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         LiveData<Boolean> liveSplitDue;
         boolean splitDue;
         boolean splitMo;
+        EditText editText;
 
         private static final String TAG = "MainActivity";
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
+            onTextChangedListener();
             seedPay = prefs.getInt("seedPay", 0);
             //seedPay = 0;
             Log.d(TAG, "Seedpay" +seedPay);
@@ -174,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     public void calculate(View view) {
-            EditText editText = findViewById(R.id.balance);
-            balanceStr = editText.getText().toString();
+        editText = findViewById(R.id.balance);
+        balanceStr = editText.getText().toString();
             if(splitDue){
                 expenseViewModel.getNextBillsEndMo();
                 expenseViewModel.getNexBillsBegMo();
@@ -258,6 +261,48 @@ public class MainActivity extends AppCompatActivity {
             upAfter.setAfterBillsBegMo(bills);
         });
     }
+    private TextWatcher onTextChangedListener() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.removeTextChangedListener(this);
+
+                try {
+                    String originalString = s.toString();
+
+                    double longval;
+                    if (originalString.contains(",")) {
+                    }
+                    originalString = originalString.replaceAll(",", "");
+                    longval = Double.valueOf(originalString);
+
+                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+                    formatter.applyPattern("#,###,###,###.00");
+                    String formattedString = formatter.format(longval);
+
+                    //setting text after format to EditText
+                    editText.setText(formattedString);
+                    editText.setSelection(editText.getText().length());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+                editText.addTextChangedListener(this);
+            }
+        };
+    }
+
+
 }
 
 

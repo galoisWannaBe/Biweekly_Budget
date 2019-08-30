@@ -136,9 +136,9 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         wAdapter.notifyDataSetChanged();
         Log.d(TAG,"observed update to Weekly list");
         budgetData.setAllWeekly(allWeekly);
-        ttlView = findViewById(R.id.total_ppd);
-        remainView =findViewById(R.id.ttl_biweek);
-        ttlView.setText(String.valueOf(budgetData.getWeeklyWholePay()));
+        ttlView = findViewById(R.id.ttl_biweek);
+        remainView =findViewById(R.id.total_ppd);
+        ttlView.setText(    (budgetData.getWeeklyWholePay()));
         remainView.setText(String.valueOf(budgetData.getWeeklyTotal()));
     });
     }
