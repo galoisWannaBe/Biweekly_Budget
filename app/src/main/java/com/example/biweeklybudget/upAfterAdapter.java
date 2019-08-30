@@ -10,8 +10,6 @@ import android.widget.TextView;
 import java.util.Collections;
 import java.util.List;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 
 public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterViewHolder> {
 
@@ -54,7 +52,7 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
     private static Context context;
     @Override
     public upAfterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_item, parent, false);
         upAfterViewHolder avh = new upAfterViewHolder(v, mOnBillListener);
         return avh;
     }

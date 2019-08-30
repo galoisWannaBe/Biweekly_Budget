@@ -66,35 +66,78 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/total_ppd"
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="Total until end of pay"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/ttl_biweek"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".3"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:text="Total until pay:"/>
+
+                    <TextView
+                        android:id="@+id/total_ppd"
+                        android:layout_weight=".8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:hint="Total until pay?"
+                        android:textSize="20sp"/>
+
+                </TableRow>
+
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="Total for 2 weeks"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".3"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:text="Total for 2 weeks:"/>
+
+                    <TextView
+                        android:id="@+id/ttl_biweek"
+                        android:layout_weight=".8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:hint="Total for a whole pay?"
+                        android:textSize="20sp"/>
+
+                </TableRow>
+
+            </TableLayout>
 
             <Button
                 android:id="@+id/button3"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:onClick="goToAddWeeklies"
                 android:text="Add" />
 
