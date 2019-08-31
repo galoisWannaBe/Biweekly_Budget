@@ -81,10 +81,10 @@ public class BudgetData {
 
     }
 
-    public double getTtlbills() {
+    public String getTtlbills() {
         ttlbills = nextTTl + endTtl + begTtl;
         Log.d(TAG, nextBills +" + " +endTtl +" + " +begTtl +" = " +ttlbills);
-        return ttlbills;
+        return formatter.format(ttlbills);
     }
 
     public void addBills() {
@@ -245,9 +245,9 @@ public class BudgetData {
         return formatter.format(weeklyWholePay);
     }
 
-    public double getAfterTtl(){
+    public String getAfterTtl(){
         allAfterTtl = afterTtl + afterEnd + afterBeg;
-        return allAfterTtl;
+        return formatter.format(allAfterTtl);
     }
 
     public void setDaysRemain(int daysRemain) {
@@ -275,8 +275,8 @@ public class BudgetData {
         Log.d(TAG, "You pay $" +allBillsTtl +" each month in bills");
     }
 
-    public double getAllBillsTtl() {
+    public String getAllBillsTtl() {
         Log.d(TAG, "All Bills totalted to: " +allBillsTtl);
-        return allBillsTtl;
+        return formatter.format(allBillsTtl);
     }
 }

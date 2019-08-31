@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,6 +55,8 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
 
     @Override
     public void onBindViewHolder(ViewAllViewHolder holder, int position) {
+        NumberFormat formatter;
+        formatter = NumberFormat.getCurrencyInstance();
         String label;
         int due;
         double cost;
@@ -66,7 +69,7 @@ public class viewAllAdapter extends RecyclerView.Adapter<viewAllAdapter.ViewAllV
 
         holder.mTextView1.setText(label);
         holder.mTextView2.setText(String.valueOf(due));
-        holder.mTextView3.setText(String.valueOf(cost));
+        holder.mTextView3.setText(formatter.format(cost));
 
 
 

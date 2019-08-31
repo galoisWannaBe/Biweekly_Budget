@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,6 +61,8 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
     @Override
     public void onBindViewHolder(upNextViewHolder holder, int position) {
+        NumberFormat formatter;
+        formatter = NumberFormat.getCurrencyInstance();
         String label = "\0";
         int due = 0;
         double cost = 0;
@@ -88,7 +91,7 @@ public class upNextAdapter extends RecyclerView.Adapter<upNextAdapter.upNextView
 
         holder.mTextView1.setText(label);
         holder.mTextView2.setText(String.valueOf(due));
-        holder.mTextView3.setText(String.valueOf(cost));
+        holder.mTextView3.setText(formatter.format(cost));
 
 
     }

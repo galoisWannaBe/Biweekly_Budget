@@ -91,7 +91,7 @@
 
                     <TextView
                         android:id="@+id/total_ppd"
-                        android:layout_weight=".8"
+                        android:layout_weight=".7"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="8dp"
@@ -120,7 +120,7 @@
 
                     <TextView
                         android:id="@+id/ttl_biweek"
-                        android:layout_weight=".8"
+                        android:layout_weight=".7"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="8dp"

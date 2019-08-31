@@ -151,7 +151,7 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
                 Log.d(TAG, "Update to bills observed");
                 budgetData.setAllBills(allBills);
                 ttlView = findViewById(R.id.total_box_all);
-                ttlView.setText(String.valueOf(budgetData.getAllBillsTtl()));
+                ttlView.setText(budgetData.getAllBillsTtl());
             }
         });
     }

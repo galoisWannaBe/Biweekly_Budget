@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,6 +67,8 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
 
     @Override
     public void onBindViewHolder(WeeklyViewHolder holder, int position) {
+        NumberFormat formatter;
+        formatter = NumberFormat.getCurrencyInstance();
         Weekly weekly = allWeekly.get(position);
         String label = weekly.getLabel();
         double cost = weekly.getCost();
@@ -90,7 +93,7 @@ public class weeklyAdapter extends RecyclerView.Adapter<weeklyAdapter.WeeklyView
             }
         }
         holder.wTextView1.setText(label);
-        holder.wTextView2.setText(String.valueOf(cost));
+        holder.wTextView2.setText(formatter.format(cost));
         holder.wTextView3.setText(sb.toString());
 
 

@@ -188,7 +188,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
                 Log.d(TAG, "getAfterBills observed");
                 budgetData.setAfterBills(afterBills);
                 ttlView = findViewById(R.id.total_box_after);
-                ttlView.setText(String.valueOf(budgetData.getAfterTtl()));
+                ttlView.setText(budgetData.getAfterTtl());
             });
     }
 

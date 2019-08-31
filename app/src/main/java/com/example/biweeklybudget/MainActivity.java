@@ -25,6 +25,18 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+/* TODO: 8/31/19 Navigation map to eliminate eternal back press cycles
+TODO: Fix UI elements that don't line up properly on larger screens
+TODO: Make column widths uniform
+TODO: Fix text spacing in subtotal boxes
+TODO: Learn Fragments and implement them where appropriate (ie. just about everywhere)
+TODO: support for landscape mode
+TODO: FAB for adding weekly and monthly expenses from MainActivity
+TODO: Make adding or deleting multiple expenses easier
+TODO: Allow some sort of syncing option
+ */
+
+
 public class MainActivity extends AppCompatActivity {
         String balanceStr;
         String projBalanceStr;

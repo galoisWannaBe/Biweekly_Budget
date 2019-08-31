@@ -184,7 +184,7 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
                 nAdapter.notifyDataSetChanged();
                 budgetData.setNextBills(nextBills);
                 ttlView = findViewById(R.id.total_box);
-                ttlView.setText(String.valueOf(budgetData.getTtlbills()));
+                ttlView.setText(budgetData.getTtlbills());
             }
         });
     }
