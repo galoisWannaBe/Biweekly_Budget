@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         boolean splitDue;
         boolean splitMo;
         EditText editText;
-        boolean fristRun;
+        boolean firstRun;
 
         private static final String TAG = "MainActivity";
         public static final int REQUEST_ADD_BILL = 2;
@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
             expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
             seedPay = prefs.getInt("seedPay", 0);
+            firstRun = prefs.getBoolean("firstRun", true);
+            if (firstRun){
+                Intent intent = new Intent(this, Settings.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("seed", seedPay);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 0);
+            }
             //seedPay = 0;
             Log.d(TAG, "Seedpay" +seedPay);
             expenseViewModel.setSeedPay(seedPay);
