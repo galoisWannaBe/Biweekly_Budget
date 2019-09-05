@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         private static final String TAG = "MainActivity";
         public static final int REQUEST_ADD_BILL = 2;
         public static final int REQUEST_ADD_WEEKLY = 3;
+        public static final int REQUEST_FIRST_RUN = 4;
 
     ExpenseViewModel expenseViewModel;
     BudgetData budgetData;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt("seed", seedPay);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_FIRST_RUN);
             }
             //seedPay = 0;
             Log.d(TAG, "Seedpay" +seedPay);
@@ -153,6 +154,19 @@ public class MainActivity extends AppCompatActivity {
             double cost = bundle.getInt("Cost");
             byte days = bundle.getByte("Days");
             expenseViewModel.insertWeekly(new Weekly(label, cost, days));
+        }else if (requestCode == REQUEST_FIRST_RUN && resultCode == RESULT_OK){
+            firstRun = false;
+            Bundle bundle = Data.getExtras();
+            seedPay = bundle.getInt("seed");
+            SharedPreferences prefs = getApplication().getSharedPreferences("prefs" , context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstRun" , false);
+            editor.putInt("seed" , seedPay);
+            editor.commit();
+            expenseViewModel.setSeedPay(seedPay);
+            daysRemain = expenseViewModel.getDaysRemain();
+            splitDue = expenseViewModel.isSplitDue();
+            budgetData.setDaysRemain(daysRemain);
         }
         if(splitDue){
             expenseViewModel.getNextBillsEndMo();
