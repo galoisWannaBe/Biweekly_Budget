@@ -52,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
         boolean splitDue;
         boolean splitMo;
         EditText editText;
+        boolean fristRun;
 
         private static final String TAG = "MainActivity";
+        public static final int REQUEST_ADD_BILL = 2;
+        public static final int REQUEST_ADD_WEEKLY = 3;
 
     ExpenseViewModel expenseViewModel;
     BudgetData budgetData;
@@ -66,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
-            onTextChangedListener();
             seedPay = prefs.getInt("seedPay", 0);
             //seedPay = 0;
             Log.d(TAG, "Seedpay" +seedPay);
@@ -80,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
             budgetData.setDaysRemain(daysRemain);
             expenseViewModel.getAllBills();
             expenseViewModel.getAllWeekly();
-        observeAllWeekly();
-        observeAllBills();
+            observeAllWeekly();
+            observeAllBills();
 
         splitDue = expenseViewModel.isSplitDue();
         if(splitDue){
@@ -130,6 +132,20 @@ public class MainActivity extends AppCompatActivity {
             splitDue = expenseViewModel.isSplitDue();
             budgetData.setDaysRemain(daysRemain);
         }
+        else if(requestCode == REQUEST_ADD_BILL && resultCode == RESULT_OK){
+            Bundle bundle = Data.getExtras();
+            String label = bundle.getString("Label");
+            int due = bundle.getInt("Due");
+            double cost = bundle.getDouble("Cost");
+            expenseViewModel.insertBill(new Bill(label, due, cost));
+        }
+        else if (requestCode == REQUEST_ADD_WEEKLY && resultCode == RESULT_OK){
+            Bundle bundle = Data.getExtras();
+            String label = bundle.getString("Label");
+            double cost = bundle.getInt("Cost");
+            byte days = bundle.getByte("Days");
+            expenseViewModel.insertWeekly(new Weekly(label, cost, days));
+        }
         if(splitDue){
             expenseViewModel.getNextBillsEndMo();
             expenseViewModel.getNexBillsBegMo();
@@ -141,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "getNextAsink ran");
         }
         expenseViewModel.getAllBills();
+        observeAllBills();
+        expenseViewModel.getAllWeekly();
+        observeAllWeekly();
         EditText editText = findViewById(R.id.balance);
         editText.getText().clear();
         TextView textView = findViewById(R.id.projBalance_box);
@@ -220,6 +239,23 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
 
+    public void goToAddToList(View view){
+        Intent intent = new Intent(this, AddToList.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "MainActivity");
+        bundle.putBoolean("fromList" , false);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_ADD_BILL);
+    }
+    public void goToAddWeekly(View view){
+        Intent intent = new Intent(this, AddWeekly.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "MainActivity");
+        bundle.putBoolean("fromList" , false);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_ADD_WEEKLY);
+    }
+
     public void observeNextBills(){
         expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
 
@@ -273,48 +309,6 @@ public class MainActivity extends AppCompatActivity {
             upAfter.setAfterBillsBegMo(bills);
         });
     }
-    private TextWatcher onTextChangedListener() {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editText.removeTextChangedListener(this);
-
-                try {
-                    String originalString = s.toString();
-
-                    double longval;
-                    if (originalString.contains(",")) {
-                    }
-                    originalString = originalString.replaceAll(",", "");
-                    longval = Double.valueOf(originalString);
-
-                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
-                    formatter.applyPattern("#,###,###,###.00");
-                    String formattedString = formatter.format(longval);
-
-                    //setting text after format to EditText
-                    editText.setText(formattedString);
-                    editText.setSelection(editText.getText().length());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-
-                editText.addTextChangedListener(this);
-            }
-        };
-    }
-
-
 }
 
 

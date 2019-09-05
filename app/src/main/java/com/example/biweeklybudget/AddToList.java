@@ -67,6 +67,8 @@ public class AddToList extends AppCompatActivity {
             case "upAfter":
                 backIntent = new Intent(this, upAfter.class);
                 break;
+            case "MainActivity":
+                backIntent = new Intent(this, MainActivity.class);
             default:
                 backIntent = new Intent();
         }

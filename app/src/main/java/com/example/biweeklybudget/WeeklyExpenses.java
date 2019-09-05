@@ -113,6 +113,7 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         Intent nintent = new Intent(this, AddWeekly.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("fromList", false);
+        bundle.putString("origin_class" , "WeeklyExpenses");
         nintent.putExtras(bundle);
         startActivityForResult(nintent, ADD_REQUEST);
     }
@@ -125,6 +126,7 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         bundle.putBoolean("fromList", true);
         bundle.putInt("position", weekly.getId());
         Log.d(TAG, "clicked at position: " +position);
+        bundle.putString("origin_class" , "WeeklyExpenses");
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_REQUEST);
     }

@@ -34,7 +34,7 @@ public class AddWeekly extends AppCompatActivity {
     public CheckBox thursday;
     public CheckBox friday;
     public CheckBox saturday;
-
+    public String originClass;
     public EditText labelEdit;
     public EditText costEdit;
     public int pos;
@@ -61,6 +61,7 @@ public class AddWeekly extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         fromList = bundle.getBoolean("fromList");
+        originClass = bundle.getString("origin_class");
 
         if (fromList){
             setTitle("Edit a Weekly Expense");
@@ -76,6 +77,7 @@ public class AddWeekly extends AppCompatActivity {
         else{
             setTitle("Add a Weekly Expense");
             days = 0;
+
         }
         sunday.setChecked((days & SUNDAY) == SUNDAY);
         monday.setChecked((days & MONDAY) == MONDAY);
@@ -89,6 +91,7 @@ public class AddWeekly extends AppCompatActivity {
     }
     public void save(View view){
 
+        Intent mIntent;
         days = 0;
 
         if (sunday.isChecked())
@@ -148,8 +151,18 @@ public class AddWeekly extends AppCompatActivity {
                     R.string.days_empty,
                     Toast.LENGTH_LONG).show();
         }else {
+            switch (originClass){
+                case "WeeklyExpenses":
+                    mIntent = new Intent(this, WeeklyExpenses.class);
+                    break;
+                case "MainActivity":
+                    mIntent = new Intent(this, MainActivity.class);
+                    break;
+                default:
+                    mIntent = new Intent(this, WeeklyExpenses.class);
+                    break;
 
-            Intent mIntent = new Intent(this, WeeklyExpenses.class);
+            }
             Bundle backBundle = new Bundle();
             backBundle.putString("Label", label);
             backBundle.putDouble("Cost", Double.parseDouble(cost));
@@ -169,8 +182,13 @@ public class AddWeekly extends AppCompatActivity {
     public void delete(View view){
         Intent nIntent = new Intent(this, WeeklyExpenses.class);
         Bundle backBundle = new Bundle();
-        backBundle.putInt("ID", currentWeekly.getId());
+        if (fromList) {
+            backBundle.putInt("ID", currentWeekly.getId());
+        }
         nIntent.putExtras(backBundle);
+        if (fromList){
+            setResult(RESULT_CANCELED, nIntent);
+        }
         setResult(2, nIntent);
         finish();
     }
