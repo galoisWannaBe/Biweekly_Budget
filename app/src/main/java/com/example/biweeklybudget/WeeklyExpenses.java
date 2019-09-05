@@ -58,7 +58,6 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle bundle = data.getExtras();
         String label = " ";
         double cost = 0;
         byte days = 0;
@@ -69,18 +68,24 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
                     Toast.LENGTH_LONG).show();
             Log.d(TAG, "action cancelled");
         } else if(resultCode == RESULT_OK && requestCode == ADD_REQUEST){
+            Bundle bundle = data.getExtras();
             label = bundle.getString("Label");
             cost = bundle.getDouble("Cost");
             days = bundle.getByte("Days");
+            Log.d(TAG, "result ok and add request");
             expenseViewModel.insertWeekly(new Weekly(label, cost, days));
         }else if(resultCode == RESULT_OK && requestCode == EDIT_REQUEST){
+            Bundle bundle = data.getExtras();
             label = bundle.getString("Label");
             cost = bundle.getDouble("Cost");
             days = bundle.getByte("Days");
             int ID = bundle.getInt("ID");
+            Log.d(TAG,"result ok and edit request");
             expenseViewModel.updateWeekly(ID, label, cost, days);
         }else if (resultCode == RESULT_DELETED && requestCode == EDIT_REQUEST){
+            Bundle bundle = data.getExtras();
             int ID = bundle.getInt("ID");
+            Log.d(TAG, "result deleted and edit request");
             expenseViewModel.deleteWeekly(ID);
         }
     }
