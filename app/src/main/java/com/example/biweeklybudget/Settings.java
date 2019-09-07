@@ -73,13 +73,16 @@ public class Settings extends AppCompatActivity {
             mon++;
         }
         int i = 0;
-        for(i = 0; i < mon; i++){
+        while(i < (mon - 1)){
             jul += months[i];
+            Log.d(TAG, "Month " +i);
             Log.d(TAG, "Counting julian date" +jul);
+            i++;
         }
+        Log.d(TAG, "day is " +day);
         jul += day;
-        jul --;
-        jul -= months[i];
+        //jul --;
+        //jul -= months[i];
         jul = jul % 14;
 
         Log.d(TAG, "Seed pay: " +jul);
