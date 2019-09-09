@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Hashtable;
 import java.util.List;
 
 public class AddWeekly extends AppCompatActivity {
@@ -220,6 +221,16 @@ public class AddWeekly extends AppCompatActivity {
         Intent intent = new Intent(this, helpAddWeekly.class);
         Bundle bundle = new Bundle();
         bundle.putString("origin_class" , "AddWeekly");
+        Hashtable<String, String> priorHash = new Hashtable<>();
+        priorHash.put("origin_class" , originClass);
+        bundle.putString("origin_class" , "AddWeekly");
+        if (fromList){
+            priorHash.put("fromList" , "true");
+            priorHash.put("index" , String.valueOf(pos));
+        }else {
+            priorHash.put("fromList" , "false");
+        }
+        bundle.putSerializable("prior_hash" , priorHash);
         intent.putExtras(bundle);
         startActivity(intent);
     }

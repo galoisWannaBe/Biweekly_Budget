@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class AllHelpActivity extends AppCompatActivity {
 
@@ -51,7 +52,11 @@ public class AllHelpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent;
+                Bundle bundle = new Bundle();
+                bundle.putString("origin_class", originClass);
                 Bundle extraBundle = getIntent().getExtras();
+                Bundle priorBundle;
+                Hashtable<String, String> priorHash;
                 originClass = extraBundle.getString("origin_class");
                 switch (originClass) {
                     case "mainActivity":
@@ -64,15 +69,21 @@ public class AllHelpActivity extends AppCompatActivity {
                         intent = new Intent(context, viewsHelp.class);
                         break;
                     case "AddToList":
+                        priorBundle = getIntent().getExtras();
+                        priorHash = (Hashtable<String, String>) priorBundle.getSerializable("prior_bundle");
                         intent = new Intent(context, AddToList.class);
+                        bundle.putSerializable("prior_bundle" , priorHash);
+                        break;
                     case "AddWeekly":
+                        priorBundle = getIntent().getExtras();
+                        priorHash = (Hashtable<String, String>) priorBundle.getSerializable("prior_bundle");
                         intent = new Intent(context, AddWeekly.class);
+                        bundle.putSerializable("prior_hash" , priorHash);
+                        break;
                     default:
                         intent = new Intent(context, MainActivity.class);
                         break;
                 }
-                Bundle bundle = new Bundle();
-                bundle.putString("origin_class", originClass);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

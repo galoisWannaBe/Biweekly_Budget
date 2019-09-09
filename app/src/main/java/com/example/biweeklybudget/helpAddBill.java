@@ -22,13 +22,14 @@ public class helpAddBill extends AppCompatActivity {
     private helpAdapter mHelpAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     int count;
-    Hashtable<String, String> priorBundle;
+    Hashtable<String, String> priorHash;
+    String temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_add_bill);
-        priorBundle = new Hashtable<>();
+        priorHash = new Hashtable<>();
         helps = new ArrayList<>();
         allHelp = AllHelp.getInstance();
         count = allHelp.helpCount();
@@ -52,20 +53,38 @@ public class helpAddBill extends AppCompatActivity {
 
     public void goToMoreHelp(View view){
         Intent priorIntent = getIntent();
-        Bundle bundle1 = priorIntent.getExtras();
-        priorBundle = (Hashtable<String, String>) bundle1.getSerializable("prior_bundle"); 
+        Bundle priorBundle = priorIntent.getExtras();
+        priorHash = (Hashtable<String, String>) priorBundle.getSerializable("prior_bundle");
         Intent intent = new Intent(this, AllHelpActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("origin_class" , "AddtoList");
-        bundle.putSerializable("prior_bundle" , priorBundle);
+        bundle.putSerializable("prior_bundle" , priorHash);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     // TODO: 9/9/19 Finish dragging from helpAddBill through allHelpActivity; do same with helpAddWeekly 
     public void goBack(View view){
+        Bundle priorBundle = getIntent().getExtras();
+        priorHash = (Hashtable<String, String>) priorBundle.getSerializable("prior_bundle");
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
+        if(priorHash.size() == 0){
+            intent.putExtras(priorBundle);
+        }else {
+            temp = priorHash.get("origin_class");
+            bundle.putString("origin_class", temp);
+            temp = priorHash.get("fromList");
+            if (temp.equals("true")) {
+                bundle.putBoolean("fromList", true);
+                temp = priorHash.get("index");
+                bundle.putInt("index", Integer.parseInt(temp));
+            } else {
+                bundle.putBoolean("fromList", false);
+                intent.putExtras(bundle);
+            }
+            intent.putExtras(bundle);
+        }
         startActivity(intent);
     }
 }
