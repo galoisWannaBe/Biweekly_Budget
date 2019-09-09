@@ -128,6 +128,13 @@ public class viewAll extends AppCompatActivity implements viewAllAdapter.OnBillL
         Intent wIntent = new Intent(viewAll.this, WeeklyExpenses.class);
         startActivity(wIntent);
     }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, viewsHelp.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "viewAll");
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     @Override
     public void OnBillClick(int position) {

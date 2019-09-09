@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.Inet4Address;
 import java.util.List;
 
 public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillListener{
@@ -152,6 +153,13 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
     }
     public void goToWeekly(View view){
         Intent intent = new Intent(upAfter.this, WeeklyExpenses.class);
+        startActivity(intent);
+    }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, viewsHelp.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "upAfter");
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

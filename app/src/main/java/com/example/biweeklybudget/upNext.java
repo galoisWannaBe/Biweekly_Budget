@@ -150,6 +150,13 @@ public class upNext extends AppCompatActivity implements upNextAdapter.OnBillLis
         Intent intent = new Intent(upNext.this, WeeklyExpenses.class);
         startActivity(intent);
     }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, viewsHelp.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "upNext");
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     @Override
     public void OnBillClick(int position) {

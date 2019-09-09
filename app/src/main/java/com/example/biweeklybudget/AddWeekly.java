@@ -216,4 +216,11 @@ public class AddWeekly extends AppCompatActivity {
             fromList = false;
         }
     }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, helpAddWeekly.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , "AddWeekly");
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }

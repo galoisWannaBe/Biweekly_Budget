@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="no_tags">0</integer>
+    <integer name="main_activity">1</integer>
+    <integer name="settings">2</integer>
+    <integer name="lists">4</integer>
+    <integer name="add_bill">8</integer>
+    <integer name="add_weekly">16</integer>
+
+</resources>

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         public static final int REQUEST_ADD_BILL = 2;
         public static final int REQUEST_ADD_WEEKLY = 3;
         public static final int REQUEST_FIRST_RUN = 4;
+        public static final int REQUEST_HELP = 5;
 
     ExpenseViewModel expenseViewModel;
     BudgetData budgetData;
@@ -167,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
             daysRemain = expenseViewModel.getDaysRemain();
             splitDue = expenseViewModel.isSplitDue();
             budgetData.setDaysRemain(daysRemain);
+        } else if (requestCode == REQUEST_HELP){
+            //do nothing
         }
         if(splitDue){
             expenseViewModel.getNextBillsEndMo();
@@ -277,6 +280,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_ADD_WEEKLY);
     }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, helpMainActivity.class);
+        startActivity(intent);
+    }
 
     public void observeNextBills(){
         expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {
@@ -322,8 +329,8 @@ public class MainActivity extends AppCompatActivity {
             upAfter.setAfterBills(bills);
         });
     }
-    public void observeAfterSplit(){
-        expenseViewModel.getAfterBillsEndMo().observe(this, bills-> {
+    public void observeAfterSplit() {
+        expenseViewModel.getAfterBillsEndMo().observe(this, bills -> {
             upAfter.setAfterBillsEndMo(bills);
         });
 

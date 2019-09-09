@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import java.util.Hashtable;
 import java.util.List;
 
 public class AddToList extends AppCompatActivity {
@@ -38,17 +39,25 @@ public class AddToList extends AppCompatActivity {
         tvBill = findViewById(R.id.name);
         tvDue = findViewById(R.id.due);
         tvCost = findViewById(R.id.cost);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        originClass = bundle.getString("origin_class");
-        fromList = bundle.getBoolean("fromList");
+        Bundle bundle = getIntent().getExtras();
+        try {
+            originClass = bundle.getString("origin_class");
+            fromList = bundle.getBoolean("fromList" , false);
+
+        }catch (Exception e){
+
+        }
         if (fromList) {
             setTitle("Edit a Monthly Bill");
-            ID = bundle.getInt("index");
-            getBillByID(ID);
-            tvBill.setText(bill.getLabel());
-            tvDue.setText(String.valueOf(bill.getDue()));
-            tvCost.setText(String.valueOf(bill.getCost()));
+            try {
+                ID = bundle.getInt("index");
+                getBillByID(ID);
+                tvBill.setText(bill.getLabel());
+                tvDue.setText(String.valueOf(bill.getDue()));
+                tvCost.setText(String.valueOf(bill.getCost()));
+            }catch (Exception e){
+
+            }
         }else{
             setTitle("Add a Monthly Bill");
         }
@@ -165,22 +174,36 @@ public class AddToList extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putInt("ID", 0);
         switch (originClass) {
-            case "viewAll":
-                backIntent = new Intent(this, viewAll.class);
-                break;
             case "upNext":
                 backIntent = new Intent(this, upNext.class);
                 break;
             case "upAfter":
                 backIntent = new Intent(this, upAfter.class);
                 break;
+            case "viewAll":
             default:
-                backIntent = new Intent();
+                backIntent = new Intent(this, viewAll.class);
                 break;
         }
         backIntent.putExtras(bundle);
         setResult(RESULT_CANCELED, backIntent);
         finish();
+    }
+    public void goToHelp(View view){
+        Intent intent = new Intent(this, helpAddBill.class);
+        Bundle bundle = new Bundle();
+        Hashtable<String, String> priorBundle = new Hashtable<>();
+        priorBundle.put("origin_class" , originClass);
+        bundle.putString("origin_class" , "AddtoList");
+        if (fromList) {
+            priorBundle.put("fromList" , "true");
+            priorBundle.put("index" , String.valueOf(ID));
+        }else {
+            priorBundle.put("fromList" , "false");
+        }
+        bundle.putSerializable("prior_bundle" , priorBundle);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     static void setBills(List<Bill> mAllBills) {
