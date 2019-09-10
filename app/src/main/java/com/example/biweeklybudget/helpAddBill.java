@@ -53,10 +53,9 @@ public class helpAddBill extends AppCompatActivity {
     public void goToMoreHelp(View view){
         Intent priorIntent = getIntent();
         Bundle bundle1 = priorIntent.getExtras();
-        priorBundle = (Hashtable<String, String>) bundle1.getSerializable("prior_bundle"); 
         Intent intent = new Intent(this, AllHelpActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("origin_class" , "AddtoList");
+        bundle.putString("origin_class" , "AddToList");
         bundle.putSerializable("prior_bundle" , priorBundle);
         intent.putExtras(bundle);
         startActivity(intent);

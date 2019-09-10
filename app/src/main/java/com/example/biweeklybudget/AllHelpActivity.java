@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,7 +21,7 @@ public class AllHelpActivity extends AppCompatActivity {
     private helpAdapter mHelpAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     int count;
-    String originClass;
+    String originClass = "\0";
     Button btnBack;
     Context context;
 
@@ -45,14 +46,14 @@ public class AllHelpActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
+        Bundle Extras = getIntent().getExtras();
+        originClass = Extras.getString("origin_class", "mainActivity");
 
         btnBack = findViewById(R.id.button_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent;
-                Bundle extraBundle = getIntent().getExtras();
-                originClass = extraBundle.getString("origin_class");
                 switch (originClass) {
                     case "mainActivity":
                         intent = new Intent(context, helpMainActivity.class);
