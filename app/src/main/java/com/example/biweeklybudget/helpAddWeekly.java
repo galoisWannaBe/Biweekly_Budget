@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class helpAddWeekly extends AppCompatActivity {
 
@@ -19,11 +20,13 @@ public class helpAddWeekly extends AppCompatActivity {
     private helpAdapter mHelpAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     int count;
+    Hashtable<String, String> priorHash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_add_weekly);
+        priorHash = new Hashtable<>();
         helps = new ArrayList<>();
         allHelp = AllHelp.getInstance();
         count = allHelp.helpCount();
@@ -44,14 +47,29 @@ public class helpAddWeekly extends AppCompatActivity {
         mRecyclerView.setAdapter(mHelpAdapter);
     }
     public void goToMoreHelp(View view){
+        Bundle priorBundle = getIntent().getExtras();
         Intent intent = new Intent(this, AllHelpActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("origin_class" , "AddWeekly");
-        intent.putExtras(bundle);
+        intent.putExtras(priorBundle);
         startActivity(intent);
     }
     public void goBack(View view){
+        Bundle bundle = getIntent().getExtras();
         Intent intent = new Intent(this, AddWeekly.class);
+        //extract and reformat bundle contents for AddWeekly
+        priorHash = (Hashtable<String, String>) bundle.getSerializable("prior_hash");
+        String temp;
+        temp = priorHash.get("origin_class");
+        bundle.putString("origin_class", temp);
+        temp = priorHash.get("fromList");
+        if (temp.equals("true")){
+            bundle.putBoolean("fromList" , true);
+            temp = priorHash.get("index");
+            bundle.putInt("index" , Integer.parseInt(temp));
+        }else{
+            bundle.putBoolean("fromList" , false);
+        }
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }
