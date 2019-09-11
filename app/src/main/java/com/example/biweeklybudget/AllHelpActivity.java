@@ -47,6 +47,7 @@ public class AllHelpActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
         Bundle Extras = getIntent().getExtras();
+        assert Extras != null;
         originClass = Extras.getString("origin_class", "mainActivity");
 
         btnBack = findViewById(R.id.button_back);

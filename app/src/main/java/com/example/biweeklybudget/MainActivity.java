@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         boolean firstRun;
 
         private static final String TAG = "MainActivity";
+        public static final int REQUEST_CHANGE_PPD = 0;
         public static final int REQUEST_ADD_BILL = 2;
         public static final int REQUEST_ADD_WEEKLY = 3;
         public static final int REQUEST_FIRST_RUN = 4;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent Data) {
         super.onActivityResult(requestCode, resultCode, Data);
         expenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CHANGE_PPD && resultCode == RESULT_OK) {
             Bundle bundle = Data.getExtras();
             seedPay = bundle.getInt("seed");
             SharedPreferences prefs = getApplication().getSharedPreferences("prefs", context.MODE_PRIVATE);
@@ -152,8 +153,9 @@ public class MainActivity extends AppCompatActivity {
         else if (requestCode == REQUEST_ADD_WEEKLY && resultCode == RESULT_OK){
             Bundle bundle = Data.getExtras();
             String label = bundle.getString("Label");
-            double cost = bundle.getInt("Cost");
+            double cost = bundle.getDouble("Cost");
             byte days = bundle.getByte("Days");
+            Log.d(TAG, label +" , " +cost +" , " +days +" added");
             expenseViewModel.insertWeekly(new Weekly(label, cost, days));
         }else if (requestCode == REQUEST_FIRST_RUN && resultCode == RESULT_OK){
             firstRun = false;
