@@ -7,13 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 
 public class viewsHelp extends AppCompatActivity {
 
-    byte Tag = (byte) (0 | R.integer.lists);
+    public static final String TAG = "viewsHelp";
+
     public static final byte helpLists = (byte) R.integer.lists;
     ArrayList<String> helps;
     AllHelp allHelp;
@@ -29,7 +31,11 @@ public class viewsHelp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_views_help);
         Bundle bundle = getIntent().getExtras();
+        assert bundle != null;
         originClass = bundle.getString("origin_class" , "mainActivity");
+        if (bundle.containsKey("origin_class")){
+            Log.d(TAG, "contains Origin Class:" +originClass);
+        }
         helps = new ArrayList<>();
         allHelp = AllHelp.getInstance();
         count = allHelp.helpCount();
@@ -53,7 +59,9 @@ public class viewsHelp extends AppCompatActivity {
     public void goToMoreHelp(View view){
         Intent intent = new Intent(this, AllHelpActivity.class);
         Bundle bundle = new Bundle();
+        Log.d(TAG, "origin class" +originClass);
         bundle.putString("origin_class" , originClass);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
     public void goBack(View view){

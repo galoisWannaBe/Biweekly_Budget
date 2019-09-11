@@ -1,5 +1,6 @@
 package com.example.biweeklybudget;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -20,13 +22,22 @@ public class helpAddWeekly extends AppCompatActivity {
     private helpAdapter mHelpAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     int count;
-    Hashtable<String, String> priorHash;
+    Bundle extras;
+    int id;
+    boolean fromList;
+    String priorOrigin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_add_weekly);
-        priorHash = new Hashtable<>();
+        extras = getIntent().getExtras();
+        assert extras != null;
+        fromList = extras.getBoolean("fromList" , false);
+        if (fromList){
+            id = extras.getInt("ID");
+        }
+        priorOrigin = extras.getString("origin_class" , "MainActivity");
         helps = new ArrayList<>();
         allHelp = AllHelp.getInstance();
         count = allHelp.helpCount();
@@ -46,29 +57,30 @@ public class helpAddWeekly extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
     }
+
     public void goToMoreHelp(View view){
-        Bundle priorBundle = getIntent().getExtras();
         Intent intent = new Intent(this, AllHelpActivity.class);
         Bundle bundle = new Bundle();
-        intent.putExtras(priorBundle);
-        startActivity(intent);
-    }
-    public void goBack(View view){
-        Bundle bundle = getIntent().getExtras();
-        Intent intent = new Intent(this, AddWeekly.class);
-        //extract and reformat bundle contents for AddWeekly
-        priorHash = (Hashtable<String, String>) bundle.getSerializable("prior_hash");
-        String temp;
-        temp = priorHash.get("origin_class");
-        bundle.putString("origin_class", temp);
-        temp = priorHash.get("fromList");
-        if (temp.equals("true")){
+        bundle.putString("origin_class" , "AddWeekly");
+        if (fromList){
             bundle.putBoolean("fromList" , true);
-            temp = priorHash.get("index");
-            bundle.putInt("index" , Integer.parseInt(temp));
+            bundle.putInt("ID" , id);
         }else{
             bundle.putBoolean("fromList" , false);
         }
+        bundle.putString("prior_origin" , priorOrigin);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        startActivity(intent);
+    }
+    public void goBack(View view){
+        // TODO: 9/10/19 Make this work both before and after allHelpActivity
+        Intent intent = new Intent(this, AddWeekly.class);
+        //extract and reformat bundle contents for AddWeekly
+        Bundle bundle = new Bundle();
+        bundle.putString("origin_class" , priorOrigin);
+        bundle.putBoolean("fromList" , fromList);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtras(bundle);
         startActivity(intent);
     }

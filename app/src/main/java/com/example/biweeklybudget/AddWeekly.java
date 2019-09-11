@@ -153,12 +153,10 @@ public class AddWeekly extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }else {
             switch (originClass){
-                case "WeeklyExpenses":
-                    mIntent = new Intent(this, WeeklyExpenses.class);
-                    break;
                 case "MainActivity":
                     mIntent = new Intent(this, MainActivity.class);
                     break;
+                case "WeeklyExpenses":
                 default:
                     mIntent = new Intent(this, WeeklyExpenses.class);
                     break;
@@ -221,16 +219,13 @@ public class AddWeekly extends AppCompatActivity {
         Intent intent = new Intent(this, helpAddWeekly.class);
         Bundle bundle = new Bundle();
         bundle.putString("origin_class" , "AddWeekly");
-        Hashtable<String, String> priorHash = new Hashtable<>();
-        priorHash.put("origin_class" , originClass);
-        bundle.putString("origin_class" , "AddWeekly");
         if (fromList){
-            priorHash.put("fromList" , "true");
-            priorHash.put("index" , String.valueOf(pos));
+            bundle.putBoolean("fromList" , true);
+            bundle.putInt("ID" , pos);
         }else {
-            priorHash.put("fromList" , "false");
+            bundle.putBoolean("fromList" , false);
         }
-        bundle.putSerializable("prior_hash" , priorHash);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtras(bundle);
         startActivity(intent);
     }
