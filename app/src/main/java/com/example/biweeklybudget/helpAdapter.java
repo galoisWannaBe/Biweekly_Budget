@@ -17,10 +17,15 @@ import java.util.List;
 public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolder>{
     public static final String TAG = "helpAdapter";
     ArrayList<String> Helps;
+    boolean open = false;
+    int tempItemPos;
+    String tempHelp;
+    AllHelp allHelp;
 
     public helpAdapter(){
         Helps = new ArrayList<>();
         Log.d(TAG, "Ran " +TAG);
+        allHelp = AllHelp.getInstance();
     }
 
     @NonNull
@@ -60,5 +65,43 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
     int count;
     public void setCount(int mCount){
         count = mCount;
+    }
+/*
+    public void openHelp(int pos, int id){
+        if(open){
+            Helps.remove(tempItemPos);
+            open = false;
+            notifyDataSetChanged();
+            Log.d(TAG, "closed item");
+        }else{
+            tempHelp = allHelp.getHelpText(id);
+            Log.d(TAG, "added " +tempHelp);
+            if (pos < Helps.size()){
+                Helps.add(tempHelp);
+            }else{
+                Helps.add(pos,tempHelp);
+            }
+            Log.d(TAG, "Opened item");
+            open = true;
+            notifyDataSetChanged();
+        }
+    }
+
+ */
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean Open) {
+        open = Open;
+    }
+    public void removeThing(int pos){
+        Helps.add(pos, allHelp.getHelpLabel(pos));
+        notifyDataSetChanged();
+    }
+    public void addThing(int pos, int id){
+        Helps.add(pos, allHelp.getHelpText(pos));
+        notifyDataSetChanged();
     }
 }

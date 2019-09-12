@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 
@@ -59,30 +57,6 @@ public class helpAddWeekly extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
     }
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        assert data != null;
-        Bundle extras = data.getExtras();
-        Intent intent;
-        assert extras != null;
-        priorOrigin = extras.getString("prior_origin");
-        switch (priorOrigin) {
-            case "mainActivity":
-            default:
-                intent = new Intent(this, MainActivity.class);
-                break;
-            case "WeeklyExpenses":
-                intent = new Intent(this, WeeklyExpenses.class);
-                break;
-        }
-                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                setResult(RESULT_OK, intent);
-                startActivity(intent);
-        Log.d("addHelpWeekly", "Got to finish but didn't finish");
-    }
- */
 
     public void goToMoreHelp(View view){
         Intent intent = new Intent(this, AllHelpActivity.class);

@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             byte days = bundle.getByte("Days");
             Log.d(TAG, label +" , " +cost +" , " +days +" added");
             expenseViewModel.insertWeekly(new Weekly(label, cost, days));
+            Log.d(TAG, "added weekly through MainActivity");
         }else if (requestCode == REQUEST_FIRST_RUN && resultCode == RESULT_OK){
             firstRun = false;
             Bundle bundle = Data.getExtras();

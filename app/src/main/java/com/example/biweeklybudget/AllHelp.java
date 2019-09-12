@@ -9,6 +9,7 @@ public class AllHelp {
     private ArrayList<HelpItem> Helps = new ArrayList<>();
     private byte currentTags;
     private String helpLabel;
+    private ArrayList<String> HelpText = new ArrayList<>();
     int mainSize;
 
     private static final AllHelp INSTANCE = new AllHelp();
@@ -43,7 +44,7 @@ public class AllHelp {
         currentTags = (byte) R.integer.no_tags;
         currentTags |= R.integer.main_activity;
         Log.d(TAG, "tags are " +currentTags);
-        Helps.add(new HelpItem(3, currentTags, "Change you're pay day"));
+        Helps.add(new HelpItem(3, currentTags, "Change your pay day"));
 
         //Explain choosing a payperiod
         currentTags = (byte) R.integer.no_tags;
@@ -82,6 +83,11 @@ public class AllHelp {
         currentTags = (byte) R.integer.no_tags;
         currentTags |= R.integer.add_weekly;
         Helps.add(new HelpItem(10, currentTags, "Days"));
+
+        HelpText.add(Helps.get(0).getText() +":\nThis is random text to test the thing and it should be wrappable and loveable and helpful and never ever ever give up");
+        HelpText.add(Helps.get(1).getText() +":\nThis is random text to test the thing and it should be wrappable and loveable and helpful and never ever ever give up");
+        HelpText.add(Helps.get(2).getText() +":\nThis is random text to test the thing and it should be wrappable and loveable and helpful and never ever ever give up");
+        HelpText.add(Helps.get(3).getText() +":\nThis is random text to test the thing and it should be wrappable and loveable and helpful and never ever ever give up");
     }
     public int helpCount(){
         Log.d(TAG, "counted Help");
@@ -103,4 +109,8 @@ public class AllHelp {
     }
 
      */
+    public String getHelpText(int id){
+        return HelpText.get(id);
+    }
+
 }
