@@ -69,13 +69,23 @@ public class helpMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 id = helps.get(3).getID();
                 boolean open = mHelpAdapter.isOpen();
-                if (open){
-                    mHelpAdapter.removeThing(3);
-                }else {
-                    mHelpAdapter.addThing(3, id);
-                    //tempPos = 3;
+                    if (open) {
+                        mHelpAdapter.clearList();
+                        for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                            mHelpAdapter.addHelpLabel(i);
+                            mHelpAdapter.setOpen(false);
+                        }
+                    }else{
+                        for (int i = 0; i < 3; i++){
+                            mHelpAdapter.addHelpLabel(i);
+                        }mHelpAdapter.addHelpText(3);
+                        for (int i = (3 + 1); i < mHelpAdapter.getCount(); i++){
+                            mHelpAdapter.addHelpText(i);
+                        }
+                    }mHelpAdapter.setOpen(true);
+                    mHelpAdapter.printList();
                 }
-            }
+
         });
         btnTest1 = findViewById(R.id.button_test_0);
         btnTest1.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +93,23 @@ public class helpMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 id = helps.get(0).getID();
                 boolean open = mHelpAdapter.isOpen();
-                if (open){
-                    mHelpAdapter.removeThing(0);
-                }else {
-                    mHelpAdapter.addThing(0, id);
-                    //tempPos = 0;
+                if (open) {
+                    mHelpAdapter.clearList();
+                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                        mHelpAdapter.addHelpLabel(i);
+                        mHelpAdapter.setOpen(false);
+                    }
+                }else{
+                    for (int i = 0; i < 0; i++){
+                        mHelpAdapter.addHelpLabel(i);
+                    }mHelpAdapter.addHelpText(0);
+                    for (int i = (0 + 1); i < mHelpAdapter.getCount(); i++){
+                        mHelpAdapter.addHelpText(i);
+                    }
+                }mHelpAdapter.setOpen(true);
+                mHelpAdapter.printList();
                 }
-            }
+
         });
         btnTest2 = findViewById(R.id.button_test_1);
         btnTest2.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +117,21 @@ public class helpMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 id = helps.get(1).getID();
                 boolean open = mHelpAdapter.isOpen();
-                if (open){
-                    mHelpAdapter.removeThing(1);
-                }else {
-                    mHelpAdapter.addThing(1, id);
-                    //tempPos = 1;
-                }
+                if (open) {
+                    mHelpAdapter.clearList();
+                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                        mHelpAdapter.addHelpLabel(i);
+                        mHelpAdapter.setOpen(false);
+                    }
+                }else{
+                    for (int i = 0; i < 1; i++){
+                        mHelpAdapter.addHelpLabel(i);
+                    }mHelpAdapter.addHelpText(1);
+                    for (int i = (1 + 1); i < mHelpAdapter.getCount(); i++){
+                        mHelpAdapter.addHelpText(i);
+                    }
+                }mHelpAdapter.setOpen(true);
+                mHelpAdapter.printList();
             }
         });
         btnTest3 = findViewById(R.id.button_test_2);
@@ -111,14 +140,21 @@ public class helpMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 id = helps.get(2).getID();
                 boolean open = mHelpAdapter.isOpen();
-                if (open){
-                    mHelpAdapter.removeThing(2);
-                    mHelpAdapter.setOpen(false);
-                }else if(open == false){
-                    mHelpAdapter.addThing(2, id);
-                    mHelpAdapter.setOpen(true);
-                    //tempPos = 2;
-                }
+                if (open) {
+                    mHelpAdapter.clearList();
+                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                        mHelpAdapter.addHelpLabel(i);
+                        mHelpAdapter.setOpen(false);
+                    }
+                }else{
+                    for (int i = 0; i < 2; i++){
+                        mHelpAdapter.addHelpLabel(i);
+                    }mHelpAdapter.addHelpText(2);
+                    for (int i = (2 + 1); i < mHelpAdapter.getCount(); i++){
+                        mHelpAdapter.addHelpText(i);
+                    }
+                }mHelpAdapter.setOpen(true);
+                mHelpAdapter.printList();
             }
         });
 
@@ -135,5 +171,5 @@ public class helpMainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
+    //force reinstall
 }

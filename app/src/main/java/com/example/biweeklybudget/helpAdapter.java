@@ -66,28 +66,10 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
     public void setCount(int mCount){
         count = mCount;
     }
-/*
-    public void openHelp(int pos, int id){
-        if(open){
-            Helps.remove(tempItemPos);
-            open = false;
-            notifyDataSetChanged();
-            Log.d(TAG, "closed item");
-        }else{
-            tempHelp = allHelp.getHelpText(id);
-            Log.d(TAG, "added " +tempHelp);
-            if (pos < Helps.size()){
-                Helps.add(tempHelp);
-            }else{
-                Helps.add(pos,tempHelp);
-            }
-            Log.d(TAG, "Opened item");
-            open = true;
-            notifyDataSetChanged();
-        }
-    }
 
- */
+    public int getCount() {
+        return count;
+    }
 
     public boolean isOpen() {
         return open;
@@ -95,13 +77,22 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
 
     public void setOpen(boolean Open) {
         open = Open;
+        //notifyDataSetChanged();
     }
-    public void removeThing(int pos){
-        Helps.add(pos, allHelp.getHelpLabel(pos));
-        notifyDataSetChanged();
+    public void clearList() {
+        Helps.clear();
     }
-    public void addThing(int pos, int id){
-        Helps.add(pos, allHelp.getHelpText(pos));
-        notifyDataSetChanged();
+    public void addHelpText(int id){
+        Helps.add(allHelp.getHelpText(id));
+    }
+    public void addHelpLabel(int id){
+        Helps.add(allHelp.getHelpLabel(id));
+            notifyDataSetChanged();
+    }
+    public void printList(){
+
+                for (int i = 0; i < Helps.size(); i++) {
+                    System.out.println();
+        }
     }
 }
