@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     BudgetData budgetData;
     Context context;
     //Database vars
+    // TODO: 9/12/19 Figure out help items
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
