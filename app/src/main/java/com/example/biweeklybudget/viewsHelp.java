@@ -52,6 +52,7 @@ public class viewsHelp extends AppCompatActivity implements helpAdapter.OnHelpLi
                 text = allHelp.getHelpLabel(i);
                 tags = allHelp.getHelpByte(i);
                 id = allHelp.getHelpID(i);
+                Log.d(TAG, "Id is: " +id);
                 helps.add(new HelpItem(id, tags, text));
                 Log.d(TAG , "Adding: " +allHelp.getHelpLabel(i));
                 Log.d(TAG, "ID: " +id);
@@ -102,21 +103,23 @@ public class viewsHelp extends AppCompatActivity implements helpAdapter.OnHelpLi
     public void OnHelpClick(int position) {
         int pos = position;
         id = helps.get(pos).getID();
+        Log.d(TAG, "pos: " +pos);
+        Log.d(TAG, "ID: " +id);
         boolean open = mHelpadapter.isOpen();
         if (open) {
             Log.d(TAG, "Was open");
             mHelpadapter.clearList();
             for (int i = 0; i < mHelpadapter.getCount(); i++) {
-                mHelpadapter.addHelpLabel(i);
+                mHelpadapter.addHelpLabel(helps.get(i).getID());
             }
         }else{
             mHelpadapter.clearList();
             Log.d(TAG, "was closed");
             for (int i = 0; i < pos; i++){
-                mHelpadapter.addHelpLabel(i);
+                mHelpadapter.addHelpLabel(helps.get(i).getID());
             }mHelpadapter.addHelpText(id);
             for (int i = (pos + 1); i < mHelpadapter.getCount(); i++){
-                mHelpadapter.addHelpLabel(i);
+                mHelpadapter.addHelpLabel(helps.get(i).getID());
             }
         }
         if (open) {

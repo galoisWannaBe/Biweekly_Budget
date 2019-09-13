@@ -97,15 +97,15 @@ public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHe
         if (open) {
             mHelpAdapter.clearList();
             for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }
         }else{
             mHelpAdapter.clearList();
             for (int i = 0; i < pos; i++){
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }mHelpAdapter.addHelpText(id);
             for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }
         }
         if (open) {

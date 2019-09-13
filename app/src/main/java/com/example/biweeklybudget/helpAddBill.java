@@ -64,7 +64,6 @@ public class helpAddBill extends AppCompatActivity implements helpAdapter.OnHelp
         startActivity(intent);
     }
 
-    // TODO: 9/9/19 Finish dragging from helpAddBill through allHelpActivity; do same with helpAddWeekly 
     public void goBack(View view){
         Intent intent = new Intent(this, AddToList.class);
         Bundle bundle = new Bundle();
@@ -75,19 +74,20 @@ public class helpAddBill extends AppCompatActivity implements helpAdapter.OnHelp
     public void OnHelpClick(int position) {
         int pos = position;
         id = helps.get(pos).getID();
+        int tempID;
         boolean open = mHelpAdapter.isOpen();
         if (open) {
             mHelpAdapter.clearList();
             for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }
         }else{
             mHelpAdapter.clearList();
             for (int i = 0; i < pos; i++){
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }mHelpAdapter.addHelpText(id);
             for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
-                mHelpAdapter.addHelpLabel(i);
+                mHelpAdapter.addHelpLabel(helps.get(i).getID());
             }
         }
         if (open) {

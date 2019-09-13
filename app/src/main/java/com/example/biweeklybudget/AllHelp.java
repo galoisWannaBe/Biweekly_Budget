@@ -45,6 +45,7 @@ public class AllHelp {
         //Explain how to add items
         currentTags = NO_TAGS;
         currentTags |= MAIN_ACTIVITY;
+        currentTags |= LISTS;
         Log.d(TAG, "tags are " +currentTags);
         Helps.add(new HelpItem(2, currentTags, "How to add bills and weekly expenses"));
 

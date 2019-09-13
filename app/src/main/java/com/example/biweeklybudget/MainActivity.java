@@ -34,6 +34,7 @@ TODO: support for landscape mode
 TODO: FAB for adding weekly and monthly expenses from MainActivity
 TODO: Make adding or deleting multiple expenses easier
 TODO: Allow some sort of syncing option
+TODO: Get rid of extraneous list adapters
  */
 
 
@@ -64,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
     ExpenseViewModel expenseViewModel;
     BudgetData budgetData;
     Context context;
-    //Database vars
-    // TODO: 9/12/19 Figure out help items
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

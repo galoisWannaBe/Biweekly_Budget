@@ -17,7 +17,7 @@ import java.util.List;
 
 public class helpMainActivity extends AppCompatActivity implements helpAdapter.OnHelpListener{
 
-    public static final byte helpMainActivity = (byte) R.integer.main_activity;
+    public static final byte helpMainActivity = 1;
     public static final String TAG = "helpMainActivity";
     ArrayList<HelpItem> helps;
     AllHelp allHelp;
@@ -29,8 +29,6 @@ public class helpMainActivity extends AppCompatActivity implements helpAdapter.O
     byte tags;
     String text;
 
-    // TODO: 9/11/19 Finish converting list for ids to load from master list
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +37,11 @@ public class helpMainActivity extends AppCompatActivity implements helpAdapter.O
         allHelp = AllHelp.getInstance();
         count = allHelp.helpCount();
         for (int i = 0; i < count; i++){
-            if ((allHelp.getHelpByte(i) & helpMainActivity) == helpMainActivity){
+            byte currentByte = allHelp.getHelpByte(i);
+            Log.d(TAG, "currentByte: " +currentByte);
+            Log.d(TAG, "currentByte & helpMainActivity: " +(currentByte & helpMainActivity));
+            Log.d(TAG, "bool currentByte & helpMainActivity" +((currentByte & helpMainActivity) == (int) helpMainActivity));
+            if ((currentByte & helpMainActivity) == helpMainActivity){
                 text = allHelp.getHelpLabel(i);
                 tags = allHelp.getHelpByte(i);
                 id = allHelp.getHelpID(i);
