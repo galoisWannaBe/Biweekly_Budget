@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class helpMainActivity extends AppCompatActivity {
+public class helpMainActivity extends AppCompatActivity implements helpAdapter.OnHelpListener{
 
     public static final byte helpMainActivity = (byte) R.integer.main_activity;
     public static final String TAG = "helpMainActivity";
@@ -28,11 +28,7 @@ public class helpMainActivity extends AppCompatActivity {
     int id;
     byte tags;
     String text;
-    Button btnTest;
-    Button btnTest1;
-    Button btnTest2;
-    Button btnTest3;
-    int tempPos;
+
     // TODO: 9/11/19 Finish converting list for ids to load from master list
     
     @Override
@@ -53,110 +49,15 @@ public class helpMainActivity extends AppCompatActivity {
         }
         Log.d(TAG, "Helps contains " +helps.size() +" elements");
         mRecyclerView = findViewById(R.id.help_view);
-        mHelpAdapter = new helpAdapter();
+        mHelpAdapter = new helpAdapter(this);
         mHelpAdapter.setCount(helps.size());
         for (int i = 0; i < helps.size(); i++){
             mHelpAdapter.setHelps(helps.get(i).getText());
         }
-        //mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
         
-        btnTest = findViewById(R.id.button_test_3);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id = helps.get(3).getID();
-                boolean open = mHelpAdapter.isOpen();
-                    if (open) {
-                        mHelpAdapter.clearList();
-                        for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                            mHelpAdapter.addHelpLabel(i);
-                            mHelpAdapter.setOpen(false);
-                        }
-                    }else{
-                        for (int i = 0; i < 3; i++){
-                            mHelpAdapter.addHelpLabel(i);
-                        }mHelpAdapter.addHelpText(3);
-                        for (int i = (3 + 1); i < mHelpAdapter.getCount(); i++){
-                            mHelpAdapter.addHelpText(i);
-                        }
-                    }mHelpAdapter.setOpen(true);
-                    mHelpAdapter.printList();
-                }
-
-        });
-        btnTest1 = findViewById(R.id.button_test_0);
-        btnTest1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id = helps.get(0).getID();
-                boolean open = mHelpAdapter.isOpen();
-                if (open) {
-                    mHelpAdapter.clearList();
-                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                        mHelpAdapter.addHelpLabel(i);
-                        mHelpAdapter.setOpen(false);
-                    }
-                }else{
-                    for (int i = 0; i < 0; i++){
-                        mHelpAdapter.addHelpLabel(i);
-                    }mHelpAdapter.addHelpText(0);
-                    for (int i = (0 + 1); i < mHelpAdapter.getCount(); i++){
-                        mHelpAdapter.addHelpText(i);
-                    }
-                }mHelpAdapter.setOpen(true);
-                mHelpAdapter.printList();
-                }
-
-        });
-        btnTest2 = findViewById(R.id.button_test_1);
-        btnTest2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id = helps.get(1).getID();
-                boolean open = mHelpAdapter.isOpen();
-                if (open) {
-                    mHelpAdapter.clearList();
-                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                        mHelpAdapter.addHelpLabel(i);
-                        mHelpAdapter.setOpen(false);
-                    }
-                }else{
-                    for (int i = 0; i < 1; i++){
-                        mHelpAdapter.addHelpLabel(i);
-                    }mHelpAdapter.addHelpText(1);
-                    for (int i = (1 + 1); i < mHelpAdapter.getCount(); i++){
-                        mHelpAdapter.addHelpText(i);
-                    }
-                }mHelpAdapter.setOpen(true);
-                mHelpAdapter.printList();
-            }
-        });
-        btnTest3 = findViewById(R.id.button_test_2);
-        btnTest3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                id = helps.get(2).getID();
-                boolean open = mHelpAdapter.isOpen();
-                if (open) {
-                    mHelpAdapter.clearList();
-                    for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                        mHelpAdapter.addHelpLabel(i);
-                        mHelpAdapter.setOpen(false);
-                    }
-                }else{
-                    for (int i = 0; i < 2; i++){
-                        mHelpAdapter.addHelpLabel(i);
-                    }mHelpAdapter.addHelpText(2);
-                    for (int i = (2 + 1); i < mHelpAdapter.getCount(); i++){
-                        mHelpAdapter.addHelpText(i);
-                    }
-                }mHelpAdapter.setOpen(true);
-                mHelpAdapter.printList();
-            }
-        });
 
 
     }
@@ -171,5 +72,138 @@ public class helpMainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    //force reinstall
+    public void click4(View view) {
+        int pos = 3;
+        id = helps.get(pos).getID();
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            Log.d(TAG, "Was open");
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            Log.d(TAG, "was closed");
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(id);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
+    }
+    public void click1(View view){
+            int pos = 0;
+            id = helps.get(pos).getID();
+            boolean open = mHelpAdapter.isOpen();
+            if (open) {
+                Log.d(TAG, "Was open");
+                mHelpAdapter.clearList();
+                for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                    mHelpAdapter.addHelpLabel(i);
+                }
+            }else{
+                mHelpAdapter.clearList();
+                Log.d(TAG, "was closed");
+                for (int i = 0; i < pos; i++){
+                    mHelpAdapter.addHelpLabel(i);
+                }mHelpAdapter.addHelpText(id);
+                for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                    mHelpAdapter.addHelpLabel(i);
+                }
+            }
+            if (open) {
+                mHelpAdapter.setOpen(false);
+            }else{
+                mHelpAdapter.setOpen(true);
+            }
+    }
+    public void click2(View v) {
+        int pos = 1;
+        id = helps.get(pos).getID();
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            Log.d(TAG, "Was open");
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            Log.d(TAG, "was closed");
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(0);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
+    }
+    public void click3(View view) {
+        int pos = 2;
+        id = helps.get(pos).getID();
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            Log.d(TAG, "Was open");
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            Log.d(TAG, "was closed");
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(0);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
+    }
+
+    @Override
+    public void OnHelpClick(int position) {
+        int pos = position;
+        id = helps.get(pos).getID();
+        Log.d(TAG, "position: " +pos);
+        Log.d(TAG, "ID" +id);
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            Log.d(TAG, "Was open");
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            Log.d(TAG, "was closed");
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(id);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
+    }
 }

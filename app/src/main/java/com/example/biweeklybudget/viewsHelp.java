@@ -12,12 +12,13 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class viewsHelp extends AppCompatActivity {
+public class viewsHelp extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
     public static final String TAG = "viewsHelp";
 
-    public static final byte helpLists = (byte) R.integer.lists;
-    ArrayList<String> helps;
+    public static final byte helpLists = 4;
+
+    ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
     private helpAdapter mHelpadapter;
@@ -25,11 +26,15 @@ public class viewsHelp extends AppCompatActivity {
     String originClass;
     Context context;
     int count;
+    byte tags;
+    String text;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_views_help);
+        Log.d(TAG, "helpLists ASAP: " +helpLists);
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
         originClass = bundle.getString("origin_class" , "mainActivity");
@@ -42,14 +47,21 @@ public class viewsHelp extends AppCompatActivity {
         context = getApplicationContext();
         for (int i = 0; i < count; i++){
             if ((allHelp.getHelpByte(i) & helpLists) == helpLists){
-                helps.add(allHelp.getHelpLabel(i));
+                Log.d(TAG, "bytes compared: " +allHelp.getHelpByte(i));
+                Log.d(TAG, "Help Lists " +helpLists);
+                text = allHelp.getHelpLabel(i);
+                tags = allHelp.getHelpByte(i);
+                id = allHelp.getHelpID(i);
+                helps.add(new HelpItem(id, tags, text));
+                Log.d(TAG , "Adding: " +allHelp.getHelpLabel(i));
+                Log.d(TAG, "ID: " +id);
             }
         }
         mRecyclerView = findViewById(R.id.view_help_view);
-        mHelpadapter = new helpAdapter();
+        mHelpadapter = new helpAdapter(this);
         mHelpadapter.setCount(helps.size());
         for (int i = 0; i < helps.size(); i++){
-            mHelpadapter.setHelps(helps.get(i));
+            mHelpadapter.setHelps(helps.get(i).getText());
         }
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -84,6 +96,34 @@ public class viewsHelp extends AppCompatActivity {
                 break;
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void OnHelpClick(int position) {
+        int pos = position;
+        id = helps.get(pos).getID();
+        boolean open = mHelpadapter.isOpen();
+        if (open) {
+            Log.d(TAG, "Was open");
+            mHelpadapter.clearList();
+            for (int i = 0; i < mHelpadapter.getCount(); i++) {
+                mHelpadapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpadapter.clearList();
+            Log.d(TAG, "was closed");
+            for (int i = 0; i < pos; i++){
+                mHelpadapter.addHelpLabel(i);
+            }mHelpadapter.addHelpText(id);
+            for (int i = (pos + 1); i < mHelpadapter.getCount(); i++){
+                mHelpadapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpadapter.setOpen(false);
+        }else{
+            mHelpadapter.setOpen(true);
+        }
     }
     // TODO: 9/10/19 fix intents; pass origin_class from prior bundles and/or pass new intents 
 }

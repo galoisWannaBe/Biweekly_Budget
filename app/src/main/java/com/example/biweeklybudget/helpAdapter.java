@@ -11,28 +11,29 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolder>{
+public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolder> {
     public static final String TAG = "helpAdapter";
-    ArrayList<String> Helps;
-    boolean open = false;
-    int tempItemPos;
-    String tempHelp;
-    AllHelp allHelp;
+    private ArrayList<String> Helps;
+    private boolean open = false;
+    private int tempItemPos;
+    private String tempHelp;
+    private AllHelp allHelp;
+    private OnHelpListener mOnClickListener;
+    private Context context;
 
-    public helpAdapter(){
+    public helpAdapter(OnHelpListener onHelpListener){
         Helps = new ArrayList<>();
         Log.d(TAG, "Ran " +TAG);
         allHelp = AllHelp.getInstance();
+        this.mOnClickListener = onHelpListener;
     }
 
     @NonNull
     @Override
     public HelpViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.help_item, parent, false);
-        HelpViewHolder hvh = new HelpViewHolder(v);
+        HelpViewHolder hvh = new HelpViewHolder(v, mOnClickListener);
         return hvh;
     }
 
@@ -46,15 +47,23 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
         return count;
     }
 
-    public class HelpViewHolder extends RecyclerView.ViewHolder {
+    public class HelpViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView textView;
         private final Context context;
+        OnHelpListener onHelpListener;
 
-        public HelpViewHolder(@NonNull View itemView) {
+        public HelpViewHolder(@NonNull View itemView, OnHelpListener onHelpListener) {
             super(itemView);
             context = itemView.getContext();
             textView = itemView.findViewById(R.id.help_view);
+            this.onHelpListener = onHelpListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onHelpListener.OnHelpClick(getAdapterPosition());
         }
     }
     public void setHelps(String helpText){
@@ -77,7 +86,7 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
 
     public void setOpen(boolean Open) {
         open = Open;
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
     public void clearList() {
         Helps.clear();
@@ -87,12 +96,8 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
     }
     public void addHelpLabel(int id){
         Helps.add(allHelp.getHelpLabel(id));
-            notifyDataSetChanged();
     }
-    public void printList(){
-
-                for (int i = 0; i < Helps.size(); i++) {
-                    System.out.println();
-        }
+    public interface OnHelpListener{
+        void OnHelpClick(int position);
     }
 }

@@ -13,9 +13,9 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class AllHelpActivity extends AppCompatActivity {
+public class AllHelpActivity extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
-    ArrayList<String> helps;
+    ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
     private helpAdapter mHelpAdapter;
@@ -24,6 +24,9 @@ public class AllHelpActivity extends AppCompatActivity {
     String originClass = "\0";
     Button btnBack;
     Context context;
+    String text;
+    byte tags;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,16 @@ public class AllHelpActivity extends AppCompatActivity {
         count = allHelp.helpCount();
         context = getApplicationContext();
         for (int i = 0; i < count; i++){
-            helps.add(allHelp.getHelpLabel(i));
+            text = allHelp.getHelpLabel(i);
+            tags = allHelp.getHelpByte(i);
+            id = allHelp.getHelpID(i);
+            helps.add(new HelpItem(id, tags, text));
         }
         mRecyclerView = findViewById(R.id.all_help_view);
-        mHelpAdapter = new helpAdapter();
+        mHelpAdapter = new helpAdapter(this);
         mHelpAdapter.setCount(count);
         for (int i = 0; i < count; i++){
-            mHelpAdapter.setHelps(helps.get(i));
+            mHelpAdapter.setHelps(helps.get(i).getText());
         }
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -79,5 +85,31 @@ public class AllHelpActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void OnHelpClick(int position) {
+        int pos = position;
+        id = helps.get(pos).getID();
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(id);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
     }
 }

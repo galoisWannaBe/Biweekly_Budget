@@ -18,7 +18,6 @@
         <activity android:name=".AddWeekly" />
         <activity android:name=".weeklyAdapter" />
         <activity android:name=".WeeklyExpenses" />
-        <activity android:name=".ExampleItem" />
         <activity android:name=".upAfter" />
         <activity android:name=".AddToList" />
         <activity android:name=".viewAll" />

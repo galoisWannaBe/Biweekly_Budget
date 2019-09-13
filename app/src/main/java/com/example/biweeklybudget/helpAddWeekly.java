@@ -13,10 +13,10 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class helpAddWeekly extends AppCompatActivity {
+public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
     public static final byte helpAddWeekly = (byte) R.integer.add_weekly;
-    ArrayList<String> helps;
+    ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
     private helpAdapter mHelpAdapter;
@@ -24,6 +24,8 @@ public class helpAddWeekly extends AppCompatActivity {
     int count;
     Bundle extras;
     int id;
+    byte tags;
+    String text;
     boolean fromList;
     String priorOrigin;
 
@@ -43,16 +45,18 @@ public class helpAddWeekly extends AppCompatActivity {
         count = allHelp.helpCount();
         for (int i = 0; i < count; i++){
             if ((allHelp.getHelpByte(i) & helpAddWeekly) == helpAddWeekly){
-                helps.add(allHelp.getHelpLabel(i));
+                text = allHelp.getHelpLabel(i);
+                tags = allHelp.getHelpByte(i);
+                id = allHelp.getHelpID(i);
+                helps.add(new HelpItem(id, tags, text));
             }
         }
         mRecyclerView = findViewById(R.id.add_weekly_help_view);
-        mHelpAdapter = new helpAdapter();
+        mHelpAdapter = new helpAdapter(this);
         mHelpAdapter.setCount(helps.size());
         for (int i = 0; i < helps.size(); i++){
-            mHelpAdapter.setHelps(helps.get(i));
+            mHelpAdapter.setHelps(helps.get(i).getText());
         }
-        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mHelpAdapter);
@@ -83,5 +87,31 @@ public class helpAddWeekly extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void OnHelpClick(int position) {
+        int pos = position;
+        id = helps.get(pos).getID();
+        boolean open = mHelpAdapter.isOpen();
+        if (open) {
+            mHelpAdapter.clearList();
+            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }else{
+            mHelpAdapter.clearList();
+            for (int i = 0; i < pos; i++){
+                mHelpAdapter.addHelpLabel(i);
+            }mHelpAdapter.addHelpText(id);
+            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
+                mHelpAdapter.addHelpLabel(i);
+            }
+        }
+        if (open) {
+            mHelpAdapter.setOpen(false);
+        }else{
+            mHelpAdapter.setOpen(true);
+        }
     }
 }
