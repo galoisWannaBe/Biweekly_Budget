@@ -46,6 +46,11 @@ public class AddWeekly extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
+        if (extras.containsKey("got_help")) {
+            Log.d(TAG, "got_help");
+            passThrough(getCurrentFocus());
+        }
         setContentView(R.layout.activity_add_weekly);
 
         labelEdit = findViewById(R.id.labelsIn);
@@ -90,6 +95,7 @@ public class AddWeekly extends AppCompatActivity {
 
 
     }
+
     public void save(View view){
 
         Intent mIntent;
@@ -227,6 +233,10 @@ public class AddWeekly extends AppCompatActivity {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtras(bundle);
+        startActivity(intent);
+    }
+    public void passThrough(View view){
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

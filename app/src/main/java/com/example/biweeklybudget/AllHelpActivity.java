@@ -1,5 +1,6 @@
 package com.example.biweeklybudget;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +87,6 @@ public class AllHelpActivity extends AppCompatActivity implements helpAdapter.On
             }
         });
     }
-
     @Override
     public void OnHelpClick(int position) {
         int pos = position;

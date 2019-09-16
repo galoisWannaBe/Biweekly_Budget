@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 
@@ -15,7 +16,7 @@ import java.util.Hashtable;
 
 public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
-    public static final byte helpAddWeekly = (byte) R.integer.add_weekly;
+    public static final byte helpAddWeekly = 16;
     ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
@@ -28,6 +29,11 @@ public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHe
     String text;
     boolean fromList;
     String priorOrigin;
+
+    public final static String TAG = "helpAddWeekly";
+    public final int ADD_REQUEST = 0;
+    public final int EDIT_REQUEST = 1;
+    public final int RESULT_DELETED = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +90,29 @@ public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHe
         Bundle bundle = new Bundle();
         bundle.putString("origin_class" , priorOrigin);
         bundle.putBoolean("fromList" , fromList);
-        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_REQUEST);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "Triggered onActivityResult");
+        extras = data.getExtras();
+        String label = extras.getString("Label");
+        double cost = extras.getDouble("Cost");
+        byte days = extras.getByte("Days");
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Label" , label);
+        bundle.putDouble("Cost" , cost);
+        bundle.putByte("Days" , days);
+        bundle.putBoolean("got_help" , true);
+        bundle.putString("origin_class" , priorOrigin);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override

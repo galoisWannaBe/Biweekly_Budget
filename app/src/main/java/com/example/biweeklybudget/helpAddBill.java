@@ -14,8 +14,7 @@ import java.util.Hashtable;
 
 public class helpAddBill extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
-    byte Tag = (byte) (0 | R.integer.add_bill);
-    public static final byte helpAddBill = (byte) R.integer.add_bill;
+    public static final byte helpAddBill = 8;
     ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
@@ -35,7 +34,7 @@ public class helpAddBill extends AppCompatActivity implements helpAdapter.OnHelp
         count = allHelp.helpCount();
         for (int i = 0; i < count; i++){
             if ((allHelp.getHelpByte(i) & helpAddBill) == helpAddBill){
-                text = allHelp.getHelpText(i);
+                text = allHelp.getHelpLabel(i);
                 tags = allHelp.getHelpByte(i);
                 id = allHelp.getHelpID(i);
                 helps.add(new HelpItem(id, tags, text));
