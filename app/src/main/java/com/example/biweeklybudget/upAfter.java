@@ -22,9 +22,6 @@ import java.util.List;
 public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillListener{
     private static final String TAG  ="upAfter";
 
-    LiveData<List<Bill>> afterCrossLive;
-    List<Bill> afterCross;
-
     private RecyclerView mRecyclerView;
     static upAfterAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -170,7 +167,7 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         int pos = position;
         int id;
         if(splitMo) {
-            if (pos > afterBillsEndMo.size()) {
+            if (pos > (afterBillsEndMo.size() - 1)) {
                 pos -= afterBillsEndMo.size();
                 id = afterBillsBegMo.get(pos).getId();
             } else {
@@ -180,7 +177,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             id = afterBills.get(pos).getId();
         }
         bundle.putBoolean("fromList", true);
-        Log.d(TAG, "ID: " +afterBills.get(position).getId());
         bundle.putInt("index", id);
         bundle.putString("origin_class", "upAfter");
         intent.putExtras(bundle);
