@@ -170,7 +170,8 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         int pos = position;
         int id;
         if(splitMo) {
-            if (pos > afterBillsEndMo.size()) {
+            //afterBillsEndMo.size() - 1 = highest index number
+            if (pos > (afterBillsEndMo.size() - 1)) {
                 pos -= afterBillsEndMo.size();
                 id = afterBillsBegMo.get(pos).getId();
             } else {
@@ -180,7 +181,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
             id = afterBills.get(pos).getId();
         }
         bundle.putBoolean("fromList", true);
-        Log.d(TAG, "ID: " +afterBills.get(position).getId());
         bundle.putInt("index", id);
         bundle.putString("origin_class", "upAfter");
         intent.putExtras(bundle);

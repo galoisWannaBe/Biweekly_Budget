@@ -15,6 +15,9 @@ import java.util.Hashtable;
 public class helpAddBill extends AppCompatActivity implements helpAdapter.OnHelpListener {
 
     public static final byte helpAddBill = 8;
+    public final int ADD_REQUEST = 0;
+    public final int EDIT_REQUEST = 1;
+    public final int RESULT_DELETED = 2;
     ArrayList<HelpItem> helps;
     AllHelp allHelp;
     private RecyclerView mRecyclerView;
