@@ -22,9 +22,9 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
     private OnHelpListener mOnClickListener;
     private Context context;
 
-    public helpAdapter(OnHelpListener onHelpListener){
+    public helpAdapter(OnHelpListener onHelpListener) {
         Helps = new ArrayList<>();
-        Log.d(TAG, "Ran " +TAG);
+        Log.d(TAG, "Ran " + TAG);
         allHelp = AllHelp.getInstance();
         this.mOnClickListener = onHelpListener;
     }
@@ -47,7 +47,7 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
         return count;
     }
 
-    public class HelpViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class HelpViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView textView;
         private final Context context;
@@ -66,13 +66,16 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
             onHelpListener.OnHelpClick(getAdapterPosition());
         }
     }
-    public void setHelps(String helpText){
+
+    public void setHelps(String helpText) {
         Helps.add(helpText);
-        Log.d(TAG, "Added " +helpText);
+        Log.d(TAG, "Added " + helpText);
         notifyDataSetChanged();
     }
+
     int count;
-    public void setCount(int mCount){
+
+    public void setCount(int mCount) {
         count = mCount;
     }
 
@@ -88,16 +91,21 @@ public class helpAdapter  extends RecyclerView.Adapter<helpAdapter.HelpViewHolde
         open = Open;
         notifyDataSetChanged();
     }
+
     public void clearList() {
         Helps.clear();
     }
-    public void addHelpText(int id){
+
+    public void addHelpText(int id) {
         Helps.add(allHelp.getHelpText(id));
     }
-    public void addHelpLabel(int id){
+
+    public void addHelpLabel(int id) {
         Helps.add(allHelp.getHelpLabel(id));
     }
-    public interface OnHelpListener{
+
+    public interface OnHelpListener {
         void OnHelpClick(int position);
+
     }
 }

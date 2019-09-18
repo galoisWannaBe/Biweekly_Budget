@@ -71,15 +71,22 @@ public class upAfterAdapter extends RecyclerView.Adapter<upAfterAdapter.upAfterV
         if (splitMo){
             if (pos < upAfterEndMo.size()) {
                 bill = upAfterEndMo.get(pos);
+                label = bill.getLabel();
+                due = bill.getDue();
+                cost = bill.getCost();
             }else{
-                bill = upAfterBegMo.get(pos - upAfterEndMo.size());
+                int i = pos - upAfterEndMo.size();
+                bill = upAfterBegMo.get(i);
+                label = bill.getLabel();
+                due = bill.getDue();
+                cost = bill.getCost();
             }
         }else {
             bill = upAfter.get(pos);
+            label = bill.getLabel();
+            due = bill.getDue();
+            cost = bill.getCost();
             }
-        label = bill.getLabel();
-        due = bill.getDue();
-        cost = bill.getCost();
 
         holder.mTextView1.setText(label);
         holder.mTextView2.setText(String.valueOf(due));
