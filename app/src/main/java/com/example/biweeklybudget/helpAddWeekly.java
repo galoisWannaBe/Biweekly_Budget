@@ -98,55 +98,47 @@ public class helpAddWeekly extends AppCompatActivity implements helpAdapter.OnHe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_REQUEST){
-            if (resultCode == RESULT_OK){
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        if (requestCode == ADD_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 extras = data.getExtras();
                 String label = extras.getString("Label");
                 double cost = extras.getDouble("Cost");
                 byte days = extras.getByte("Days");
                 priorOrigin = extras.getString("origin_class");
-                Bundle bundle = new Bundle();
-                bundle.putString("Label" , label);
-                bundle.putDouble("Cost" , cost);
-                bundle.putByte("Days" , days);
-                bundle.putString("origin_class" , priorOrigin);
-                Intent intent;
-                switch (priorOrigin){
-                    case "mainActivity":
-                    default:
-                        intent = new Intent(this, MainActivity.class);
-                        break;
-                    case "WeeklyExpenses":
-                        intent = new Intent(this, WeeklyExpenses.class);
-                }
+                bundle.putString("Label", label);
+                bundle.putDouble("Cost", cost);
+                bundle.putByte("Days", days);
                 intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
-                finish();
+
             } else if (resultCode == RESULT_CANCELED) {
-                //make toast
-                //go to origin class?
+                //toast cancelled
             }
-        } else if (requestCode == EDIT_REQUEST){
-            if (resultCode == RESULT_OK){
+        } else if (requestCode == EDIT_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 extras = data.getExtras();
                 int id = extras.getInt("ID");
                 String label = extras.getString("Label");
                 double cost = extras.getDouble("Cost");
                 byte days = extras.getByte("Days");
-                Intent intent = new Intent(this, WeeklyExpenses.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Label" , label);
-                bundle.putDouble("Cost" , cost);
-                bundle.putByte("Days" , days);
-                bundle.putInt("ID" , id);
+                intent = new Intent(this, WeeklyExpenses.class);
+                bundle.putString("Label", label);
+                bundle.putDouble("Cost", cost);
+                bundle.putByte("Days", days);
+                bundle.putInt("ID", id);
                 intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
                 finish();
-            } else if (resultCode == RESULT_DELETED){
+            } else if (resultCode == RESULT_DELETED) {
                 extras = data.getExtras();
                 int id = extras.getInt("ID");
-                Intent intent = new Intent(this, WeeklyExpenses.class);
+                intent = new Intent(this, WeeklyExpenses.class);
+            } else if (resultCode == RESULT_CANCELED) {
+                extras = data.getExtras();
             }
+
         }
     }
 
