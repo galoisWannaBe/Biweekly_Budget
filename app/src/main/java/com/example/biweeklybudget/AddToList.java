@@ -189,22 +189,6 @@ public class AddToList extends AppCompatActivity {
         setResult(RESULT_CANCELED, backIntent);
         finish();
     }
-    public void goToHelp(View view){
-        Intent intent = new Intent(this, helpAddBill.class);
-        Bundle bundle = new Bundle();
-        Hashtable<String, String> priorBundle = new Hashtable<>();
-        priorBundle.put("origin_class" , originClass);
-        bundle.putString("origin_class" , "AddtoList");
-        if (fromList) {
-            priorBundle.put("fromList" , "true");
-            priorBundle.put("index" , String.valueOf(ID));
-        }else {
-            priorBundle.put("fromList" , "false");
-        }
-        bundle.putSerializable("prior_bundle" , priorBundle);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     static void setBills(List<Bill> mAllBills) {
         allBills = mAllBills;

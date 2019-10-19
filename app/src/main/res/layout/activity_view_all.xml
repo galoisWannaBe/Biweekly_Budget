@@ -118,13 +118,6 @@
                 android:onClick="goToAdd"
                 android:text="Add" />
 
-            <Button
-                android:id="@+id/button_help_view_all"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:onClick="goToHelp"
-                android:text="Help"/>
-
         </LinearLayout>
 
     </LinearLayout>

@@ -221,20 +221,6 @@ public class AddWeekly extends AppCompatActivity {
             fromList = false;
         }
     }
-    public void goToHelp(View view){
-        Intent intent = new Intent(this, helpAddWeekly.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("origin_class" , "AddWeekly");
-        if (fromList){
-            bundle.putBoolean("fromList" , true);
-            bundle.putInt("ID" , pos);
-        }else {
-            bundle.putBoolean("fromList" , false);
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
     public void passThrough(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

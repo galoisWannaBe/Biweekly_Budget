@@ -14,7 +14,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class AllHelpActivity extends AppCompatActivity implements helpAdapter.OnHelpListener {
+public class AllHelpActivity extends AppCompatActivity{
 
     ArrayList<HelpItem> helps;
     AllHelp allHelp;
@@ -44,7 +44,13 @@ public class AllHelpActivity extends AppCompatActivity implements helpAdapter.On
             helps.add(new HelpItem(id, tags, text));
         }
         mRecyclerView = findViewById(R.id.all_help_view);
-        mHelpAdapter = new helpAdapter(this);
+        //the new OnHelpListener is garbage code so I can run my app without deleting the class
+        mHelpAdapter = new helpAdapter(new helpAdapter.OnHelpListener() {
+            @Override
+            public void OnHelpClick(int position) {
+
+            }
+        });
         mHelpAdapter.setCount(count);
         for (int i = 0; i < count; i++){
             mHelpAdapter.setHelps(helps.get(i).getText());
@@ -58,58 +64,5 @@ public class AllHelpActivity extends AppCompatActivity implements helpAdapter.On
         originClass = Extras.getString("origin_class", "mainActivity");
 
         btnBack = findViewById(R.id.button_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent;
-                switch (originClass) {
-                    case "mainActivity":
-                        intent = new Intent(context, helpMainActivity.class);
-                        break;
-                    case "upNext":
-                    case "upAfter":
-                    case "viewAll":
-                    case "WeeklyExpenses":
-                        intent = new Intent(context, viewsHelp.class);
-                        break;
-                    case "AddToList":
-                        intent = new Intent(context, AddToList.class);
-                    case "AddWeekly":
-                        intent = new Intent(context, AddWeekly.class);
-                    default:
-                        intent = new Intent(context, MainActivity.class);
-                        break;
-                }
-                Bundle bundle = new Bundle();
-                bundle.putString("origin_class", originClass);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    }
-    @Override
-    public void OnHelpClick(int position) {
-        int pos = position;
-        id = helps.get(pos).getID();
-        boolean open = mHelpAdapter.isOpen();
-        if (open) {
-            mHelpAdapter.clearList();
-            for (int i = 0; i < mHelpAdapter.getCount(); i++) {
-                mHelpAdapter.addHelpLabel(i);
-            }
-        }else{
-            mHelpAdapter.clearList();
-            for (int i = 0; i < pos; i++){
-                mHelpAdapter.addHelpLabel(i);
-            }mHelpAdapter.addHelpText(id);
-            for (int i = (pos + 1); i < mHelpAdapter.getCount(); i++){
-                mHelpAdapter.addHelpLabel(i);
-            }
-        }
-        if (open) {
-            mHelpAdapter.setOpen(false);
-        }else{
-            mHelpAdapter.setOpen(true);
-        }
     }
 }

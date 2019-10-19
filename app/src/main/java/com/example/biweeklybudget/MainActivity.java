@@ -281,10 +281,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_ADD_WEEKLY);
     }
-    public void goToHelp(View view){
-        Intent intent = new Intent(this, helpMainActivity.class);
-        startActivity(intent);
-    }
 
     public void observeNextBills(){
         expenseViewModel.getNextBills().observe(this, new Observer<List<Bill>>() {

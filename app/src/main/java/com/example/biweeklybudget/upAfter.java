@@ -155,13 +155,6 @@ public class upAfter extends AppCompatActivity implements upAfterAdapter.OnBillL
         Intent intent = new Intent(upAfter.this, WeeklyExpenses.class);
         startActivity(intent);
     }
-    public void goToHelp(View view){
-        Intent intent = new Intent(this, viewsHelp.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("origin_class" , "upAfter");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     @Override
     public void OnBillclick(int position) {

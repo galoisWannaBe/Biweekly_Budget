@@ -114,13 +114,6 @@ public class WeeklyExpenses extends AppCompatActivity implements weeklyAdapter.O
         Intent intent = new Intent(WeeklyExpenses.this, WeeklyExpenses.class);
         startActivity(intent);
     }
-    public void goToHelp(View view){
-        Intent intent = new Intent(this, viewsHelp.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("origin_class" , "WeeklyExpenses");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
     public void goToAddWeeklies(View view){
         Intent nintent = new Intent(this, AddWeekly.class);
         Bundle bundle = new Bundle();
